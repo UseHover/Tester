@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file:///media/Storage/Active/Hover/Android/HoverTester/HoverTester.iml" filepath="/media/Storage/Active/Hover/Android/HoverTester/HoverTester.iml" />
+      <module fileurl="file:///media/Storage/Active/Hover/Android/HoverTester/app/app.iml" filepath="/media/Storage/Active/Hover/Android/HoverTester/app/app.iml" />
+    </modules>
+  </component>
+</project>
