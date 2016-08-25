@@ -1,9 +1,13 @@
 package com.hover.tester;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -13,6 +17,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +39,9 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         setUpToolbar();
         addListeners();
 
-        HoverIntegration.add(this, this);
+        Log.d(TAG, "Creating activity");
+        checkPermission();
+        Log.d(TAG, "Op: " + Utils.getOperator(this));
         if (Utils.getSharedPrefs(this).contains(Utils.OPERATOR)) fillOpInfo();
         chooseAction(getIntent());
     }
@@ -78,7 +86,8 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     }
 
     @Override
-    public void onSIMError() { // fill and remove error box instead of using dialog
+    public void onSIMError() {
+        Toast.makeText(this, "Sim error", Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onSuccess(String operatorSlug, String countryName, String currency) {
@@ -90,9 +99,10 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         fillOpInfo();
     }
     @Override
-    public void onUserDenied() {  }
+    public void onUserDenied() {  Toast.makeText(this, "User denied", Toast.LENGTH_SHORT).show(); }
 
     private void fillOpInfo() {
+        Log.d(TAG, "Filling op info");
         try {
             ((TextView) findViewById(R.id.operator)).setText(Utils.getOperator(this));
             ((TextView) findViewById(R.id.country)).setText(getString(R.string.country, Utils.getCountry(this), Utils.getCurrency(this)));
@@ -108,7 +118,8 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     private void addActionLayout(final String name, final int num) {
         Log.d(TAG, "Adding action: " + name);
         String opSlug = Utils.getOperator(this);
-        View view = getLayoutInflater().inflate(R.layout.test_action, (ViewGroup) findViewById(R.id.actions));
+        RelativeLayout view = (RelativeLayout) getLayoutInflater().inflate(R.layout.test_action, null);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 72));
         view.setId(num);
         view.setTag(name);
         ((TextView) view.findViewById(R.id.name)).setText(name);
@@ -122,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
             }
         });
         setResultInView(view, opSlug, name);
+        ((LinearLayout) findViewById(R.id.actions)).addView(view);
     }
 
     @Override
@@ -202,5 +214,19 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
                 Utils.setPaybillAcct(s.toString(), getApplicationContext());
             }
         });
+    }
+
+    public void checkPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_PHONE_STATE }, 0);
+        } else HoverIntegration.add(this, this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
+        if (grantResults.length > 0	&& grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            HoverIntegration.add(this, this);
+        else
+            finish();
     }
 }

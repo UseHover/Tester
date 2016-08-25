@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="72dp"
     android:layout_centerVertical="true">
 
     <ImageView android:id="@+id/status_icon"
@@ -19,7 +19,7 @@
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textSize="16sp"
-        android:text="Check Balance"/>
+        android:text="balance"/>
 
     <TextView android:id="@+id/time"
         android:layout_width="wrap_content"
