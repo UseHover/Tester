@@ -53,10 +53,13 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     private void chooseAction(Intent intent) {
         if (intent.hasExtra("sdk_action") && Utils.isActive(this)) {
             ViewGroup parent = (ViewGroup) findViewById(R.id.actions);
-            for (int j = 0; j < parent.getChildCount() - 1; j++)
+            for (int j = 0; j < parent.getChildCount(); j++)
                 if (((String) parent.getChildAt(j).getTag()).equals(intent.getStringExtra("sdk_action"))) {
-                    performAction(j + 1);
-                    return;
+                    setIcon(parent.getChildAt(j), R.drawable.circle_passes);
+                    if (j < parent.getChildCount() - 1) {
+                        performAction(j + 1);
+                        return;
+                    }
                 }
             Utils.setActive(false, this);
         }
