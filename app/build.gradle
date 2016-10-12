@@ -2,7 +2,7 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
-        maven { url 'http://maven.usehover.com.s3-website-eu-west-1.amazonaws.com/releases' }
+        maven { url 'http://maven.usehover.com/releases' }
     }
 
     dependencies {
@@ -15,7 +15,7 @@ apply plugin: 'io.fabric'
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-    maven { url 'http://maven.usehover.com.s3-website-eu-west-1.amazonaws.com/releases' }
+    maven { url 'http://maven.usehover.com/releases' }
 }
 
 
@@ -44,5 +44,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') { transitive = true; }
-    compile('com.hover:android-sdk:0.8.6@aar') { transitive = true; }
+    compile('com.hover:android-sdk:0.9.0-alpha2@aar') { transitive = true; }
 }

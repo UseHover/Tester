@@ -51,17 +51,20 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         chooseAction(intent);
     }
     private void chooseAction(Intent intent) {
-        if (intent.hasExtra("sdk_action") && Utils.isActive(this)) {
+        if (intent.hasExtra("sdk_action")) {
             ViewGroup parent = (ViewGroup) findViewById(R.id.actions);
-            for (int j = 0; j < parent.getChildCount(); j++)
+            for (int j = 0; j < parent.getChildCount(); j++) {
                 if (((String) parent.getChildAt(j).getTag()).equals(intent.getStringExtra("sdk_action"))) {
-                    setIcon(parent.getChildAt(j), R.drawable.circle_passes);
-                    if (j < parent.getChildCount() - 1) {
-                        performAction(j + 1);
-                        return;
+                    setResultInView(parent.getChildAt(j), Utils.getOperator(this), intent.getStringExtra("sdk_action"));
+                    if (Utils.isActive(this)) {
+                        if (j < parent.getChildCount() - 1) {
+                            performAction(j + 1);
+                            return;
+                        }
+                        Utils.setActive(false, this);
                     }
                 }
-            Utils.setActive(false, this);
+            }
         }
     }
 
@@ -95,11 +98,12 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     @Override
     public void onSuccess(String operatorSlug, String countryName, String currency) {
         Toast.makeText(this, "Success! " + currency, Toast.LENGTH_SHORT).show();
-        Utils.setOperator(operatorSlug, this);
-        Utils.setCountry(countryName, this);
-        Utils.setCurrency(currency, this);
-        Log.d(TAG, "Filling page info");
-        fillOpInfo();
+        if (!Utils.getOperator(this).equals(operatorSlug)) {
+            Utils.setOperator(operatorSlug, this);
+            Utils.setCountry(countryName, this);
+            Utils.setCurrency(currency, this);
+            fillOpInfo();
+        }
     }
     @Override
     public void onUserDenied() {  Toast.makeText(this, "User denied", Toast.LENGTH_SHORT).show(); }
@@ -109,13 +113,18 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         try {
             ((TextView) findViewById(R.id.operator)).setText(Utils.getOperator(this));
             ((TextView) findViewById(R.id.country)).setText(getString(R.string.country, Utils.getCountry(this), Utils.getCurrency(this)));
-            String[] actions = HoverIntegration.getActionsList(Utils.getOperator(this), this);
-            Log.d(TAG, "Setting actions: " + actions[0]);
-            for (int i = 0; i < actions.length; i++)
-                addActionLayout(actions[i], i);
+            addActions();
         } catch (Exception e) {
             Log.d(TAG, "Fail: " + e.getMessage());
         }
+    }
+
+    private void addActions() {
+        String[] actions = HoverIntegration.getActionsList(Utils.getOperator(this), this);
+        Log.d(TAG, "Setting actions: " + actions[0]);
+        ((LinearLayout) findViewById(R.id.actions)).removeAllViews();
+        for (int i = 0; i < actions.length; i++)
+            addActionLayout(actions[i], i);
     }
 
     private void addActionLayout(final String name, final int num) {
@@ -222,14 +231,18 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_PHONE_STATE }, 0);
-        } else HoverIntegration.add(this, this);
+        } else addHoverIntegration();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
         if (grantResults.length > 0	&& grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            HoverIntegration.add(this, this);
+            addHoverIntegration();
         else
             finish();
+    }
+
+    private void addHoverIntegration() {
+        HoverIntegration.add(this, this);
     }
 }

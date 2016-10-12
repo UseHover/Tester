@@ -11,7 +11,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.d(TAG, "Op: " + i.getStringExtra(Utils.OPERATOR));
+		Log.d(TAG, "Transaction received. Op: " + i.getStringExtra(Utils.OPERATOR) + ", Action: " + i.getStringExtra(Utils.ACTION));
 		Utils.saveActionResult(i.getStringExtra(Utils.OPERATOR), i.getStringExtra(Utils.ACTION), true, context);
 
 		Intent intent = new Intent();
