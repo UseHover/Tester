@@ -234,14 +234,6 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         } else addHoverIntegration();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
-        if (grantResults.length > 0	&& grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            addHoverIntegration();
-        else
-            finish();
-    }
-
     private void addHoverIntegration() {
         HoverIntegration.add(this, this);
     }
