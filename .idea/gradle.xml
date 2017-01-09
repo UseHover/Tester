@@ -8,8 +8,8 @@
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.14.1" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
+            <option value="/media/Storage/Active/Hover/Android/HoverTester" />
+            <option value="/media/Storage/Active/Hover/Android/HoverTester/app" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

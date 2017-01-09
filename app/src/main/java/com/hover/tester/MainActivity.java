@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         setUpToolbar();
         addListeners();
 
-        Log.d(TAG, "Creating activity");
         checkPermission();
         Log.d(TAG, "Op: " + Utils.getOperator(this));
         if (Utils.getSharedPrefs(this).contains(Utils.OPERATOR)) fillOpInfo();
@@ -109,7 +108,6 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     public void onUserDenied() {  Toast.makeText(this, "User denied", Toast.LENGTH_SHORT).show(); }
 
     private void fillOpInfo() {
-        Log.d(TAG, "Filling op info");
         try {
             ((TextView) findViewById(R.id.operator)).setText(Utils.getOperator(this));
             ((TextView) findViewById(R.id.country)).setText(getString(R.string.country, Utils.getCountry(this), Utils.getCurrency(this)));
@@ -137,9 +135,8 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         ((TextView) view.findViewById(R.id.name)).setText(name);
         view.findViewById(R.id.rerun).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                Context c = getApplicationContext();
-                Hover.Builder hb = new Hover.Builder(c).request(name);
-                addExtras(hb, c);
+                Hover.Builder hb = new Hover.Builder(MainActivity.this).request(name);
+                addExtras(hb, MainActivity.this);
                 Intent i = hb.fromAny();
                 startActivityForResult(i, num);
             }
@@ -151,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        logResponse(data);
         String opSlug = Utils.getOperator(this);
         View v = findViewById(requestCode);
         if (resultCode == RESULT_CANCELED) {
@@ -159,6 +157,15 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         } else {
             Utils.saveActionResult(opSlug, (String) v.getTag(), false, this);
             setIcon(v, R.drawable.circle_unknown);
+        }
+    }
+
+    private void logResponse(Intent data) {
+        if (data != null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (String key : data.getExtras().keySet())
+                stringBuilder.append(key).append(": ").append(data.getExtras().get(key)).append("\n");
+            Log.d(TAG, stringBuilder.toString());
         }
     }
 
@@ -177,12 +184,12 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     }
 
     private void addExtras(Hover.Builder hb, Context c) {
-        hb.extra("amount", Utils.getAmount(c));
-        hb.extra("currency", Utils.getCurrency(c));
-        hb.extra("who", Utils.getPhone(c));
-        hb.extra("merchant", Utils.getMerchant(c));
-        hb.extra("paybill", Utils.getPaybill(c));
-        hb.extra("paybill_acct", Utils.getPaybillAcct(c));
+        if (!Utils.getAmount(c).isEmpty()) hb.extra("amount", Utils.getAmount(c));
+        if (!Utils.getCurrency(c).isEmpty()) hb.extra("currency", Utils.getCurrency(c));
+        if (!Utils.getPhone(c).isEmpty()) hb.extra("who", Utils.getPhone(c));
+        if (!Utils.getMerchant(c).isEmpty()) hb.extra("merchant", Utils.getMerchant(c));
+        if (!Utils.getPaybill(c).isEmpty()) hb.extra("paybill", Utils.getPaybill(c));
+        if (!Utils.getPaybillAcct(c).isEmpty()) hb.extra("paybill_acct", Utils.getPaybillAcct(c));
     }
 
     private void addListeners() {
