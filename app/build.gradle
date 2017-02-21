@@ -20,13 +20,13 @@ repositories {
 
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "com.hover.tester"
         minSdkVersion 18
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 2
         versionName "0.2"
     }
@@ -41,8 +41,8 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.0.0'
-    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.6.1@aar') { transitive = true; }
-    compile('com.hover:android-sdk:0.9.6@aar') { transitive = true; }
+    compile('com.hover:android-sdk:0.9.3@aar') { transitive = true; }
 }
