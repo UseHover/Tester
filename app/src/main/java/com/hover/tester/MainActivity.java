@@ -23,12 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.hover.sdk.main.Hover;
+import com.hover.sdk.main.HoverParameters;
 import com.hover.sdk.main.HoverIntegration;
+import com.hover.sdk.operators.Permission;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements HoverIntegration.HoverListener {
+public class MainActivity extends AppCompatActivity {
     public final static String TAG = "MainActivity";
 
     @Override
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         setUpToolbar();
         addListeners();
 
+        Log.d(TAG, "Creating activity");
         checkPermission();
         Log.d(TAG, "Op: " + Utils.getOperator(this));
         if (Utils.getSharedPrefs(this).contains(Utils.OPERATOR)) fillOpInfo();
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
             ViewGroup parent = (ViewGroup) findViewById(R.id.actions);
             for (int j = 0; j < parent.getChildCount(); j++) {
                 if (((String) parent.getChildAt(j).getTag()).equals(intent.getStringExtra("sdk_action"))) {
-                    setResultInView(parent.getChildAt(j), Utils.getOperator(this), intent.getStringExtra("sdk_action"));
+                    setResultInView(parent.getChildAt(j), Utils.getServiceId(this), intent.getStringExtra("sdk_action"));
                     if (Utils.isActive(this)) {
                         if (j < parent.getChildCount() - 1) {
                             performAction(j + 1);
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
 
     private void performAllActions() {
         Utils.setActive(true, this);
-        if (HoverIntegration.getActionsList(Utils.getOperator(this), this).length > 0)
+        if (HoverIntegration.getActionsList(Utils.getServiceId(this), this).length > 0)
             performAction(0);
     }
 
@@ -90,24 +92,8 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         });
     }
 
-    @Override
-    public void onSIMError() {
-        Toast.makeText(this, "Sim error", Toast.LENGTH_SHORT).show();
-    }
-    @Override
-    public void onSuccess(String operatorSlug, String countryName, String currency) {
-        Toast.makeText(this, "Success! " + currency, Toast.LENGTH_SHORT).show();
-        if (!Utils.getOperator(this).equals(operatorSlug)) {
-            Utils.setOperator(operatorSlug, this);
-            Utils.setCountry(countryName, this);
-            Utils.setCurrency(currency, this);
-            fillOpInfo();
-        }
-    }
-    @Override
-    public void onUserDenied() {  Toast.makeText(this, "User denied", Toast.LENGTH_SHORT).show(); }
-
     private void fillOpInfo() {
+        Log.d(TAG, "Filling op info");
         try {
             ((TextView) findViewById(R.id.operator)).setText(Utils.getOperator(this));
             ((TextView) findViewById(R.id.country)).setText(getString(R.string.country, Utils.getCountry(this), Utils.getCurrency(this)));
@@ -118,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     }
 
     private void addActions() {
-        String[] actions = HoverIntegration.getActionsList(Utils.getOperator(this), this);
+        String[] actions = HoverIntegration.getActionsList(Utils.getServiceId(this), this);
         Log.d(TAG, "Setting actions: " + actions[0]);
         ((LinearLayout) findViewById(R.id.actions)).removeAllViews();
         for (int i = 0; i < actions.length; i++)
@@ -127,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
 
     private void addActionLayout(final String name, final int num) {
         Log.d(TAG, "Adding action: " + name);
-        String opSlug = Utils.getOperator(this);
+        Integer serviceId = Utils.getServiceId(this);
         RelativeLayout view = (RelativeLayout) getLayoutInflater().inflate(R.layout.test_action, null);
         view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 72));
         view.setId(num);
@@ -135,44 +121,43 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         ((TextView) view.findViewById(R.id.name)).setText(name);
         view.findViewById(R.id.rerun).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
-                Hover.Builder hb = new Hover.Builder(MainActivity.this).request(name);
-                addExtras(hb, MainActivity.this);
-                Intent i = hb.fromAny();
+                Context c = getApplicationContext();
+                Intent i = new HoverParameters.Builder(c).request(name).
+                        from(Utils.getServiceId(c)).buildIntent();
                 startActivityForResult(i, num);
             }
         });
-        setResultInView(view, opSlug, name);
+        view.findViewById(R.id.status_icon).setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+                Context c = getApplicationContext();
+                Intent i = new Intent(c, ParsedValuesListActivity.class);
+                i.putExtra(Utils.ACTION, name);
+                startActivity(i);
+            }
+        });
+        setResultInView(view, serviceId, name);
         ((LinearLayout) findViewById(R.id.actions)).addView(view);
     }
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        logResponse(data);
-        String opSlug = Utils.getOperator(this);
+        Log.d(TAG, Integer.toString(requestCode));
+        Integer serviceId = Utils.getServiceId(this);
         View v = findViewById(requestCode);
         if (resultCode == RESULT_CANCELED) {
-            Utils.saveActionResult(opSlug, (String) v.getTag(), false, this);
-            setResultInView(v, opSlug, (String) v.getTag());
+            Utils.saveActionResult(serviceId, (String) v.getTag(), false, this);
+            setResultInView(v, serviceId, (String) v.getTag());
         } else {
-            Utils.saveActionResult(opSlug, (String) v.getTag(), false, this);
+            Utils.saveActionResult(serviceId, (String) v.getTag(), false, this);
             setIcon(v, R.drawable.circle_unknown);
         }
     }
 
-    private void logResponse(Intent data) {
-        if (data != null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (String key : data.getExtras().keySet())
-                stringBuilder.append(key).append(": ").append(data.getExtras().get(key)).append("\n");
-            Log.d(TAG, stringBuilder.toString());
-        }
-    }
-
-    private void setResultInView(View parent, String opSlug, String action) {
-        if (Utils.hasActionResult(opSlug, action, this)) {
-            ((TextView) parent.findViewById(R.id.time)).setText(Utils.getActionResultTime(opSlug, action, this));
-            if (Utils.actionResultPositive(opSlug, action, this))
+    private void setResultInView(View parent, Integer serviceId, String action) {
+        if (Utils.hasActionResult(serviceId, action, this)) {
+            ((TextView) parent.findViewById(R.id.time)).setText(Utils.getActionResultTime(serviceId, action, this));
+            if (Utils.actionResultPositive(serviceId, action, this))
                 setIcon(parent, R.drawable.circle_passes);
             else
                 setIcon(parent, R.drawable.circle_fails);
@@ -183,13 +168,15 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
         ((ImageView) parent.findViewById(R.id.status_icon)).setImageDrawable(getResources().getDrawable(drawable));
     }
 
-    private void addExtras(Hover.Builder hb, Context c) {
-        if (!Utils.getAmount(c).isEmpty()) hb.extra("amount", Utils.getAmount(c));
-        if (!Utils.getCurrency(c).isEmpty()) hb.extra("currency", Utils.getCurrency(c));
-        if (!Utils.getPhone(c).isEmpty()) hb.extra("who", Utils.getPhone(c));
-        if (!Utils.getMerchant(c).isEmpty()) hb.extra("merchant", Utils.getMerchant(c));
-        if (!Utils.getPaybill(c).isEmpty()) hb.extra("paybill", Utils.getPaybill(c));
-        if (!Utils.getPaybillAcct(c).isEmpty()) hb.extra("paybill_acct", Utils.getPaybillAcct(c));
+    private void addExtras(HoverParameters.Builder hb, Context c) {
+        hb.extra("amount", Utils.getAmount(c));
+        hb.extra("currency", Utils.getCurrency(c));
+        hb.extra("who", Utils.getPhone(c));
+        hb.extra("merchant", Utils.getMerchant(c));
+        hb.extra("paybill", Utils.getPaybill(c));
+        hb.extra("paybill_acct", Utils.getPaybillAcct(c));
+        hb.extra("recipient_nrc", Utils.getRecipientNRC(c));
+        hb.extra("withdrawal_code", Utils.getWithdrawalCode(c));
     }
 
     private void addListeners() {
@@ -233,6 +220,22 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
                 Utils.setPaybillAcct(s.toString(), getApplicationContext());
             }
         });
+        ((EditText) findViewById(R.id.recipient_nrc)).setText(Utils.getPaybillAcct(this));
+        ((EditText) findViewById(R.id.recipient_nrc)).addTextChangedListener(new TextWatcher() {
+            @Override public void afterTextChanged(Editable s) { }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Utils.setRecipientNRC(s.toString(), getApplicationContext());
+            }
+        });
+        ((EditText) findViewById(R.id.withdrawal_code)).setText(Utils.getPaybillAcct(this));
+        ((EditText) findViewById(R.id.withdrawal_code)).addTextChangedListener(new TextWatcher() {
+            @Override public void afterTextChanged(Editable s) { }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Utils.setWithdrawalCode(s.toString(), getApplicationContext());
+            }
+        });
     }
 
     public void checkPermission() {
@@ -242,6 +245,30 @@ public class MainActivity extends AppCompatActivity implements HoverIntegration.
     }
 
     private void addHoverIntegration() {
-        HoverIntegration.add(this, this);
+        HoverIntegration.add(21, Permission.NORMAL, new BasicListener(), this);;
+    }
+
+    private class BasicListener implements HoverIntegration.HoverListener {
+        public void onError(String error) {
+            Log.d(TAG, "Error: " + error);
+        };
+        public void onSIMError(String error) {
+            Log.d(TAG, "SIM Error : " + error);
+        };
+        public void onUserDenied() {
+            Log.d(TAG, "User Denied");
+        };
+        public void onSuccess(int serviceId, String serviceName, String operatorName, String countryName, String currency) {
+            Log.d(TAG, "Success");
+            Context c = getApplicationContext();
+            Toast.makeText(c, "Success! " + currency, Toast.LENGTH_SHORT).show();
+            if (!Utils.getServiceId(c).equals(serviceId)) {
+                Utils.setServiceId(serviceId, c);
+                Utils.setOperator(operatorName, c);
+                Utils.setCountry(countryName, c);
+                Utils.setCurrency(currency, c);
+                fillOpInfo();
+            }
+        };
     }
 }
