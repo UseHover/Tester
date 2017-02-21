@@ -122,8 +122,10 @@ public class MainActivity extends AppCompatActivity {
         view.findViewById(R.id.rerun).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View view) {
                 Context c = getApplicationContext();
-                Intent i = new HoverParameters.Builder(c).request(name).
-                        from(Utils.getServiceId(c)).buildIntent();
+                HoverParameters.Builder hpb = new HoverParameters.Builder(c).request(name).
+                        from(Utils.getServiceId(c));
+                addExtras(hpb, MainActivity.this);
+                Intent i = hpb.buildIntent();
                 startActivityForResult(i, num);
             }
         });
