@@ -42,6 +42,30 @@
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <EditText android:id="@+id/recipient_nrc"
+                android:hint="@string/hint_recipient_nrc"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText android:id="@+id/withdrawal_code"
+                android:hint="@string/hint_withdrawal_Code"
+                android:textColor="?attr/colorPrimaryDark"
+                android:textSize="14sp"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
             <EditText android:id="@+id/merchant"
                       android:hint="@string/hint_biz"
                       android:textColor="?attr/colorPrimaryDark"

@@ -2,6 +2,8 @@ package com.hover.tester;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,28 +11,33 @@ import java.util.TimeZone;
 
 public class Utils {
 	public static final String TAG = "Utils", OPERATOR = "operator_slug", ACTION = "action", ACTIVE = "active",
-						COUNTRY = "country", CURRENCY = "currency",
+						COUNTRY = "country", CURRENCY = "currency", SERVICE = "service_id",
 						AMOUNT = "amount", PHONE = "phone", MERCHANT = "merchant",
-						PAYBILL = "paybill", PAYBILL_ACCT = "paybill_acct";
+						PAYBILL = "paybill", PAYBILL_ACCT = "paybill_acct",
+						RECIPIENT_NRC = "recipient_nrc", WITHDRAWAL_CODE = "withdrawal_code";
+
+	public static final String[] parsableValues = new String[]{ "code", "currency", "balance",
+			"amount", "who" };
 
 	public static SharedPreferences getSharedPrefs(Context context) {
 		return context.getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_MULTI_PROCESS);
 	}
 
-	public static boolean hasActionResult(String opSlug, String actionName, Context c) {
-		return Utils.getSharedPrefs(c).contains(opSlug + actionName + "_result");
+	public static boolean hasActionResult(Integer serviceId, String actionName, Context c) {
+		return Utils.getSharedPrefs(c).contains(serviceId + actionName + "_result");
 	}
-	public static void saveActionResult(String opSlug, String actionName, boolean value, Context c) {
+	public static void saveActionResult(Integer serviceId, String actionName, boolean value, Context c) {
+		Log.d(TAG, "saveActionResult: " + serviceId + actionName + "_time");
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putBoolean(opSlug + actionName + "_result", value);
-		editor.putLong(opSlug + actionName + "_time", now());
+		editor.putBoolean(serviceId + actionName + "_result", value);
+		editor.putLong(serviceId + actionName + "_time", now());
 		editor.commit();
 	}
-	public static boolean actionResultPositive(String opSlug, String actionName, Context c) {
-		return Utils.getSharedPrefs(c).getBoolean(opSlug + actionName + "_result", false);
+	public static boolean actionResultPositive(Integer serviceId, String actionName, Context c) {
+		return Utils.getSharedPrefs(c).getBoolean(serviceId + actionName + "_result", false);
 	}
-	public static String getActionResultTime(String opSlug, String actionName, Context c) {
-		return convertTimestampToISO(Utils.getSharedPrefs(c).getLong(opSlug + actionName + "_time", 0));
+	public static String getActionResultTime(Integer serviceId, String actionName, Context c) {
+		return shortDateFormatTimestamp(Utils.getSharedPrefs(c).getLong(serviceId + actionName + "_time", 0));
 	}
 
 	public static long now() {
@@ -38,6 +45,12 @@ public class Utils {
 	}
 	public static String convertTimestampToISO(long timestamp) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'+00:00'");
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+		return sdf.format(new Date(timestamp)); // *1000L ?
+	}
+
+	public static String shortDateFormatTimestamp(long timestamp) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm");
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return sdf.format(new Date(timestamp)); // *1000L ?
 	}
@@ -55,6 +68,13 @@ public class Utils {
 		editor.commit();
 	}
 	public static String getOperator(Context c) { return Utils.getSharedPrefs(c).getString(OPERATOR, ""); }
+
+	public static void setServiceId(Integer serviceId, Context c) {
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putInt(SERVICE, serviceId);
+		editor.commit();
+	}
+	public static Integer getServiceId(Context c) { return Utils.getSharedPrefs(c).getInt(SERVICE, 0); }
 
 	public static void setCountry(String value, Context c) {
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
@@ -104,4 +124,33 @@ public class Utils {
 		editor.commit();
 	}
 	public static String getPaybillAcct(Context c) { return Utils.getSharedPrefs(c).getString(PAYBILL_ACCT, ""); }
+
+	public static void setRecipientNRC(String value, Context c) {
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putString(RECIPIENT_NRC, value);
+		editor.commit();
+	}
+	public static String getRecipientNRC(Context c) { return Utils.getSharedPrefs(c).getString(RECIPIENT_NRC, ""); }
+
+	public static void setWithdrawalCode(String value, Context c) {
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putString(WITHDRAWAL_CODE, value);
+		editor.commit();
+	}
+	public static String getWithdrawalCode(Context c) { return Utils.getSharedPrefs(c).getString(WITHDRAWAL_CODE, ""); }
+
+	public static void storeParsedValues(Bundle extras, Context c) {
+		String operatorName = getOperator(c);
+		String actionName = extras.getString(ACTION);
+		String prefix = operatorName + "_" + actionName + "_";
+
+		for (int i = 0; i < parsableValues.length; i++) {
+			String val = extras.getString(parsableValues[i]);
+			SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+			editor.putString(prefix + parsableValues[i], val);
+			editor.commit();
+			Log.d(TAG, "Stored " + prefix + parsableValues[i] + ": " + val);
+		}
+
+	}
 }

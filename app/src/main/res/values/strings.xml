@@ -6,6 +6,8 @@
     <string name="hint_amount">Send Amount</string>
     <string name="default_amount">10</string>
     <string name="hint_recip">Phone Recipient</string>
+    <string name="hint_recipient_nrc">Recipient NRC</string>
+    <string name="hint_withdrawal_Code">Secret Withdrawal Code</string>
     <string name="hint_biz">Merchant Recipient</string>
     <string name="hint_bill">Pay Bill Recipient</string>
     <string name="hint_acct">Pay Bill Account</string>
