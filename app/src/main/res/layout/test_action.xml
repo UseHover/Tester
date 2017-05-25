@@ -1,42 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="72dp"
-    android:layout_centerVertical="true">
-
-    <ImageView android:id="@+id/status_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:gravity="center"
-        android:src="@drawable/circle_untested"/>
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical|start">
 
     <TextView android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toEndOf="@+id/status_icon"
-        android:gravity="center"
-        android:paddingStart="16dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:paddingEnd="16dp"
-        android:textSize="16sp"
-        android:text="balance"/>
+        android:textAlignment="textStart"
+        android:textSize="18sp"
+        android:textColor="@color/light_black"
+        android:text="Balance"/>
 
     <TextView android:id="@+id/time"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toStartOf="@+id/rerun"
-        android:gravity="center"
+        android:layout_height="wrap_content"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:text=""/>
 
-    <ImageButton android:id="@+id/rerun"
+    <ImageView android:id="@+id/status_icon"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentEnd="true"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_refresh"/>
+        android:src="@drawable/circle_untested"/>
 
-</RelativeLayout>
+</LinearLayout>

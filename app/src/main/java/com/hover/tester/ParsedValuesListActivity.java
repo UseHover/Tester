@@ -21,7 +21,7 @@ public class ParsedValuesListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parsed_values_list);
 
-        String operatorName = Utils.getOperator(getApplicationContext());
+        String operatorName = new OperatorService(getApplicationContext()).mName;
         String actionName = getIntent().getStringExtra(Utils.ACTION);
         String prefix = operatorName + "_" + actionName + "_";
 

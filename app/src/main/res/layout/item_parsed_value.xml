@@ -7,14 +7,16 @@
         android:id="@+id/parsedValueLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/light_black"
         android:text="Label"
         android:layout_marginBottom="2dp" />
     <TextView
         android:id="@+id/parsedValueContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/light_black"
         android:text="Content"
-        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textSize="16sp"
         android:layout_marginBottom="5dp" />
 
 </LinearLayout>

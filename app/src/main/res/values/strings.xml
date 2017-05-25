@@ -2,6 +2,11 @@
     <string name="app_name">Hover Tester</string>
     <string name="action_settings">Settings</string>
 
+    <string name="add_integration">Add an Integration</string>
+    <string name="change_integration">Change Integration</string>
+
+    <string name="never">never run</string>
+
     <string name="country">%1$s (%2$s)</string>
     <string name="hint_amount">Send Amount</string>
     <string name="default_amount">10</string>

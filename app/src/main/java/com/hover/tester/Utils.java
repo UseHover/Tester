@@ -62,33 +62,7 @@ public class Utils {
 	}
 	public static Boolean isActive(Context c) { return Utils.getSharedPrefs(c).getBoolean(ACTIVE, false); }
 
-	public static void setOperator(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(OPERATOR, value);
-		editor.commit();
-	}
-	public static String getOperator(Context c) { return Utils.getSharedPrefs(c).getString(OPERATOR, ""); }
 
-	public static void setServiceId(Integer serviceId, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putInt(SERVICE, serviceId);
-		editor.commit();
-	}
-	public static Integer getServiceId(Context c) { return Utils.getSharedPrefs(c).getInt(SERVICE, 0); }
-
-	public static void setCountry(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(COUNTRY, value);
-		editor.commit();
-	}
-	public static String getCountry(Context c) { return Utils.getSharedPrefs(c).getString(COUNTRY, ""); }
-
-	public static void setCurrency(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(CURRENCY, value);
-		editor.commit();
-	}
-	public static String getCurrency(Context c) { return Utils.getSharedPrefs(c).getString(CURRENCY, ""); }
 
 	public static void setAmount(String value, Context c) {
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
@@ -140,17 +114,17 @@ public class Utils {
 	public static String getWithdrawalCode(Context c) { return Utils.getSharedPrefs(c).getString(WITHDRAWAL_CODE, ""); }
 
 	public static void storeParsedValues(Bundle extras, Context c) {
-		String operatorName = getOperator(c);
-		String actionName = extras.getString(ACTION);
-		String prefix = operatorName + "_" + actionName + "_";
-
-		for (int i = 0; i < parsableValues.length; i++) {
-			String val = extras.getString(parsableValues[i]);
-			SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-			editor.putString(prefix + parsableValues[i], val);
-			editor.commit();
-			Log.d(TAG, "Stored " + prefix + parsableValues[i] + ": " + val);
-		}
+//		String operatorName = getOperator(c);
+//		String actionName = extras.getString(ACTION);
+//		String prefix = operatorName + "_" + actionName + "_";
+//
+//		for (int i = 0; i < parsableValues.length; i++) {
+//			String val = extras.getString(parsableValues[i]);
+//			SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+//			editor.putString(prefix + parsableValues[i], val);
+//			editor.commit();
+//			Log.d(TAG, "Stored " + prefix + parsableValues[i] + ": " + val);
+//		}
 
 	}
 }
