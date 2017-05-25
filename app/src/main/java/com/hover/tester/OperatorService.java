@@ -17,12 +17,12 @@ public class OperatorService {
 	public static final String TAG = "OperatorService", ID = "service_id", SLUG = "service_slug",
 			NAME = "service_name", COUNTRY = "country", CURRENCY = "currency", ACTION_LIST = "service_actions";
 
-	public int id;
+	public int mId;
 	public String mName, mSlug, mCountryIso, mCurrencyIso;
 	public List<OperatorAction> mActions;
 
 	public OperatorService(Intent data, Context c) {
-		id = data.getIntExtra("serviceId", -1);
+		mId = data.getIntExtra("serviceId", -1);
 		mSlug = data.getStringExtra("opSlug");
 		mName = data.getStringExtra("opSlug");
 		mCountryIso = data.getStringExtra("countryName");
@@ -33,7 +33,7 @@ public class OperatorService {
 
 	public OperatorService(Context c) {
 		SharedPreferences db = Utils.getSharedPrefs(c);
-		id = db.getInt(ID, -1);
+		mId = db.getInt(ID, -1);
 		mName = db.getString(NAME, "");
 		mSlug = db.getString(SLUG, "");
 		mCountryIso = db.getString(COUNTRY, "");
@@ -45,12 +45,12 @@ public class OperatorService {
 	}
 
 	private List<OperatorAction> getActionsFromSdk(Context c) {
-		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(id, c);
+		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(mId, c);
 		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
 		Log.e(TAG, "Adding actions from list. json: " + jsonActions);
 		try {
-			for (int a = 0; a < jsonActions.length(); a++)
-				actions.add(new OperatorAction(jsonActions.getJSONObject(a), mSlug));
+			for (int a = 0; a < jsonActions. length(); a++)
+				actions.add(new OperatorAction(jsonActions.getJSONObject(a), mId));
 		} catch (JSONException e) { Log.e(TAG, "Exception processing actions from json", e); }
 		return actions;
 	}
@@ -60,14 +60,14 @@ public class OperatorService {
 		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
 		try {
 			for (int a = 0; a < jsonActions.length(); a++)
-				actions.add(new OperatorAction(jsonActions.getString(a), mSlug, c));
+				actions.add(new OperatorAction(jsonActions.getString(a), mId, c));
 		} catch (JSONException e) { Log.e(TAG, "Exception processing actions from shared prefs", e); }
 		return actions;
 	}
 
 	private void save(Context c) {
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putInt(ID, id);
+		editor.putInt(ID, mId);
 		editor.putString(SLUG, mSlug);
 		editor.putString(NAME, mName);
 		editor.putString(COUNTRY, mCountryIso);

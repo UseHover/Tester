@@ -4,11 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -20,6 +16,7 @@ import io.fabric.sdk.android.Fabric;
 public class MainActivity extends AppCompatActivity implements ActionListFragment.OnListFragmentInteractionListener {
     public final static String TAG = "MainActivity";
     private final int INTEGRATE_REQUEST = 111;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements ActionListFragmen
 
         setContentView(R.layout.activity_main);
         setUpToolbar();
+        if (findViewById(R.id.detail_container) != null)
+            mTwoPane = true;
     }
 
     private void setUpToolbar() {
@@ -70,17 +69,20 @@ public class MainActivity extends AppCompatActivity implements ActionListFragmen
 
     @Override
     public void onListFragmentInteraction(OperatorAction act) {
-
-    }
-
-    private void addListeners() {
-        ((EditText) findViewById(R.id.amount)).setText(Utils.getAmount(this));
-        ((EditText) findViewById(R.id.amount)).addTextChangedListener(new TextWatcher() {
-            @Override public void afterTextChanged(Editable s) { }
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Utils.setAmount(s.toString(), getApplicationContext());
-            }
-        });
+        if (mTwoPane) {
+            Bundle arguments = new Bundle();
+            arguments.putString(OperatorAction.SLUG, act.mSlug);
+            arguments.putInt(OperatorService.ID, act.mOpId);
+            ActionDetailFragment fragment = new ActionDetailFragment();
+            fragment.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container, fragment)
+                    .commit();
+        } else {
+            Intent intent = new Intent(this, ActionDetailActivity.class);
+            intent.putExtra(OperatorAction.SLUG, act.mSlug);
+            intent.putExtra(OperatorService.ID, act.mOpId);
+            startActivity(intent);
+        }
     }
 }

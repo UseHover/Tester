@@ -30,4 +30,6 @@
         android:gravity="center"
         android:src="@drawable/circle_untested"/>
 
+    <!--android:textAppearance="?attr/textAppearanceListItem"-->
+
 </LinearLayout>

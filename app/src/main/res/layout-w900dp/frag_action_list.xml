@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginLeft="16dp"
+              android:layout_marginRight="16dp"
+              android:baselineAligned="false"
+              android:divider="?android:attr/dividerHorizontal"
+              android:orientation="horizontal"
+              android:showDividers="middle"
+              tools:context="com.hover.tester.MainActivity">
+
+    <LinearLayout android:layout_width="@dimen/item_width"
+                  android:layout_height="wrap_content"
+                  android:padding="@dimen/standard_padding"
+                  android:orientation="vertical">
+
+        <LinearLayout android:id="@+id/actions_section"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:text="@string/detected_actions"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list"
+                android:name="com.hover.tester.ActionListFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="LinearLayoutManager"
+                tools:context="com.hover.tester.ActionListFragment"
+                tools:listitem="@layout/test_action"/>
+
+        </LinearLayout>
+
+        <Button android:id="@+id/add_integration_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_integration"
+                android:onClick="addIntegration"/>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/detail_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"/>
+
+</LinearLayout>

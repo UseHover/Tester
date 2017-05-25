@@ -2,6 +2,7 @@ package com.hover.tester;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,13 +16,14 @@ public class OperatorAction {
 			VARIABLE = "action_variable", VARIABLES = "action_variables";
 	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1;
 
-	public String mName, mSlug, mOpSlug;
+	public String mName, mSlug;
 	public HashMap<String, String> mVariables;
 	public Long mLastRunTime = 0L;
-	public int mStatus = STATUS_UNTESTED;
+	public int mOpId, mStatus = STATUS_UNTESTED;
 
-	public OperatorAction(JSONObject jsonAct, String opSlug) throws JSONException {
-		mOpSlug = opSlug;
+	public OperatorAction(JSONObject jsonAct, int opId) throws JSONException {
+		Log.e(TAG, "Building action");
+		mOpId = opId;
 		mSlug = jsonAct.getString("slug");
 		mName = jsonAct.getString("name");
 		JSONArray variables = jsonAct.getJSONArray("variables");
@@ -30,8 +32,9 @@ public class OperatorAction {
 			mVariables.put(variables.getString(v), "");
 	}
 
-	public OperatorAction(String slug, String opSlug, Context c) throws JSONException {
-		mOpSlug = opSlug;
+	public OperatorAction(String slug, int opId, Context c) throws JSONException {
+		Log.e(TAG, "Loading action");
+		mOpId = opId;
 		mSlug = slug;
 		mName = Utils.getSharedPrefs(c).getString(getPrefix() + NAME, "");
 		mStatus = Utils.getSharedPrefs(c).getInt(getPrefix() + STATUS, -1);
@@ -40,7 +43,7 @@ public class OperatorAction {
 		JSONArray variableNames = getVariableNames(c);
 		mVariables = new HashMap<>(variableNames.length());
 		for (int v = 0; v < variableNames.length(); v++)
-			mVariables.put(getVariable(c, variableNames.getString(v)), "");
+			mVariables.put(variableNames.getString(v), getVariable(c, variableNames.getString(v)));
 	}
 
 	public void save(Context c) {
@@ -54,6 +57,11 @@ public class OperatorAction {
 		editor.commit();
 	}
 
+	public void saveVariableValue(Context context, String name, String value) {
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(context).edit();
+		editor.putString(getPrefix() + VARIABLE + name, value);
+		editor.commit();
+	}
 	public String getVariable(Context context, String name) {
 		return Utils.getSharedPrefs(context).getString(getPrefix() + VARIABLE + name, "");
 	}
@@ -72,7 +80,7 @@ public class OperatorAction {
 		try {
 			JSONArray new_variables = getVariableNames(context);
 			new_variables.put(value);
-			editor.putString(VARIABLES, new_variables.toString());
+			editor.putString(getPrefix() + VARIABLES, new_variables.toString());
 		} catch (Exception e) {}
 	}
 
@@ -81,6 +89,6 @@ public class OperatorAction {
 	}
 
 	private String getPrefix() {
-		return mOpSlug + "_" + mSlug + "_";
+		return mOpId + "_" + mSlug + "_";
 	}
 }

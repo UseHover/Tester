@@ -11,14 +11,14 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="false"
         android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/AppTheme.PopupOverlay">
 
             </android.support.v7.widget.Toolbar>
@@ -33,10 +33,12 @@
         tools:context="com.hover.tester.MainActivity">
 
         <fragment android:name="com.hover.tester.ActionListFragment"
-            tools:layout="@layout/fragment_action_list"
+            tools:layout="@layout/frag_action_list"
             android:id="@+id/action_list_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <!--<include layout="@layout/frag_action_list"/>-->
 
     </android.support.v4.widget.NestedScrollView>
 
