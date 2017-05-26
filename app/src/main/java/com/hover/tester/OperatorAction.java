@@ -1,6 +1,7 @@
 package com.hover.tester;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -12,17 +13,17 @@ import java.util.HashMap;
 
 public class OperatorAction {
 	public static final String TAG = "OperatorAction", NAME = "action_name", SLUG = "action_slug",
-		STATUS = "action_status", TIMESTAMP = "action_timestamp",
-			VARIABLE = "action_variable", VARIABLES = "action_variables";
-	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1;
+		STATUS = "action_status", TIMESTAMP = "action_timestamp", RESULT = "response_message", NEG_RESULT = "result",
+			VARIABLE = "action_variable", VARIABLES = "action_variables", RESULT_TIMESTAMP = "response_timestamp";
+	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1, STATUS_UNKNOWN = 2;
 
-	public String mName, mSlug;
+	public String mName, mSlug, mLastResult;
 	public HashMap<String, String> mVariables;
 	public Long mLastRunTime = 0L;
 	public int mOpId, mStatus = STATUS_UNTESTED;
 
 	public OperatorAction(JSONObject jsonAct, int opId) throws JSONException {
-		Log.e(TAG, "Building action");
+		Log.e(TAG, "Building action: " + jsonAct);
 		mOpId = opId;
 		mSlug = jsonAct.getString("slug");
 		mName = jsonAct.getString("name");
@@ -33,12 +34,13 @@ public class OperatorAction {
 	}
 
 	public OperatorAction(String slug, int opId, Context c) throws JSONException {
-		Log.e(TAG, "Loading action");
+		Log.e(TAG, "Loading action: " + slug);
 		mOpId = opId;
 		mSlug = slug;
 		mName = Utils.getSharedPrefs(c).getString(getPrefix() + NAME, "");
 		mStatus = Utils.getSharedPrefs(c).getInt(getPrefix() + STATUS, -1);
 		mLastRunTime = Utils.getSharedPrefs(c).getLong(getPrefix() + TIMESTAMP, 0L);
+		mLastResult = Utils.getSharedPrefs(c).getString(getPrefix() + RESULT, "");
 
 		JSONArray variableNames = getVariableNames(c);
 		mVariables = new HashMap<>(variableNames.length());
@@ -47,6 +49,7 @@ public class OperatorAction {
 	}
 
 	public void save(Context c) {
+		Log.e(TAG, "Saving action: " + mSlug);
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
 		editor.putString(getPrefix() + NAME, mName);
 		editor.putString(getPrefix() + SLUG, mSlug);
@@ -57,7 +60,47 @@ public class OperatorAction {
 		editor.commit();
 	}
 
+	public static void saveWaitingResult(Intent data, Context c) {
+		int opId = data.getIntExtra(Utils.SERVICE, 0);
+		String slug = data.getStringExtra(Utils.ACTION);
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putInt(getPrefix(opId, slug) + STATUS, STATUS_UNKNOWN);
+		if (data.hasExtra(RESULT_TIMESTAMP))
+			editor.putLong(getPrefix(opId, slug) + TIMESTAMP, data.getLongExtra(RESULT_TIMESTAMP, 0L));
+		else
+			editor.putLong(getPrefix(opId, slug) + TIMESTAMP, Utils.now());
+		editor.putString(getPrefix(opId, slug) + RESULT, data.getStringExtra(RESULT));
+		editor.commit();
+	}
+
+	public static void savePositiveResult(Intent data, Context c) {
+		int opId = data.getIntExtra(Utils.SERVICE, 0);
+		String slug = data.getStringExtra(Utils.ACTION);
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putInt(getPrefix(opId, slug) + STATUS, STATUS_SUCCEEDED);
+		if (data.hasExtra(RESULT_TIMESTAMP))
+			editor.putLong(getPrefix(opId, slug) + TIMESTAMP, data.getLongExtra(RESULT_TIMESTAMP, 0L));
+		else
+			editor.putLong(getPrefix(opId, slug) + TIMESTAMP, Utils.now());
+		editor.putString(getPrefix(opId, slug) + RESULT, data.getStringExtra(RESULT));
+		editor.commit();
+	}
+
+	public static void saveNegativeResult(Intent data, Context c) {
+		int opId = data.getIntExtra(Utils.SERVICE, 0);
+		String slug = data.getStringExtra(Utils.ACTION);
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putInt(getPrefix(opId, slug) + STATUS, STATUS_FAILED);
+		if (data.hasExtra(RESULT_TIMESTAMP))
+			editor.putLong(getPrefix(opId, slug) + TIMESTAMP, data.getLongExtra(RESULT_TIMESTAMP, 0L));
+		else
+			editor.putLong(getPrefix(opId, slug) + TIMESTAMP, Utils.now());
+		editor.putString(getPrefix(opId, slug) + RESULT, data.getStringExtra(NEG_RESULT));
+		editor.commit();
+	}
+
 	public void saveVariableValue(Context context, String name, String value) {
+		mVariables.put(name, value);
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(context).edit();
 		editor.putString(getPrefix() + VARIABLE + name, value);
 		editor.commit();
@@ -84,11 +127,10 @@ public class OperatorAction {
 		} catch (Exception e) {}
 	}
 
-	public boolean exists(String opName, String slug) {
-		return false;
-	}
-
 	private String getPrefix() {
 		return mOpId + "_" + mSlug + "_";
+	}
+	private static String getPrefix(int opId, String slug) {
+		return opId + "_" + slug + "_";
 	}
 }

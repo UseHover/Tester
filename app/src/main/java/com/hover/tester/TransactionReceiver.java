@@ -11,14 +11,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.d(TAG, "Transaction received. Op: " + i.getStringExtra(Utils.OPERATOR) + ", Action: " + i.getStringExtra(Utils.ACTION));
-		Utils.saveActionResult(i.getIntExtra(Utils.SERVICE, 0), i.getStringExtra(Utils.ACTION), true, context);
-		Utils.storeParsedValues(i.getExtras(), context);
-
-		Intent intent = new Intent();
-		intent.putExtra("sdk_action", i.getStringExtra(Utils.ACTION));
-		intent.setClass(context, MainActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		context.startActivity(intent);
+		Log.e(TAG, "Transaction received. Op: " + i.getStringExtra(Utils.OPERATOR) + ", Action: " + i.getStringExtra(Utils.ACTION));
+		OperatorAction.savePositiveResult(i, context);
 	}
 }

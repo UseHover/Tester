@@ -16,8 +16,7 @@ public class Utils {
 						PAYBILL = "paybill", PAYBILL_ACCT = "paybill_acct",
 						RECIPIENT_NRC = "recipient_nrc", WITHDRAWAL_CODE = "withdrawal_code";
 
-	public static final String[] parsableValues = new String[]{ "code", "currency", "balance",
-			"amount", "who" };
+	public static final String[] parsableValues = new String[]{ "code", "currency", "balance", "amount", "who" };
 
 	public static SharedPreferences getSharedPrefs(Context context) {
 		return context.getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_MULTI_PROCESS);
@@ -54,64 +53,6 @@ public class Utils {
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return sdf.format(new Date(timestamp)); // *1000L ?
 	}
-
-	public static void setActive(boolean value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putBoolean(ACTIVE, value);
-		editor.commit();
-	}
-	public static Boolean isActive(Context c) { return Utils.getSharedPrefs(c).getBoolean(ACTIVE, false); }
-
-
-
-	public static void setAmount(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(AMOUNT, value);
-		editor.commit();
-	}
-	public static String getAmount(Context c) { return Utils.getSharedPrefs(c).getString(AMOUNT, ""); }
-
-	public static void setPhone(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(PHONE, value);
-		editor.commit();
-	}
-	public static String getPhone(Context c) { return Utils.getSharedPrefs(c).getString(PHONE, ""); }
-
-	public static void setMerchant(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(MERCHANT, value);
-		editor.commit();
-	}
-	public static String getMerchant(Context c) { return Utils.getSharedPrefs(c).getString(MERCHANT, ""); }
-
-	public static void setPaybill(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(PAYBILL, value);
-		editor.commit();
-	}
-	public static String getPaybill(Context c) { return Utils.getSharedPrefs(c).getString(PAYBILL, ""); }
-
-	public static void setPaybillAcct(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(PAYBILL_ACCT, value);
-		editor.commit();
-	}
-	public static String getPaybillAcct(Context c) { return Utils.getSharedPrefs(c).getString(PAYBILL_ACCT, ""); }
-
-	public static void setRecipientNRC(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(RECIPIENT_NRC, value);
-		editor.commit();
-	}
-	public static String getRecipientNRC(Context c) { return Utils.getSharedPrefs(c).getString(RECIPIENT_NRC, ""); }
-
-	public static void setWithdrawalCode(String value, Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(WITHDRAWAL_CODE, value);
-		editor.commit();
-	}
-	public static String getWithdrawalCode(Context c) { return Utils.getSharedPrefs(c).getString(WITHDRAWAL_CODE, ""); }
 
 	public static void storeParsedValues(Bundle extras, Context c) {
 //		String operatorName = getOperator(c);

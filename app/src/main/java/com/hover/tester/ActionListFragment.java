@@ -48,7 +48,7 @@ public class ActionListFragment extends Fragment {
 		((RecyclerView) view.findViewById(R.id.list)).swapAdapter(mAdapter, true);
 		showActions(view);
 		if (isAdded())
-			((MainActivity) getActivity()).setToolbarTitle(mOpService);
+			((ActionListActivity) getActivity()).setToolbarTitle(mOpService);
 	}
 
 	private void showActions(View view) {

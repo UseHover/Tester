@@ -38,18 +38,19 @@ public class OperatorService {
 		mSlug = db.getString(SLUG, "");
 		mCountryIso = db.getString(COUNTRY, "");
 		mCurrencyIso = db.getString(CURRENCY, "");
-//		getSavedActions(c);
-		mActions = getActionsFromSdk(c);
-		if (mActions.size() > 0 && mActions.size() != getSavedActions(c).size())
+		mActions = getSavedActions(c);
+		if (mActions.size() == 0 || mActions.size() != getActionsFromSdk(c).size()) {
+			mActions = getActionsFromSdk(c);
 			saveActions(null, c);
+		}
 	}
 
 	private List<OperatorAction> getActionsFromSdk(Context c) {
 		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(mId, c);
 		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
-		Log.e(TAG, "Adding actions from list. json: " + jsonActions);
+		Log.e(TAG, "Adding actions from json: " + jsonActions);
 		try {
-			for (int a = 0; a < jsonActions. length(); a++)
+			for (int a = 0; a < jsonActions.length(); a++)
 				actions.add(new OperatorAction(jsonActions.getJSONObject(a), mId));
 		} catch (JSONException e) { Log.e(TAG, "Exception processing actions from json", e); }
 		return actions;
@@ -57,6 +58,7 @@ public class OperatorService {
 
 	private List<OperatorAction> getSavedActions(Context c) {
 		JSONArray jsonActions = getActionList(c);
+		Log.e(TAG, "Adding actions from db: " + jsonActions);
 		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
 		try {
 			for (int a = 0; a < jsonActions.length(); a++)
@@ -77,7 +79,10 @@ public class OperatorService {
 	}
 
 	private void saveActions(SharedPreferences.Editor editor, Context c) {
+		Log.e(TAG, "Saving Actions");
 		if (editor == null) editor = Utils.getSharedPrefs(c).edit();
+		editor.putString(ACTION_LIST, "[]");
+		editor.commit();
 		for (OperatorAction opAction: mActions) {
 			addAction(opAction.mSlug, c, editor);
 			opAction.save(c);
@@ -99,6 +104,7 @@ public class OperatorService {
 			JSONArray new_actions = getActionList(context);
 			new_actions.put(value);
 			editor.putString(ACTION_LIST, new_actions.toString());
+			editor.commit();
 		} catch (Exception e) {}
 	}
 }

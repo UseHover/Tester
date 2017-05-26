@@ -40,6 +40,7 @@ public class ActionRecyclerViewAdapter extends RecyclerView.Adapter<ActionRecycl
 		switch (holder.mAction.mStatus) {
 			case 0: holder.mStatusView.setImageResource(R.drawable.circle_fails); break;
 			case 1: holder.mStatusView.setImageResource(R.drawable.circle_passes); break;
+			case 2: holder.mStatusView.setImageResource(R.drawable.circle_unknown); break;
 			case -1:
 			default:
 				holder.mStatusView.setImageResource(R.drawable.circle_untested);

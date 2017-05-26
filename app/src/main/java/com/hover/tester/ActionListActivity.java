@@ -13,8 +13,8 @@ import com.hover.sdk.operators.Permission;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements ActionListFragment.OnListFragmentInteractionListener {
-    public final static String TAG = "MainActivity";
+public class ActionListActivity extends AppCompatActivity implements ActionListFragment.OnListFragmentInteractionListener {
+    public final static String TAG = "ActionListActivity";
     private final int INTEGRATE_REQUEST = 111;
     private boolean mTwoPane;
 
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements ActionListFragmen
 
     public void addIntegration(View view) {
         Intent integrationIntent = new Intent(this, HoverIntegrationActivity.class);
-        integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { 1, 4 });
+        integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { 17 });
         integrationIntent.putExtra(HoverIntegrationActivity.PERM_LEVEL, Permission.NORMAL);
         startActivityForResult(integrationIntent, INTEGRATE_REQUEST);
     }
@@ -52,14 +52,7 @@ public class MainActivity extends AppCompatActivity implements ActionListFragmen
         if (requestCode == INTEGRATE_REQUEST && resultCode == RESULT_OK)
             onIntegrateSuccess(data);
         else if (requestCode == INTEGRATE_REQUEST)
-            Toast.makeText(this, data.getStringExtra("error"), Toast.LENGTH_SHORT).show();
-//        else if (resultCode == RESULT_CANCELED) {
-//            Utils.saveActionResult(serviceId, (String) v.getTag(), false, this);
-//            setResultInView(v, serviceId, (String) v.getTag());
-//        } else {
-//            Utils.saveActionResult(serviceId, (String) v.getTag(), false, this);
-//            setIcon(v, R.drawable.circle_unknown);
-//        }
+            Toast.makeText(this, data.getStringExtra("result"), Toast.LENGTH_SHORT).show();
     }
 
     public void onIntegrateSuccess(Intent data) {
