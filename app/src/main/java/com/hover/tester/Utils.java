@@ -54,6 +54,20 @@ public class Utils {
 		return sdf.format(new Date(timestamp)); // *1000L ?
 	}
 
+	public static int[] getIdListFromString(String fromDb) {
+		if (fromDb == null) return new int[0];
+		String[] s = fromDb.split(",");
+		int[] numbers = new int[s.length];
+		for (int curr = 0; curr < s.length; curr++)
+			numbers[curr] = Integer.parseInt(s[curr]);
+		return numbers;
+	}
+
+	public static String[] getListFromString(String fromDb) {
+		if (fromDb == null) return null;
+		return fromDb.split(",");
+	}
+
 	public static void storeParsedValues(Bundle extras, Context c) {
 //		String operatorName = getOperator(c);
 //		String actionName = extras.getString(ACTION);

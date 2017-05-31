@@ -1,11 +1,10 @@
-package com.hover.tester;
+package com.hover.tester.detail;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +13,12 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.hover.sdk.main.HoverParameters;
+import com.hover.tester.ActionResult;
+import com.hover.tester.list.ActionListActivity;
+import com.hover.tester.OperatorAction;
+import com.hover.tester.OperatorService;
+import com.hover.tester.R;
+import com.hover.tester.Utils;
 
 import java.util.HashMap;
 
@@ -52,36 +57,25 @@ public class ActionDetailActivity extends AppCompatActivity {
 			OperatorAction action = frag.mAction;
 			HoverParameters.Builder hpb = new HoverParameters.Builder(ActionDetailActivity.this)
 					.request(action.mSlug).from(action.mOpId);
-			addExtras(hpb, action, ActionDetailActivity.this);
+			frag.addAndSaveExtras(hpb);
 			startActivityForResult(hpb.buildIntent(), 0);
-		}
-	}
-
-	private void addExtras(HoverParameters.Builder hpb, OperatorAction act, Context c) {
-		for (HashMap.Entry<String, String> variable : act.mVariables.entrySet()) {
-			Log.e(TAG, "Adding Extra: " + variable.getKey() + ": " + variable.getValue());
-			hpb.extra(variable.getKey(), variable.getValue());
-			if (variable.getKey().equals("amount"))
-				hpb.extra("currency", Utils.getSharedPrefs(c).getString(OperatorService.CURRENCY, ""));
 		}
 	}
 
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK)
-			OperatorAction.saveWaitingResult(data, this);
-		else
-			OperatorAction.saveNegativeResult(data, this);
 		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container);
-		if (frag != null) frag.showResult(resultCode, data);
+		if (frag != null) {
+			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
+			frag.showResult(resultCode, data);
+		}
 	}
 
 	private void restoreFrag(Bundle savedInstanceState) {
 		if (savedInstanceState == null) {
 			Bundle args = new Bundle();
-			args.putString(OperatorAction.SLUG, getIntent().getStringExtra(OperatorAction.SLUG));
-			args.putInt(OperatorService.ID, getIntent().getIntExtra(OperatorService.ID, -1));
+			args.putInt(OperatorAction.ID, getIntent().getIntExtra(OperatorAction.ID, 1));
 
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);

@@ -38,11 +38,7 @@ public class OperatorService {
 		mSlug = db.getString(SLUG, "");
 		mCountryIso = db.getString(COUNTRY, "");
 		mCurrencyIso = db.getString(CURRENCY, "");
-		mActions = getSavedActions(c);
-		if (mActions.size() == 0 || mActions.size() != getActionsFromSdk(c).size()) {
-			mActions = getActionsFromSdk(c);
-			saveActions(null, c);
-		}
+		mActions = getActionsFromSdk(c);
 	}
 
 	private List<OperatorAction> getActionsFromSdk(Context c) {
@@ -56,55 +52,25 @@ public class OperatorService {
 		return actions;
 	}
 
-	private List<OperatorAction> getSavedActions(Context c) {
-		JSONArray jsonActions = getActionList(c);
-		Log.e(TAG, "Adding actions from db: " + jsonActions);
-		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
-		try {
-			for (int a = 0; a < jsonActions.length(); a++)
-				actions.add(new OperatorAction(jsonActions.getString(a), mId, c));
-		} catch (JSONException e) { Log.e(TAG, "Exception processing actions from shared prefs", e); }
-		return actions;
-	}
-
-	private void save(Context c) {
+	public OperatorService save(Context c) {
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
 		editor.putInt(ID, mId);
 		editor.putString(SLUG, mSlug);
 		editor.putString(NAME, mName);
 		editor.putString(COUNTRY, mCountryIso);
 		editor.putString(CURRENCY, mCurrencyIso);
-		saveActions(editor, c);
 		editor.commit();
+		saveActions(c);
+		return this;
 	}
 
-	private void saveActions(SharedPreferences.Editor editor, Context c) {
+	public void saveActions(Context c) {
 		Log.e(TAG, "Saving Actions");
-		if (editor == null) editor = Utils.getSharedPrefs(c).edit();
-		editor.putString(ACTION_LIST, "[]");
-		editor.commit();
-		for (OperatorAction opAction: mActions) {
-			addAction(opAction.mSlug, c, editor);
+		for (OperatorAction opAction: mActions)
 			opAction.save(c);
-		}
-		editor.commit();
 	}
 
-	public static boolean savedServiceExists(Context c) {
-		return Utils.getSharedPrefs(c).getInt(ID, -1) != -1;
-	}
-
-	public JSONArray getActionList(Context context) {
-		try {
-			return new JSONArray(Utils.getSharedPrefs(context).getString(ACTION_LIST, "[]"));
-		} catch (Exception e) { return new JSONArray(); }
-	}
-	public void addAction(final String value, Context context, SharedPreferences.Editor editor) {
-		try {
-			JSONArray new_actions = getActionList(context);
-			new_actions.put(value);
-			editor.putString(ACTION_LIST, new_actions.toString());
-			editor.commit();
-		} catch (Exception e) {}
+	public static int getLastUsedId(Context c) {
+		return Utils.getSharedPrefs(c).getInt(ID, -1);
 	}
 }

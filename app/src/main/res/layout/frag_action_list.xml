@@ -22,20 +22,14 @@
             android:textStyle="bold"
             android:text="@string/detected_actions"/>
 
-        <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:id="@+id/list"-->
-            <!--android:name="com.hover.tester.ActionListFragment"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:layoutManager="LinearLayoutManager"-->
-            <!--tools:context="com.hover.tester.ActionListFragment"-->
-            <!--tools:listitem="@layout/test_action"/>-->
-
-        <ListView
-            android:id="@android:id/android:list"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list"
             android:name="com.hover.tester.ActionListFragment"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layoutManager="LinearLayoutManager"
+            tools:context="com.hover.tester.list.ActionListFragment"
+            tools:listitem="@layout/action_li"/>
 
     </LinearLayout>
 

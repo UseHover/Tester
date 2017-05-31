@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.list;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,11 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.sdk.operators.Permission;
+import com.hover.tester.OperatorAction;
+import com.hover.tester.OperatorService;
+import com.hover.tester.R;
+import com.hover.tester.detail.ActionDetailActivity;
+import com.hover.tester.detail.ActionDetailFragment;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -36,7 +41,7 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
 
     public void addIntegration(View view) {
         Intent integrationIntent = new Intent(this, HoverIntegrationActivity.class);
-        integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { 17 });
+        integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { 1, 2, 4, 5, 8, 11, 17, 19 });
         integrationIntent.putExtra(HoverIntegrationActivity.PERM_LEVEL, Permission.NORMAL);
         startActivityForResult(integrationIntent, INTEGRATE_REQUEST);
     }
@@ -57,15 +62,14 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
 
     public void onIntegrateSuccess(Intent data) {
         ActionListFragment frag = (ActionListFragment) getSupportFragmentManager().findFragmentById(R.id.action_list_fragment);
-        frag.update(new OperatorService(data, this), frag.getView());
+        frag.update(new OperatorService(data, this));
     }
 
     @Override
     public void onListFragmentInteraction(OperatorAction act) {
         if (mTwoPane) {
             Bundle arguments = new Bundle();
-            arguments.putString(OperatorAction.SLUG, act.mSlug);
-            arguments.putInt(OperatorService.ID, act.mOpId);
+            arguments.putInt(OperatorAction.ID, act.mId);
             ActionDetailFragment fragment = new ActionDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -73,8 +77,7 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
                     .commit();
         } else {
             Intent intent = new Intent(this, ActionDetailActivity.class);
-            intent.putExtra(OperatorAction.SLUG, act.mSlug);
-            intent.putExtra(OperatorService.ID, act.mOpId);
+            intent.putExtra(OperatorAction.ID, act.mId);
             startActivity(intent);
         }
     }

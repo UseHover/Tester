@@ -6,10 +6,17 @@
     android:orientation="horizontal"
     android:gravity="center_vertical|start">
 
+    <ImageView android:id="@+id/status_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:src="@drawable/circle_untested"/>
+
     <TextView android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:textAlignment="textStart"
         android:textSize="18sp"
@@ -19,16 +26,8 @@
     <TextView android:id="@+id/time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:textSize="14sp"
         android:text=""/>
-
-    <ImageView android:id="@+id/status_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:src="@drawable/circle_untested"/>
 
     <!--android:textAppearance="?attr/textAppearanceListItem"-->
 

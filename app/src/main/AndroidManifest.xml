@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActionListActivity"
+            android:name=".list.ActionListActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -21,18 +21,23 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".ActionDetailActivity"
+            android:name=".detail.ActionDetailActivity"
             android:label=""
-            android:parentActivityName=".ActionListActivity"
+            android:parentActivityName=".list.ActionListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hover.tester.ActionListActivity"/>
+                android:value="com.hover.tester.list.ActionListActivity"/>
         </activity>
-
         <activity android:name=".ParsedValuesListActivity"/>
+
+        <provider
+            android:name=".database.TesterContentProvider"
+            android:authorities="com.hover.tester.provider"
+            android:enabled="true"
+            android:exported="false">
+        </provider>
 
         <receiver
             android:name=".TransactionReceiver"
