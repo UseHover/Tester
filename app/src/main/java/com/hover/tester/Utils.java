@@ -22,23 +22,6 @@ public class Utils {
 		return context.getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_MULTI_PROCESS);
 	}
 
-	public static boolean hasActionResult(Integer serviceId, String actionName, Context c) {
-		return Utils.getSharedPrefs(c).contains(serviceId + actionName + "_result");
-	}
-	public static void saveActionResult(Integer serviceId, String actionName, boolean value, Context c) {
-		Log.d(TAG, "saveActionResult: " + serviceId + actionName + "_time");
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putBoolean(serviceId + actionName + "_result", value);
-		editor.putLong(serviceId + actionName + "_time", now());
-		editor.commit();
-	}
-	public static boolean actionResultPositive(Integer serviceId, String actionName, Context c) {
-		return Utils.getSharedPrefs(c).getBoolean(serviceId + actionName + "_result", false);
-	}
-	public static String getActionResultTime(Integer serviceId, String actionName, Context c) {
-		return shortDateFormatTimestamp(Utils.getSharedPrefs(c).getLong(serviceId + actionName + "_time", 0));
-	}
-
 	public static long now() {
 		return new Date().getTime();
 	}

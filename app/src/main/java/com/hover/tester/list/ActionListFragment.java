@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hover.tester.OperatorAction;
 import com.hover.tester.OperatorService;
@@ -83,7 +84,7 @@ public class ActionListFragment extends Fragment implements LoaderManager.Loader
 	private void setEmptyState(Boolean areActions) {
 		if (getView() == null) return;
 		getView().findViewById(R.id.actions_section).setVisibility(areActions ? View.VISIBLE : View.GONE);
-		getView().findViewById(R.id.add_integration_btn).setVisibility(areActions ? View.GONE : View.VISIBLE);
+		((TextView) getView().findViewById(R.id.add_integration_btn)).setText(areActions ? R.string.change_integration : R.string.add_integration);
 	}
 
 	@Override

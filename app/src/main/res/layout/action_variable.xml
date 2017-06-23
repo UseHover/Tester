@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/colorPrimaryDark"
-        android:hint="@string/hint_amount"
         android:textSize="14sp"/>
 
 </android.support.design.widget.TextInputLayout>

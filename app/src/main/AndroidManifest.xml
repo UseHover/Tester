@@ -54,6 +54,15 @@
         <meta-data
             android:name="com.hover.ApiKey"
             android:value="b97c1dd86d4d49caaf70c2303f7ede05"/>
+
+        <service
+            android:name=".network.NetworkService"
+            android:exported="false">
+        </service>
+        <service
+            android:name=".network.HoverIntegratonListService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

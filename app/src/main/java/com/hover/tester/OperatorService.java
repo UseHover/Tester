@@ -32,12 +32,12 @@ public class OperatorService {
 	}
 
 	public OperatorService(Context c) {
-		SharedPreferences db = Utils.getSharedPrefs(c);
-		mId = db.getInt(ID, -1);
-		mName = db.getString(NAME, "");
-		mSlug = db.getString(SLUG, "");
-		mCountryIso = db.getString(COUNTRY, "");
-		mCurrencyIso = db.getString(CURRENCY, "");
+		SharedPreferences prefs = Utils.getSharedPrefs(c);
+		mId = prefs.getInt(ID, -1);
+		mName = prefs.getString(NAME, "");
+		mSlug = prefs.getString(SLUG, "");
+		mCountryIso = prefs.getString(COUNTRY, "");
+		mCurrencyIso = prefs.getString(CURRENCY, "");
 		mActions = getActionsFromSdk(c);
 	}
 
