@@ -2,6 +2,7 @@ package com.hover.tester.detail;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,15 +31,35 @@ public class ResultAdapter extends RecyclerViewCursorAdapter<ResultAdapter.ViewH
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
 		holder.mResult = new ActionResult(cursor);
-		switch (holder.mResult.mStatus) {
-			case 0: holder.mStatusIcon.setImageResource(R.drawable.circle_fails); break;
-			case 1: holder.mStatusIcon.setImageResource(R.drawable.circle_passes); break;
-			case 2: holder.mStatusIcon.setImageResource(R.drawable.circle_unknown); break;
-			case -1:
-			default: holder.mStatusIcon.setImageResource(R.drawable.circle_untested); break;
-		}
+		holder.mStatusIcon.setImageResource(getIcon(holder));
 		holder.mTextView.setText(holder.mResult.mText);
 		holder.mTimestamp.setText(Utils.shortDateFormatTimestamp(holder.mResult.mTimeStamp));
+
+		holder.mView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showResultDialog(holder);
+			}
+		});
+	}
+
+	private int getIcon(final ViewHolder holder) {
+		switch (holder.mResult.mStatus) {
+			case 0: return R.drawable.circle_fails;
+			case 1: return R.drawable.circle_passes;
+			case 2: return R.drawable.circle_unknown;
+			case -1:
+			default: return R.drawable.circle_untested;
+		}
+	}
+
+	private void showResultDialog(final ViewHolder holder) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		builder.setTitle(getContext().getString(R.string.transaction_header, holder.mResult.mSdkId))
+				.setIcon(getIcon(holder))
+				.setMessage(holder.mResult.mText + "\r\n \r\n" + holder.mResult.mDetails);
+		AlertDialog dialog = builder.create();
+		dialog.show();
 	}
 
 	public class ViewHolder extends RecyclerView.ViewHolder {

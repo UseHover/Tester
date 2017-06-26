@@ -1,12 +1,9 @@
 package com.hover.tester.detail;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -16,11 +13,7 @@ import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.ActionResult;
 import com.hover.tester.list.ActionListActivity;
 import com.hover.tester.OperatorAction;
-import com.hover.tester.OperatorService;
 import com.hover.tester.R;
-import com.hover.tester.Utils;
-
-import java.util.HashMap;
 
 public class ActionDetailActivity extends AppCompatActivity {
 	public static final String TAG = "ActionDetailActivity";

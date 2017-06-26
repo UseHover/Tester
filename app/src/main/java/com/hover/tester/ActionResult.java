@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
@@ -16,7 +17,7 @@ public class ActionResult {
 	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1, STATUS_UNKNOWN = 2;
 	public int mSdkId, mActionId, mStatus;
 	public long mTimeStamp;
-	public String mText;
+	public String mText, mDetails;
 
 	public ActionResult(int actionId, int resultCode, Intent data) {
 		mSdkId = (int) data.getLongExtra("transaction_id", -1);
@@ -24,6 +25,7 @@ public class ActionResult {
 		if (resultCode == Activity.RESULT_OK) {
 			mStatus = STATUS_UNKNOWN;
 			mText = data.getStringExtra(RESULT);
+			mDetails = getDetails(data);
 		} else {
 			mStatus = STATUS_FAILED;
 			mText = data.getStringExtra(NEG_RESULT);
@@ -38,8 +40,19 @@ public class ActionResult {
 		mSdkId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_SDK_ID));
 		mActionId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_ACTION_ID));
 		mText = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_TEXT));
+		mDetails = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_RETURN_VALUES));
 		mStatus = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_STATUS));
 		mTimeStamp = c.getLong(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_TIMESTAMP));
+	}
+
+	String getDetails(Intent data) {
+		Bundle bundle = data.getExtras();
+		String deets = "";
+		if (bundle != null) {
+			for (String key : bundle.keySet())
+				if (bundle.get(key) != null) deets += key + ": " + bundle.get(key).toString() + ", ";
+		}
+		return deets;
 	}
 
 	public static ActionResult getBySdkId(int sdkId, Context context) {
@@ -82,7 +95,7 @@ public class ActionResult {
 		cv.put(Contract.ActionResultEntry.COLUMN_STATUS, mStatus);
 		cv.put(Contract.ActionResultEntry.COLUMN_TIMESTAMP, mTimeStamp);
 		cv.put(Contract.ActionResultEntry.COLUMN_TEXT, mText);
-//		cv.put(Contract.ActionResultEntry.COLUMN_RETURN_VALUES, new JsArrays.toString(mResults));
+		cv.put(Contract.ActionResultEntry.COLUMN_RETURN_VALUES, mDetails);
 		return cv;
 	}
 }
