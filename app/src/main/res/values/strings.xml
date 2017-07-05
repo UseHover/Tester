@@ -2,11 +2,12 @@
     <string name="app_name">Hover Tester</string>
     <string name="country">%1$s (%2$s)</string>
 
-    <string name="base_url">https://stage.usehover.com/sdk/</string>
+    <string name="base_url">https://www.usehover.com/sdk/</string>
     <string name="service_list_endpoint">list-services</string>
-    <string name="url_builder">%1$s%2$s</string>\
+    <string name="url_builder">%1$s%2$s</string>
 
-    <string name="add_integration">Add an Integration</string>
+    <string name="update_config">Update Config</string>
+    <string name="add_integration">Add Integration</string>
     <string name="change_integration">Change Integration</string>
 
     <string name="choose_service">Choose Service</string>

@@ -1,16 +1,22 @@
 package com.hover.tester.list;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
+import com.hover.sdk.operators.OperatorUpdateService;
 import com.hover.sdk.operators.Permission;
 import com.hover.tester.OperatorAction;
 import com.hover.tester.OperatorService;
@@ -71,6 +77,17 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
             getSupportActionBar().setSubtitle(getString(R.string.country, opService.mCountryIso, opService.mCurrencyIso));
         }
     }
+
+    public void updateConfig(View view) {
+        registerReceiver(mConfigReceiver, new IntentFilter(getPackageName() + ".CONFIG_UPDATED"));
+        startService(new Intent(getApplicationContext(), OperatorUpdateService.class));
+    }
+    private BroadcastReceiver mConfigReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Snackbar.make(ActionListActivity.this.findViewById(R.id.action_list_fragment), "Configuration Updated", Snackbar.LENGTH_LONG).show();
+        }
+    };
 
     @Override
     protected void onActivityResult (int requestCode, int resultCode, Intent data) {

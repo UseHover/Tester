@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.hover.sdk.main.HoverConfigException;
 import com.hover.tester.R;
 
 import org.json.JSONException;
@@ -31,7 +30,7 @@ public class NetworkOps {
 		mContext = c;
 	}
 
-	private HttpsURLConnection makeRequest(String urlEnd, String type, JSONObject data) throws IOException, HoverConfigException {
+	private HttpsURLConnection makeRequest(String urlEnd, String type, JSONObject data) throws IOException {
 		if (!isConnected(mContext)) throw new IOException(mContext.getString(R.string.error_network));
 
 		URL url = new URL(mContext.getString(R.string.url_builder, mContext.getString(R.string.base_url), urlEnd));
@@ -82,14 +81,14 @@ public class NetworkOps {
 				is = conn.getInputStream();
 				return convertStreamToString(is);
 			}
-		} catch (HoverConfigException e) {
+		} catch (Exception e) {
 			Log.e(TAG, "API Key Error", e);
 			return e.getMessage();
 		} finally {	if (is != null) { try { is.close(); } catch (IOException e) {} } }
 		return "failure";
 	}
 
-	public String upload(String urlEnd, JSONObject object, String httpType) throws IOException, HoverConfigException {
+	public String upload(String urlEnd, JSONObject object, String httpType) throws IOException {
 		HttpsURLConnection conn = makeRequest(urlEnd, httpType, object);
 		responseCode = conn.getResponseCode();
 		Log.i(TAG, "response code: " + responseCode);

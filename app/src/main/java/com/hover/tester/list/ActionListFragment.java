@@ -85,6 +85,7 @@ public class ActionListFragment extends Fragment implements LoaderManager.Loader
 		if (getView() == null) return;
 		getView().findViewById(R.id.actions_section).setVisibility(areActions ? View.VISIBLE : View.GONE);
 		((TextView) getView().findViewById(R.id.add_integration_btn)).setText(areActions ? R.string.change_integration : R.string.add_integration);
+		getView().findViewById(R.id.update_config).setVisibility(areActions ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
