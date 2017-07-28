@@ -26,6 +26,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nest_container"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_main"
         android:layout_width="match_parent"
@@ -41,5 +42,18 @@
         <!--<include layout="@layout/frag_action_list"/>-->
 
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton android:id="@+id/update_config"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/white"
+        app:srcCompat="@drawable/ic_refresh"
+        android:layout_gravity="center_vertical|start"
+        android:layout_margin="@dimen/fab_margin"
+        app:fabSize="normal"
+        app:layout_anchor="@+id/nest_container"
+        app:layout_anchorGravity="bottom|end"
+        android:onClick="updateConfig"
+        android:visibility="gone" />
 
 </android.support.design.widget.CoordinatorLayout>

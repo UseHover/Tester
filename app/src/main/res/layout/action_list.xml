@@ -47,14 +47,6 @@
         android:layout_margin="@dimen/standard_padding"
         android:orientation="horizontal">
 
-        <Button android:id="@+id/update_config"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/update_config"
-            android:onClick="updateConfig"
-            android:visibility="gone"/>
-
         <Button android:id="@+id/add_integration_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

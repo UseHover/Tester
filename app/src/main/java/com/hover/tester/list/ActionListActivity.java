@@ -75,6 +75,7 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
             OperatorService opService = new OperatorService(this);
             getSupportActionBar().setTitle(opService.mName);
             getSupportActionBar().setSubtitle(getString(R.string.country, opService.mCountryIso, opService.mCurrencyIso));
+            findViewById(R.id.update_config).setVisibility(View.VISIBLE);
         }
     }
 
@@ -86,6 +87,7 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
         @Override
         public void onReceive(Context context, Intent intent) {
             Snackbar.make(ActionListActivity.this.findViewById(R.id.action_list_fragment), "Configuration Updated", Snackbar.LENGTH_LONG).show();
+            if (OperatorService.getLastUsedId(ActionListActivity.this) != -1) addIntegration(OperatorService.getLastUsedId(ActionListActivity.this));
         }
     };
 
@@ -120,5 +122,12 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
             intent.putExtra(OperatorAction.ID, act.mId);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try { unregisterReceiver(mConfigReceiver); }
+        catch (Exception e) {}
     }
 }
