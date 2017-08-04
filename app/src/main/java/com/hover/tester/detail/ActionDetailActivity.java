@@ -23,7 +23,6 @@ public class ActionDetailActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_action_detail);
 		setUpToolbar();
-		setUpFab();
 		restoreFrag(savedInstanceState);
 	}
 
@@ -34,18 +33,9 @@ public class ActionDetailActivity extends AppCompatActivity {
 		if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
 	}
 
-	private void setUpFab() {
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-			makeRequest();
-			}
-		});
-	}
-
-	private void makeRequest() {
-		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container);
+	public void makeRequest(View view) {
+//		throw new RuntimeException("mwhahaha");
+		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
 		if (frag != null) {
 			OperatorAction action = frag.mAction;
 			HoverParameters.Builder hpb = new HoverParameters.Builder(ActionDetailActivity.this)
@@ -58,7 +48,7 @@ public class ActionDetailActivity extends AppCompatActivity {
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container);
+		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
 		if (frag != null) {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
@@ -73,7 +63,7 @@ public class ActionDetailActivity extends AppCompatActivity {
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.detail_container, fragment)
+					.add(R.id.action_detail, fragment)
 					.commit();
 		}
 	}
