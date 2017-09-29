@@ -66,7 +66,6 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
     public void addIntegration(int id) {
         Intent integrationIntent = new Intent(this, HoverIntegrationActivity.class);
         integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { id });
-        integrationIntent.putExtra(HoverIntegrationActivity.PERM_LEVEL, Permission.NORMAL);
         startActivityForResult(integrationIntent, INTEGRATE_REQUEST);
     }
 
@@ -80,7 +79,8 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
     }
 
     public void updateConfig(View view) {
-        registerReceiver(mConfigReceiver, new IntentFilter(getPackageName() + ".CONFIG_UPDATED"));
+        registerReceiver(mConfigReceiver, new IntentFilter
+                (getPackageName() + ".CONFIG_UPDATED"));
         startService(new Intent(getApplicationContext(), OperatorUpdateService.class));
     }
     private BroadcastReceiver mConfigReceiver = new BroadcastReceiver() {

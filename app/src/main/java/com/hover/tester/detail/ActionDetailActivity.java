@@ -2,8 +2,8 @@ package com.hover.tester.detail;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.ActionResult;
+import com.hover.tester.BuildConfig;
 import com.hover.tester.list.ActionListActivity;
 import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
@@ -34,13 +35,14 @@ public class ActionDetailActivity extends AppCompatActivity {
 	}
 
 	public void makeRequest(View view) {
-//		throw new RuntimeException("mwhahaha");
 		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
 		if (frag != null) {
 			OperatorAction action = frag.mAction;
 			HoverParameters.Builder hpb = new HoverParameters.Builder(ActionDetailActivity.this)
 					.request(action.mSlug).from(action.mOpId);
 			frag.addAndSaveExtras(hpb);
+			Log.e(TAG, BuildConfig.BUILD_TYPE);
+			if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
 			startActivityForResult(hpb.buildIntent(), 0);
 		}
 	}

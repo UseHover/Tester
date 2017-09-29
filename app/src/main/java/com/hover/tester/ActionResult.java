@@ -12,7 +12,7 @@ import com.hover.tester.database.DbHelper;
 
 public class ActionResult {
 	public static final String TAG = "ActionResult",
-			RESULT = "response_message", NEG_RESULT = "result", RESULT_TIMESTAMP = "response_timestamp",
+			RESULT = "response_message", NEG_RESULT = "error", RESULT_TIMESTAMP = "response_timestamp",
 			SORT_ORDER = Contract.ActionResultEntry.COLUMN_TIMESTAMP + " DESC";
 	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1, STATUS_UNKNOWN = 2;
 	public int mSdkId, mActionId, mStatus;

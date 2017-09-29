@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.hover.tester.detail.ActionDetailActivity;
+
 public class TransactionReceiver extends BroadcastReceiver {
 	public final static String TAG = "TransactionReceiver";
 	public TransactionReceiver() { }
@@ -19,5 +21,14 @@ public class TransactionReceiver extends BroadcastReceiver {
 			ar.mText = i.getStringExtra("response_message");
 			ar.save(context);
 		}
+		openActivity(context, i);
+	}
+
+	private void openActivity(Context c, Intent i) {
+		i = new Intent(i);
+		i.setClass(c, ActionDetailActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		i.putExtra(OperatorAction.ID, i.getIntExtra("action_id", -1));
+		c.startActivity(i);
 	}
 }
