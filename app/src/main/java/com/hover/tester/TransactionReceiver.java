@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.hover.tester.detail.ActionDetailActivity;
+import com.hover.tester.detail.ActionResult;
 
 public class TransactionReceiver extends BroadcastReceiver {
 	public final static String TAG = "TransactionReceiver";

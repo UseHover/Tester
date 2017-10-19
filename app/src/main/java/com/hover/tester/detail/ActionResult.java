@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.detail;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import com.hover.tester.Utils;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 

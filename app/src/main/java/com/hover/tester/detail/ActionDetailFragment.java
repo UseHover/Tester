@@ -17,16 +17,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.hover.sdk.main.HoverParameters;
-import com.hover.tester.ActionResult;
 import com.hover.tester.OperatorAction;
 import com.hover.tester.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.Utils;
-import com.hover.tester.ActionVariable;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 

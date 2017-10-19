@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.detail;
 
 import android.content.ContentValues;
 import android.content.Context;

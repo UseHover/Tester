@@ -7,6 +7,8 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.hover.tester.database.Contract;
+import com.hover.tester.detail.ActionResult;
+import com.hover.tester.detail.ActionVariable;
 
 import org.json.JSONArray;
 import org.json.JSONException;

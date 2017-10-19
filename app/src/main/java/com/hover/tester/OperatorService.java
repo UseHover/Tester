@@ -3,9 +3,11 @@ package com.hover.tester;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
+import com.hover.tester.database.Contract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,13 +33,14 @@ public class OperatorService {
 		save(c);
 	}
 
-	public OperatorService(Context c) {
-		SharedPreferences prefs = Utils.getSharedPrefs(c);
-		mId = prefs.getInt(ID, -1);
-		mName = prefs.getString(NAME, "");
-		mSlug = prefs.getString(SLUG, "");
-		mCountryIso = prefs.getString(COUNTRY, "");
-		mCurrencyIso = prefs.getString(CURRENCY, "");
+	public OperatorService(Cursor cursor, Context c) {
+		mId = cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_ENTRY_ID));
+		mName = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_NAME));
+		mSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SLUG));
+		mSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_COUNTRY));
+		mSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_CURRENCY));
+		mName = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_NAME));
+
 		mActions = getActionsFromSdk(c);
 	}
 

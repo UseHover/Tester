@@ -1,4 +1,4 @@
-package com.hover.tester.list;
+package com.hover.tester;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,25 +10,21 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.sdk.operators.OperatorUpdateService;
-import com.hover.sdk.operators.Permission;
-import com.hover.tester.OperatorAction;
-import com.hover.tester.OperatorService;
-import com.hover.tester.R;
 import com.hover.tester.detail.ActionDetailActivity;
 import com.hover.tester.detail.ActionDetailFragment;
+import com.hover.tester.list.ActionListFragment;
 import com.hover.tester.network.HoverIntegratonListService;
 
 import io.fabric.sdk.android.Fabric;
 
-public class ActionListActivity extends AppCompatActivity implements ActionListFragment.OnListFragmentInteractionListener {
-    public final static String TAG = "ActionListActivity";
+public class MainActivity extends AppCompatActivity implements ActionListFragment.OnListFragmentInteractionListener {
+    public final static String TAG = "MainActivity";
     private final int INTEGRATE_REQUEST = 111;
     private boolean mTwoPane;
 
@@ -56,7 +52,7 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
                 .setItems(HoverIntegratonListService.getServices(this), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        addIntegration(HoverIntegratonListService.getServiceId(i, ActionListActivity.this));
+                        addIntegration(HoverIntegratonListService.getServiceId(i, MainActivity.this));
                     }
                 });
         AlertDialog dialog = builder.create();
@@ -86,8 +82,8 @@ public class ActionListActivity extends AppCompatActivity implements ActionListF
     private BroadcastReceiver mConfigReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Snackbar.make(ActionListActivity.this.findViewById(R.id.action_list_fragment), "Configuration Updated", Snackbar.LENGTH_LONG).show();
-            if (OperatorService.getLastUsedId(ActionListActivity.this) != -1) addIntegration(OperatorService.getLastUsedId(ActionListActivity.this));
+            Snackbar.make(MainActivity.this.findViewById(R.id.action_list_fragment), "Configuration Updated", Snackbar.LENGTH_LONG).show();
+            if (OperatorService.getLastUsedId(MainActivity.this) != -1) addIntegration(OperatorService.getLastUsedId(MainActivity.this));
         }
     };
 

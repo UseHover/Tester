@@ -13,7 +13,7 @@ import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
 import com.hover.tester.Utils;
 import com.hover.tester.database.RecyclerViewCursorAdapter;
-import com.hover.tester.list.ActionListFragment.OnListFragmentInteractionListener;
+import com.hover.tester.MainFragment.OnListFragmentInteractionListener;
 
 public class ActionAdapter extends RecyclerViewCursorAdapter<ActionAdapter.ViewHolder> {
 	private final OnListFragmentInteractionListener mListener;

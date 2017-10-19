@@ -12,7 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 public class HoverIntegratonListService extends NetworkService {
-	public final static String TAG = "HoverIntegratonListService", SERVICES = "saved_services",
+	public final static String TAG = "HoverIntegratonListService", SERVICES = "saved_services", SIM_IDS = "sim_ids",
 		ID = "id", NAME = "name";
 
 	public HoverIntegratonListService() {
@@ -23,7 +23,7 @@ public class HoverIntegratonListService extends NetworkService {
 	@Override
 	protected void onHandleIntent(Intent i) {
 		try {
-			String services = netOps.download(getString(R.string.service_list_endpoint));
+			String services = netOps.download(getString(R.string.service_list_endpoint) + (i.hasExtra(SIM_IDS) ? "?sims[]" + i.getStringExtra(SIM_IDS) : ""));
 			saveServices(services);
 		} catch (Exception e) {
 			Log.d("HoverListService", "download failed", e);

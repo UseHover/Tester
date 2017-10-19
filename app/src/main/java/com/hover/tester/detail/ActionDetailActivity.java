@@ -10,9 +10,8 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.hover.sdk.main.HoverParameters;
-import com.hover.tester.ActionResult;
 import com.hover.tester.BuildConfig;
-import com.hover.tester.list.ActionListActivity;
+import com.hover.tester.MainActivity;
 import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
 
@@ -74,7 +73,7 @@ public class ActionDetailActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == android.R.id.home) {
-			navigateUpTo(new Intent(this, ActionListActivity.class));
+			navigateUpTo(new Intent(this, MainActivity.class));
 			return true;
 		}
 		return super.onOptionsItemSelected(item);

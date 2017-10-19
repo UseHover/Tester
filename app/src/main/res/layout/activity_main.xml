@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.hover.tester.list.ActionListActivity">
+    tools:context="com.hover.tester.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -31,15 +31,13 @@
         tools:showIn="@layout/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.hover.tester.list.ActionListActivity">
+        tools:context="com.hover.tester.MainActivity">
 
-        <fragment android:name="com.hover.tester.list.ActionListFragment"
-            tools:layout="@layout/frag_action_list"
-            android:id="@+id/action_list_fragment"
+        <fragment android:name="com.hover.tester.MainFragment"
+            tools:layout="@layout/frag_main"
+            android:id="@+id/main_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <!--<include layout="@layout/frag_action_list"/>-->
 
     </android.support.v4.widget.NestedScrollView>
 

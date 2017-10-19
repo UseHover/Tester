@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hover.tester.ActionResult;
 import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
 import com.hover.tester.Utils;

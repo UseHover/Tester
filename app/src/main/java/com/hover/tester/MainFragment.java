@@ -1,4 +1,4 @@
-package com.hover.tester.list;
+package com.hover.tester;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,31 +19,31 @@ import com.hover.tester.OperatorAction;
 import com.hover.tester.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
+import com.hover.tester.list.ActionAdapter;
 
-public class ActionListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-	public static final String TAG = "ActionListFragment";
-	private OnListFragmentInteractionListener mListener;
-	private ActionAdapter mAdapter;
-	private OperatorService mOpService;
-	private int lastOpServiceId;
+public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+	public static final String TAG = "MainFragment";
+	public static final int SERVICE_LOADER = 0;
+	public OnListFragmentInteractionListener mListener;
+	private ServiceAdapter mServiceAdapter;
 
-	public ActionListFragment() { }
+	public MainFragment() { }
 
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
 		mListener = (OnListFragmentInteractionListener) context;
-		lastOpServiceId = OperatorService.getLastUsedId(context);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.frag_action_list, container, false);
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+		View view = inflater.inflate(R.layout.frag_main, container, false);
+
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.service_list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-		mAdapter = new ActionAdapter(getActivity(), null, mListener);
-		recyclerView.setAdapter(mAdapter);
-		getLoaderManager().initLoader(0, null, this);
+		mServiceAdapter = new ServiceAdapter(getActivity(), null, this);
+		recyclerView.setAdapter(mServiceAdapter);
+		getLoaderManager().initLoader(SERVICE_LOADER, null, this);
 		return view;
 	}
 
@@ -56,21 +56,24 @@ public class ActionListFragment extends Fragment implements LoaderManager.Loader
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Log.d(TAG, "creating loader");
-		return new CursorLoader(getActivity(), Contract.OperatorActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
-				Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " = " + lastOpServiceId, null, null);
+		if (id == SERVICE_LOADER)
+			return new CursorLoader(getActivity(), Contract.OperatorServiceEntry.CONTENT_URI, Contract.SERVICE_PROJECTION, null, null, null);
+		else
+			return new CursorLoader(getActivity(), Contract.OperatorActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
+					Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " = " + id, null, null);
+
 	}
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-		mAdapter.swapCursor(cursor);
-		Log.d(TAG, "cursor count: " + mAdapter.getItemCount());
-		setEmptyState(mAdapter.getItemCount() > 0);
-		if (mOpService != null && mOpService.mActions.size() != mAdapter.getItemCount())
-			mOpService.saveActions(getActivity());
+		mServiceAdapter.swapCursor(cursor);
+		Log.d(TAG, "cursor count: " + mServiceAdapter.getItemCount());
+		setEmptyState(mServiceAdapter.getItemCount() > 0);
+//		if (mOpService != null && mOpService.mActions.size() != mServiceAdapter.getItemCount())
+//			mOpService.saveActions(getActivity());
 	}
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		mAdapter.swapCursor(null);
+		mServiceAdapter.swapCursor(null);
 	}
 
 	public void update(OperatorService opService) {
@@ -81,10 +84,9 @@ public class ActionListFragment extends Fragment implements LoaderManager.Loader
 		getLoaderManager().restartLoader(0, null, this);
 	}
 
-	private void setEmptyState(Boolean areActions) {
+	private void setEmptyState(Boolean areServices) {
 		if (getView() == null) return;
-		getView().findViewById(R.id.actions_section).setVisibility(areActions ? View.VISIBLE : View.GONE);
-		((TextView) getView().findViewById(R.id.add_integration_btn)).setText(areActions ? R.string.change_integration : R.string.add_integration);
+		getView().findViewById(R.id.service_list).setVisibility(areServices ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
