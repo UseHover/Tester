@@ -1,9 +1,8 @@
-package com.hover.tester;
+package com.hover.tester.services;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -15,11 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hover.tester.MainFragment;
+import com.hover.tester.R;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.RecyclerViewCursorAdapter;
-import com.hover.tester.list.ActionAdapter;
-
-import java.util.List;
+import com.hover.tester.actions.ActionAdapter;
 
 public class ServiceAdapter extends RecyclerViewCursorAdapter<ServiceAdapter.ViewHolder> {
 	public static final String TAG = "ServiceAdapter";

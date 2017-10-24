@@ -9,7 +9,7 @@
     <TextView android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/standard_padding"
         android:textAppearance="?attr/textAppearanceListItem"
         android:text="Service Name"/>
 
@@ -17,8 +17,6 @@
         android:id="@+id/action_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/standard_padding"
-        android:layout_marginEnd="@dimen/standard_padding"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.hover.tester.MainActivity"
         tools:listitem="@layout/action_li"

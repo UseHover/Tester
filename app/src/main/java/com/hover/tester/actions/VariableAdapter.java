@@ -1,4 +1,4 @@
-package com.hover.tester.detail;
+package com.hover.tester.actions;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.RecyclerViewCursorAdapter;

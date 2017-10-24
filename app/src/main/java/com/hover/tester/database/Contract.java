@@ -20,7 +20,7 @@ public final class Contract {
 		public static final String COLUMN_ENTRY_ID = "_id";
 		public static final String COLUMN_SERVICE_ID = "service_id";
 		public static final String COLUMN_NAME = "service_name";
-		public static final String COLUMN_SLUG = "service_slug";
+		public static final String COLUMN_OP_SLUG = "service_slug";
 		public static final String COLUMN_CURRENCY = "service_currency";
 		public static final String COLUMN_COUNTRY = "service_country";
 		public static final String COLUMN_ACTIONS = "service_actions";
@@ -67,7 +67,7 @@ public final class Contract {
 		OperatorServiceEntry.COLUMN_ENTRY_ID,
 		OperatorServiceEntry.COLUMN_SERVICE_ID,
 		OperatorServiceEntry.COLUMN_NAME,
-		OperatorServiceEntry.COLUMN_SLUG,
+		OperatorServiceEntry.COLUMN_OP_SLUG,
 		OperatorServiceEntry.COLUMN_CURRENCY,
 		OperatorServiceEntry.COLUMN_COUNTRY,
 		OperatorServiceEntry.COLUMN_ACTIONS

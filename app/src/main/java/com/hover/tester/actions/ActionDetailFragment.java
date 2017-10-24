@@ -1,4 +1,4 @@
-package com.hover.tester.detail;
+package com.hover.tester.actions;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,10 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hover.sdk.main.HoverParameters;
-import com.hover.tester.OperatorAction;
-import com.hover.tester.OperatorService;
+import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
-import com.hover.tester.Utils;
+import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 

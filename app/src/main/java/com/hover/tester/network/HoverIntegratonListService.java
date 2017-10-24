@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.hover.tester.R;
-import com.hover.tester.Utils;
+import com.hover.tester.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

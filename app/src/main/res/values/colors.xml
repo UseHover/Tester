@@ -6,6 +6,12 @@
     <color name="secondaryGray">#8a000000</color>
     <color name="lightGray">#E0E0E0</color>
 
+    <color name="HoverOrange">#EB7D23</color>
+    <color name="HoverRed">#CD2328</color>
+    <color name="HoverYellow">#F5C346</color>
+    <color name="HoverBlue">#374B5F</color>
+    <color name="dark_text">#323232</color>
+
     <color name="light_black">#333333</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="white">#FFFFFF</color>

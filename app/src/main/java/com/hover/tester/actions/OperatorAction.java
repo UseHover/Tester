@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.actions;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -6,9 +6,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
-import com.hover.tester.detail.ActionResult;
-import com.hover.tester.detail.ActionVariable;
 
 import org.json.JSONArray;
 import org.json.JSONException;

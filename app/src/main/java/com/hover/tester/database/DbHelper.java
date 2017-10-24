@@ -17,7 +17,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ Contract.OperatorServiceEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
 			+ Contract.OperatorServiceEntry.COLUMN_SERVICE_ID + " integer not null, "
 			+ Contract.OperatorServiceEntry.COLUMN_NAME + " text not null, "
-			+ Contract.OperatorServiceEntry.COLUMN_SLUG + " text not null, "
+			+ Contract.OperatorServiceEntry.COLUMN_OP_SLUG + " text not null, "
 			+ Contract.OperatorServiceEntry.COLUMN_COUNTRY + " text not null, "
 			+ Contract.OperatorServiceEntry.COLUMN_CURRENCY + " text not null, "
 			+ Contract.OperatorServiceEntry.COLUMN_ACTIONS + " text, "

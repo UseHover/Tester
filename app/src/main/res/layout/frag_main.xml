@@ -4,32 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/standard_padding"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/service_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/standard_padding"
-        android:layout_marginEnd="@dimen/standard_padding"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.hover.tester.MainActivity"
-        tools:listitem="@layout/service_li"
-        tools:layout_height="200dp"/>
+        tools:listitem="@layout/service_li"/>
 
     <Button android:id="@+id/add_integration_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_padding"
             android:text="@string/add_integration"
             android:onClick="pickIntegration"/>
 
     <Button android:id="@+id/grant_permissions_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/standard_padding"
             android:text="@string/grant_permissions"
-            android:onClick="pickIntegration"
+            android:onClick="grantSystemPermissions"
             android:visibility="gone"/>
+
+    <TextView android:id="@+id/internet_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/turn_on_internet"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:visibility="gone"/>
 
 </LinearLayout>

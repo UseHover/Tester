@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

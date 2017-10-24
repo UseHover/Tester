@@ -16,8 +16,8 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.sdk.operators.OperatorUpdateService;
-import com.hover.tester.detail.ActionDetailActivity;
-import com.hover.tester.detail.ActionDetailFragment;
+import com.hover.tester.actions.ActionDetailActivity;
+import com.hover.tester.actions.ActionDetailFragment;
 import com.hover.tester.list.ActionListFragment;
 import com.hover.tester.network.HoverIntegratonListService;
 

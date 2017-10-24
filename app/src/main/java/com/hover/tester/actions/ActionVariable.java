@@ -1,8 +1,7 @@
-package com.hover.tester.detail;
+package com.hover.tester.actions;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.util.Log;
 
 import com.hover.tester.database.Contract;
 

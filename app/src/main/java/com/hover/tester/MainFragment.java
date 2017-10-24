@@ -13,13 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.hover.tester.OperatorAction;
-import com.hover.tester.OperatorService;
-import com.hover.tester.R;
+import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
-import com.hover.tester.list.ActionAdapter;
+import com.hover.tester.network.NetworkOps;
+import com.hover.tester.services.OperatorService;
+import com.hover.tester.services.ServiceAdapter;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	public static final String TAG = "MainFragment";
@@ -37,8 +36,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setRetainInstance(true);
 		View view = inflater.inflate(R.layout.frag_main, container, false);
-
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.service_list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 		mServiceAdapter = new ServiceAdapter(getActivity(), null, this);
@@ -47,20 +46,54 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		return view;
 	}
 
-//	@Override
-//	public void onStart() {
-//		super.onStart();
-//		if (OperatorService.savedServiceExists(getActivity()))
-//			update(new OperatorService(getActivity()), getView());
-//	}
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		controlFlow();
+	}
+
+	void controlFlow() {
+		Log.e(TAG, "controlling flow");
+		View view = getView();
+		if (MainActivity.hasPhonePerm(getContext()) && NetworkOps.isConnected(getContext()) && OperatorService.count(getContext()) == 0 && getActivity() != null)
+			((MainActivity) getActivity()).getServices();
+
+		if (!MainActivity.meetsAllRequirements(getContext()))
+			askForPerms(view);
+		else if (!NetworkOps.isConnected(getContext()))
+			askForNet(view);
+		else
+			showIntegrations(view);
+	}
+	private void askForPerms(View view) {
+		Log.e(TAG, "asking for perms");
+		view.findViewById(R.id.add_integration_btn).setVisibility(View.GONE);
+		view.findViewById(R.id.grant_permissions_btn).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.internet_message).setVisibility(View.GONE);
+	}
+
+	private void askForNet(View view) {
+		Log.e(TAG, "asking for net");
+		view.findViewById(R.id.add_integration_btn).setVisibility(View.GONE);
+		view.findViewById(R.id.grant_permissions_btn).setVisibility(View.GONE);
+		view.findViewById(R.id.internet_message).setVisibility(View.VISIBLE);
+		if (getActivity() != null)
+			((MainActivity) getActivity()).registerNetReceiver();
+	}
+	private void showIntegrations(View view) {
+		Log.e(TAG, "showing integrations");
+		view.findViewById(R.id.add_integration_btn).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.grant_permissions_btn).setVisibility(View.GONE);
+		view.findViewById(R.id.internet_message).setVisibility(View.GONE);
+	}
+
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		if (id == SERVICE_LOADER)
+//		if (id == SERVICE_LOADER)
 			return new CursorLoader(getActivity(), Contract.OperatorServiceEntry.CONTENT_URI, Contract.SERVICE_PROJECTION, null, null, null);
-		else
-			return new CursorLoader(getActivity(), Contract.OperatorActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
-					Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " = " + id, null, null);
+//		else
+//			return new CursorLoader(getActivity(), Contract.OperatorActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
+//					Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " = " + id, null, null);
 
 	}
 	@Override
@@ -76,12 +109,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		mServiceAdapter.swapCursor(null);
 	}
 
-	public void update(OperatorService opService) {
-		mOpService = opService;
-		lastOpServiceId = opService.mId;
-		Log.e(TAG, "operator: " + opService.mName);
-		Log.e(TAG, "operator action length: " + opService.mActions.size());
-		getLoaderManager().restartLoader(0, null, this);
+	public void update() {
+		getLoaderManager().restartLoader(SERVICE_LOADER, null, this);
 	}
 
 	private void setEmptyState(Boolean areServices) {

@@ -1,12 +1,14 @@
-package com.hover.tester;
+package com.hover.tester.services;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
+import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 
 import org.json.JSONArray;
@@ -20,13 +22,13 @@ public class OperatorService {
 			NAME = "service_name", COUNTRY = "country", CURRENCY = "currency", ACTION_LIST = "service_actions";
 
 	public int mId;
-	public String mName, mSlug, mCountryIso, mCurrencyIso;
+	public String mName, mOpSlug, mCountryIso, mCurrencyIso;
 	public List<OperatorAction> mActions;
 
 	public OperatorService(Intent data, Context c) {
 		mId = data.getIntExtra("serviceId", -1);
-		mSlug = data.getStringExtra("opSlug");
-		mName = data.getStringExtra("opSlug");
+		mName = data.getStringExtra("serviceName");
+		mOpSlug = data.getStringExtra("opSlug");
 		mCountryIso = data.getStringExtra("countryName");
 		mCurrencyIso = data.getStringExtra("currency");
 		mActions = getActionsFromSdk(c);
@@ -36,11 +38,9 @@ public class OperatorService {
 	public OperatorService(Cursor cursor, Context c) {
 		mId = cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_ENTRY_ID));
 		mName = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_NAME));
-		mSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SLUG));
-		mSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_COUNTRY));
-		mSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_CURRENCY));
-		mName = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_NAME));
-
+		mOpSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_OP_SLUG));
+		mCountryIso = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_COUNTRY));
+		mCurrencyIso = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_CURRENCY));
 		mActions = getActionsFromSdk(c);
 	}
 
@@ -56,24 +56,35 @@ public class OperatorService {
 	}
 
 	public OperatorService save(Context c) {
-		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
-		editor.putInt(ID, mId);
-		editor.putString(SLUG, mSlug);
-		editor.putString(NAME, mName);
-		editor.putString(COUNTRY, mCountryIso);
-		editor.putString(CURRENCY, mCurrencyIso);
-		editor.commit();
+		mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.OperatorServiceEntry.CONTENT_URI, getBasicContentValues()));
 		saveActions(c);
 		return this;
+	}
+
+	public static int count(Context c) {
+		Cursor countCursor = c.getContentResolver().query(Contract.OperatorServiceEntry.CONTENT_URI, new String[] {"count(*) AS count"}, null, null, null);
+		if (countCursor != null) {
+			countCursor.moveToFirst();
+			int count = countCursor.getInt(0);
+			countCursor.close();
+			return count;
+		}
+		return 0;
+	}
+
+	private ContentValues getBasicContentValues() {
+		ContentValues cv = new ContentValues();
+		cv.put(Contract.OperatorServiceEntry.COLUMN_SERVICE_ID, mId);
+		cv.put(Contract.OperatorServiceEntry.COLUMN_NAME, mName);
+		cv.put(Contract.OperatorServiceEntry.COLUMN_OP_SLUG, mOpSlug);
+		cv.put(Contract.OperatorServiceEntry.COLUMN_COUNTRY, mCountryIso);
+		cv.put(Contract.OperatorServiceEntry.COLUMN_CURRENCY, mCurrencyIso);
+		return cv;
 	}
 
 	public void saveActions(Context c) {
 		Log.e(TAG, "Saving Actions");
 		for (OperatorAction opAction: mActions)
 			opAction.save(c);
-	}
-
-	public static int getLastUsedId(Context c) {
-		return Utils.getSharedPrefs(c).getInt(ID, -1);
 	}
 }

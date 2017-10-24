@@ -18,8 +18,8 @@ public class TesterContentProvider extends ContentProvider {
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	static {
-		sUriMatcher.addURI(AUTHORITY, "services", ROUTE_ACTIONS);
-		sUriMatcher.addURI(AUTHORITY, "services/*", ROUTE_ACTIONS_ID);
+		sUriMatcher.addURI(AUTHORITY, "services", ROUTE_SERVICES);
+		sUriMatcher.addURI(AUTHORITY, "services/*", ROUTE_SERVICES_ID);
 		sUriMatcher.addURI(AUTHORITY, "actions", ROUTE_ACTIONS);
 		sUriMatcher.addURI(AUTHORITY, "actions/*", ROUTE_ACTIONS_ID);
 		sUriMatcher.addURI(AUTHORITY, "variables", ROUTE_VARIABLES);

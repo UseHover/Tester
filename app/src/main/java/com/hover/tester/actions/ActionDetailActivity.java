@@ -1,4 +1,4 @@
-package com.hover.tester.detail;
+package com.hover.tester.actions;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.BuildConfig;
 import com.hover.tester.MainActivity;
-import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
 
 public class ActionDetailActivity extends AppCompatActivity {

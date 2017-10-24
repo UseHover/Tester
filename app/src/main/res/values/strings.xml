@@ -10,6 +10,7 @@
     <string name="grant_permissions">Grant Permissions</string>
     <string name="add_integration">Add Integration</string>
     <string name="change_integration">Change Integration</string>
+    <string name="turn_on_internet">Please connect to the internet</string>
 
     <string name="choose_service">Choose Service</string>
 

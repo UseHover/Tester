@@ -1,4 +1,4 @@
-package com.hover.tester.detail;
+package com.hover.tester.actions;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hover.tester.OperatorAction;
 import com.hover.tester.R;
-import com.hover.tester.Utils;
+import com.hover.tester.utils.Utils;
 import com.hover.tester.database.RecyclerViewCursorAdapter;
 
 public class ResultAdapter extends RecyclerViewCursorAdapter<ResultAdapter.ViewHolder> {

@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.hover.tester.detail.ActionDetailActivity;
-import com.hover.tester.detail.ActionResult;
+import com.hover.tester.actions.ActionDetailActivity;
+import com.hover.tester.actions.ActionResult;
+import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.utils.Utils;
 
 public class TransactionReceiver extends BroadcastReceiver {
 	public final static String TAG = "TransactionReceiver";
