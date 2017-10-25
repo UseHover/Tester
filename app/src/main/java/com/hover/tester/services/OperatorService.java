@@ -36,7 +36,7 @@ public class OperatorService {
 	}
 
 	public OperatorService(Cursor cursor, Context c) {
-		mId = cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_ENTRY_ID));
+		mId = cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SERVICE_ID));
 		mName = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_NAME));
 		mOpSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_OP_SLUG));
 		mCountryIso = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_COUNTRY));
@@ -47,7 +47,6 @@ public class OperatorService {
 	private List<OperatorAction> getActionsFromSdk(Context c) {
 		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(mId, c);
 		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
-		Log.e(TAG, "Adding actions from json: " + jsonActions);
 		try {
 			for (int a = 0; a < jsonActions.length(); a++)
 				actions.add(new OperatorAction(jsonActions.getJSONObject(a), mId));
@@ -83,8 +82,11 @@ public class OperatorService {
 	}
 
 	public void saveActions(Context c) {
-		Log.e(TAG, "Saving Actions");
 		for (OperatorAction opAction: mActions)
 			opAction.save(c);
+	}
+
+	public static int getId(Cursor cursor) {
+		return cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SERVICE_ID));
 	}
 }

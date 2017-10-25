@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hover.sdk.main.HoverParameters;
+import com.hover.tester.MainActivity;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.utils.Utils;
@@ -42,8 +43,10 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		if (getArguments().containsKey(OperatorAction.ID)) {
 			loadAction(getActivity());
 			CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-			if (appBarLayout != null)
+			if (appBarLayout != null) {
+//				((ActionDetailActivity) getActivity()).getSupportActionBar().setSubtitle("Hellow");
 				appBarLayout.setTitle(mAction.mName);
+			}
 		}
 	}
 

@@ -135,14 +135,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 		return hasPhonePerm(c) && hasWakeLockPerm(c) && usableAndroidVersion();
 	}
 	public static boolean hasPhonePerm(Context c) {
-		boolean p = Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
-		Log.e(TAG, "has phone perm: " + p);
-		return p;
+		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
 	}
 	public static boolean hasWakeLockPerm(Context c) {
-		boolean w = Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED;
-		Log.e(TAG, "has wake lock perm: " + w);
-		return w;
+		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED;
 	}
 	public static boolean usableAndroidVersion() {
 		return Build.VERSION.SDK_INT >= 18 && Build.VERSION.SDK_INT < 26;

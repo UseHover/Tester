@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.hover.tester.MainFragment;
@@ -38,44 +39,26 @@ public class ServiceAdapter extends RecyclerViewCursorAdapter<ServiceAdapter.Vie
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
 		holder.mService = new OperatorService(cursor, getContext());
+		holder.mActionsView.setTag(holder.mService.mId);
 		holder.mNameView.setText(holder.mService.mName);
-
-		holder.mActionsView.setLayoutManager(new LinearLayoutManager(getContext()));
-		holder.mAdapter = new ActionAdapter(getContext(), null, mFrag.mListener);
-		holder.mActionsView.setAdapter(holder.mAdapter);
-		mFrag.getLoaderManager().initLoader(holder.mService.mId, null, holder);
 	}
 
-	public class ViewHolder extends RecyclerView.ViewHolder implements LoaderManager.LoaderCallbacks<Cursor> {
+	@Override
+	public void onViewAttachedToWindow(ViewHolder holder) {
+		mFrag.createActionAdapter(holder.mService.mId);
+	}
+
+	public class ViewHolder extends RecyclerView.ViewHolder {
 		public final View mView;
 		public final TextView mNameView;
 		public final RecyclerView mActionsView;
 		public OperatorService mService;
-		public ActionAdapter mAdapter;
 
 		public ViewHolder(View view) {
 			super(view);
 			mView = view;
 			mNameView = (TextView) view.findViewById(R.id.name);
 			mActionsView = (RecyclerView) view.findViewById(R.id.action_list);
-		}
-
-		@Override
-		public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-			return new CursorLoader(getContext(), Contract.OperatorActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
-					Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " = " + mService.mId, null, null);
-		}
-		@Override
-		public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-			mAdapter.swapCursor(cursor);
-			Log.d(TAG, "cursor count: " + mAdapter.getItemCount());
-//		setEmptyState(mAdapter.getItemCount() > 0);
-//		if (mOpService != null && mOpService.mActions.size() != mServiceAdapter.getItemCount())
-//			mOpService.saveActions(getActivity());
-		}
-		@Override
-		public void onLoaderReset(Loader<Cursor> loader) {
-			mAdapter.swapCursor(null);
 		}
 
 		@Override

@@ -23,7 +23,6 @@ public class OperatorAction {
 	public ActionResult mLastResult;
 
 	public OperatorAction(JSONObject jsonAct, int opId) throws JSONException {
-		Log.e(TAG, "Building action: " + jsonAct);
 		mOpId = opId;
 		mSlug = jsonAct.getString("slug");
 		mName = jsonAct.getString("name");
