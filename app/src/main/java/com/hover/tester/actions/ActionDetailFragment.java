@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import com.hover.tester.database.DbHelper;
 public class ActionDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	public static final String TAG = "ActionDetailFragment";
 	private static final int VARIABLE_LOADER = 0, RESULT_LOADER = 1;
+	OperatorService mService;
 	OperatorAction mAction;
 	RecyclerView variableRecycler;
 	private VariableAdapter mVariableAdapter;
@@ -41,12 +43,9 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		super.onCreate(savedInstanceState);
 
 		if (getArguments().containsKey(OperatorAction.ID)) {
-			loadAction(getActivity());
-			CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-			if (appBarLayout != null) {
-//				((ActionDetailActivity) getActivity()).getSupportActionBar().setSubtitle("Hellow");
-				appBarLayout.setTitle(mAction.mName);
-			}
+			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
+			mService = OperatorService.load(mAction.mOpId, getContext());
+			fillToolbar();
 		}
 	}
 
@@ -58,15 +57,14 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		return root;
 	}
 
-	private void loadAction(Context context) {
-		Log.e(TAG, "getting action with id: " + getArguments().getInt(OperatorAction.ID));
-		Cursor c = new DbHelper(getActivity()).getReadableDatabase()
-				.query(Contract.OperatorActionEntry.TABLE_NAME, Contract.ACTION_PROJECTION,
-						Contract.OperatorActionEntry.COLUMN_ENTRY_ID + " = " + getArguments().getInt(OperatorAction.ID),
-						null, null, null, null);
-		if (c.moveToFirst())
-			mAction = new OperatorAction(c, context);
-		c.close();
+	private void fillToolbar() {
+		((ActionDetailActivity) getActivity()).setTitle(mAction.mName, mService.mOpSlug + " " + mService.mName);
+
+//		CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
+//		if (appBarLayout != null) {
+//				((ActionDetailActivity) getActivity()).getSupportActionBar().setSubtitle("Hellow");
+//			appBarLayout.setTitle(mAction.mName);
+//		}
 	}
 
 	private void addVariableView(View root) {

@@ -2,12 +2,14 @@ package com.hover.tester.actions;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.BuildConfig;
@@ -26,10 +28,27 @@ public class ActionDetailActivity extends AppCompatActivity {
 	}
 
 	private void setUpToolbar() {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
+		final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
 		setSupportActionBar(toolbar);
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) actionBar.setDisplayHomeAsUpEnabled(true);
+
+		final View titleLayout = findViewById(R.id.layout_title);
+		titleLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+				layoutParams.height = titleLayout.getHeight() + getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height_material);
+				toolbar.setLayoutParams(layoutParams);
+			}
+		});
+	}
+
+	void setTitle(String title, String subtitle) {
+		if (findViewById(R.id.layout_title) != null) {
+			((TextView) findViewById(R.id.title)).setText(title);
+			((TextView) findViewById(R.id.subtitle)).setText(subtitle);
+		}
 	}
 
 	public void makeRequest(View view) {

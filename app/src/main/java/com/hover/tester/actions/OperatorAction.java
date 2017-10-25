@@ -4,8 +4,10 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.hover.tester.database.DbHelper;
 import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
 
@@ -55,11 +57,25 @@ public class OperatorAction {
 			}
 		}).start();
 	}
+
 	private ContentValues getBasicContentValues() {
 		ContentValues cv = new ContentValues();
 		cv.put(Contract.OperatorActionEntry.COLUMN_NAME, mName);
 		cv.put(Contract.OperatorActionEntry.COLUMN_SLUG, mSlug);
 		cv.put(Contract.OperatorActionEntry.COLUMN_SERVICE_ID, mOpId);
 		return cv;
+	}
+
+	public static OperatorAction load(int id, Context c) {
+		OperatorAction action = null;
+		SQLiteDatabase database = new DbHelper(c).getReadableDatabase();
+		Cursor cursor = database.query(Contract.OperatorActionEntry.TABLE_NAME, Contract.ACTION_PROJECTION,
+				Contract.OperatorActionEntry.COLUMN_ENTRY_ID + " = " + id,
+				null, null, null, null);
+		if (cursor.moveToFirst())
+			action = new OperatorAction(cursor, c);
+		cursor.close();
+		database.close();
+		return action;
 	}
 }

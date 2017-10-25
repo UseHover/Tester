@@ -22,4 +22,7 @@
 
     <string name="error_integration">Failed to add an integration</string>
     <string name="error_network">Failed. Please make sure you are connected to the internet</string>
+
+    <string name="title">Action Name</string>
+    <string name="subtitle">Service Name</string>
 </resources>

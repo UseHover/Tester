@@ -5,11 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
+import com.hover.tester.database.DbHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -88,5 +90,18 @@ public class OperatorService {
 
 	public static int getId(Cursor cursor) {
 		return cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SERVICE_ID));
+	}
+
+	public static OperatorService load(int id, Context c) {
+		OperatorService service = null;
+		SQLiteDatabase database = new DbHelper(c).getReadableDatabase();
+		Cursor cursor = database.query(Contract.OperatorServiceEntry.TABLE_NAME, Contract.SERVICE_PROJECTION,
+				Contract.OperatorServiceEntry.COLUMN_SERVICE_ID + " = " + id,
+				null, null, null, null);
+		if (cursor.moveToFirst())
+			service = new OperatorService(cursor, c);
+		cursor.close();
+		database.close();
+		return service;
 	}
 }
