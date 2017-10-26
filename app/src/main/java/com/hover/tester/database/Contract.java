@@ -24,6 +24,7 @@ public final class Contract {
 		public static final String COLUMN_CURRENCY = "service_currency";
 		public static final String COLUMN_COUNTRY = "service_country";
 		public static final String COLUMN_ACTIONS = "service_actions";
+		public static final String COLUMN_PIN = "service_pin";
 	}
 
 	public static abstract class OperatorActionEntry implements BaseColumns {
@@ -71,6 +72,11 @@ public final class Contract {
 		OperatorServiceEntry.COLUMN_CURRENCY,
 		OperatorServiceEntry.COLUMN_COUNTRY,
 		OperatorServiceEntry.COLUMN_ACTIONS
+	};
+
+	public static String[] SERVICE_PIN_PROJECTION = {
+		OperatorServiceEntry.COLUMN_SERVICE_ID,
+		OperatorServiceEntry.COLUMN_PIN
 	};
 
 	public static String[] ACTION_PROJECTION = {

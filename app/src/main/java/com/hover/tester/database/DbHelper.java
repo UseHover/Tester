@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 4;
+	public static final int DATABASE_VERSION = 5;
 	public static final String DATABASE_NAME = "services.db";
 
 	public DbHelper(Context context) {
@@ -20,6 +20,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ Contract.OperatorServiceEntry.COLUMN_OP_SLUG + " text not null, "
 			+ Contract.OperatorServiceEntry.COLUMN_COUNTRY + " text not null, "
 			+ Contract.OperatorServiceEntry.COLUMN_CURRENCY + " text not null, "
+			+ Contract.OperatorServiceEntry.COLUMN_PIN + " text, "
 			+ Contract.OperatorServiceEntry.COLUMN_ACTIONS + " text, "
 			+ "UNIQUE (" + Contract.OperatorServiceEntry.COLUMN_SERVICE_ID + ") ON CONFLICT REPLACE"
 			+ ");";

@@ -4,11 +4,13 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
+import com.hover.sdk.utils.Utils;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
@@ -20,11 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OperatorService {
-	public static final String TAG = "OperatorService", ID = "service_id", SLUG = "service_slug",
-			NAME = "service_name", COUNTRY = "country", CURRENCY = "currency", ACTION_LIST = "service_actions";
+	public static final String TAG = "OperatorService", PIN = "pin";
 
 	public int mId;
-	public String mName, mOpSlug, mCountryIso, mCurrencyIso;
+	public String mName, mOpSlug, mCountryIso, mCurrencyIso, mEncryptedPin;
 	public List<OperatorAction> mActions;
 
 	public OperatorService(Intent data, Context c) {
@@ -34,7 +35,6 @@ public class OperatorService {
 		mCountryIso = data.getStringExtra("countryName");
 		mCurrencyIso = data.getStringExtra("currency");
 		mActions = getActionsFromSdk(c);
-		save(c);
 	}
 
 	public OperatorService(Cursor cursor, Context c) {
@@ -80,6 +80,7 @@ public class OperatorService {
 		cv.put(Contract.OperatorServiceEntry.COLUMN_OP_SLUG, mOpSlug);
 		cv.put(Contract.OperatorServiceEntry.COLUMN_COUNTRY, mCountryIso);
 		cv.put(Contract.OperatorServiceEntry.COLUMN_CURRENCY, mCurrencyIso);
+		cv.put(Contract.OperatorServiceEntry.COLUMN_PIN, mEncryptedPin);
 		return cv;
 	}
 
@@ -90,6 +91,12 @@ public class OperatorService {
 
 	public static int getId(Cursor cursor) {
 		return cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SERVICE_ID));
+	}
+	public static String getPin(Cursor cursor) {
+		return cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_PIN));
+	}
+	public void setPin(String value) {
+		mEncryptedPin = value;
 	}
 
 	public static OperatorService load(int id, Context c) {
@@ -104,4 +111,6 @@ public class OperatorService {
 		database.close();
 		return service;
 	}
+
+
 }

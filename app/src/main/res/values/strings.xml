@@ -25,4 +25,9 @@
 
     <string name="title">Action Name</string>
     <string name="subtitle">Service Name</string>
+
+    <string name="enter_pin">Enter PIN</string>
+    <string name="save">Save</string>
+    <string name="next">Next</string>
+    <string name="cancel">Cancel</string>
 </resources>

@@ -124,7 +124,7 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 			va.save(getActivity());
 			hpb.extra(va.mName, va.mValue);
 			if (va.mName.equals("amount"))
-				hpb.extra("currency", Utils.getSharedPrefs(getActivity()).getString(OperatorService.CURRENCY, ""));
+				hpb.extra("currency", mService.mCurrencyIso);
 		}
 	}
 

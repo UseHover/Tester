@@ -1,14 +1,15 @@
 package com.hover.tester;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,15 +25,14 @@ import com.hover.tester.network.NetworkOps;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.utils.NetworkReceiver;
 
-import com.hover.sdk.onboarding.HoverIntegrationActivity;
-
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements MainFragment.OnListFragmentInteractionListener {
 	public final static String TAG = "MainActivity";
 	private NetworkReceiver mNetworkReceiver = null;
 	private MainFragment mFrag;
-	private final int INTEGRATE_REQUEST = 111;
+	private OperatorService pendingOpService;
+	public static final int INTEGRATE_REQUEST = 111;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,49 +59,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public void pickIntegration(View view) {
-		if (NetworkOps.isConnected(this))
-			showServiceDialog();
+		if (NetworkOps.isConnected(this)) {
+			DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.CHOOSE_SERVICE_STEP, null);
+			newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
+		}
 	}
-
-	public void grantSystemPermissions(View view) {
-		ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.WAKE_LOCK }, 0);
-	}
-	@Override
-	public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		if (mFrag != null) mFrag.controlFlow();
-	}
-
-	private void showServiceDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.choose_service)
-				.setItems(HoverIntegratonListService.getServices(this), new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialogInterface, int i) {
-						addIntegration(HoverIntegratonListService.getServiceId(i, MainActivity.this));
-					}
-				});
-		AlertDialog dialog = builder.create();
-		dialog.show();
-	}
-
-	public void addIntegration(int id) {
-		Intent integrationIntent = new Intent(this, HoverIntegrationActivity.class);
-		integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { id });
-		startActivityForResult(integrationIntent, INTEGRATE_REQUEST);
-	}
-
-//	public void updateConfig(View view) {
-//		registerReceiver(mConfigReceiver, new IntentFilter(getPackageName() + ".CONFIG_UPDATED"));
-//		startService(new Intent(getApplicationContext(), OperatorUpdateService.class));
-//	}
-//	private BroadcastReceiver mConfigReceiver = new BroadcastReceiver() {
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			Snackbar.make(MainActivity.this.findViewById(R.id.main_fragment), "Configuration Updated", Snackbar.LENGTH_LONG).show();
-//			if (OperatorService.getLastUsedId(MainActivity.this) != -1) addIntegration(OperatorService.getLastUsedId(MainActivity.this));
-//		}
-//	};
 
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
@@ -113,9 +75,18 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public void onIntegrateSuccess(Intent data) {
-		MainFragment frag = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-		OperatorService opService = new OperatorService(data, this);
-		frag.update();
+		pendingOpService = new OperatorService(data, this);
+		DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.ENTER_PIN_STEP, pendingOpService.mName);
+		newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
+	}
+
+	public void savePin(String pin) {
+		pendingOpService.setPin(KeyStoreHelper.encrypt(pendingOpService.mId, pin, this));
+		Snackbar.make(findViewById(R.id.nest_container), "Saving Service " + pendingOpService.mName, Snackbar.LENGTH_LONG).show();
+		pendingOpService.save(this);
+		mFrag.update();
+
+//		Decrypt: decrypt(OperatorService.getPin(alias, c), c);
 	}
 
 	@Override
@@ -129,6 +100,15 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	protected void onStop() {
 		super.onStop();
 		unregisterNetReceiver();
+	}
+
+	public void grantSystemPermissions(View view) {
+		ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.WAKE_LOCK }, 0);
+	}
+	@Override
+	public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		if (mFrag != null) mFrag.controlFlow();
 	}
 
 	public static boolean meetsAllRequirements(Context c) {
