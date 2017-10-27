@@ -3,17 +3,31 @@
           xmlns:tools="http://schemas.android.com/tools">
 
     <application>
-        <!--<activity android:name="com.hover.tester.gateway.MainActivity">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
         <meta-data
-            tools:replace="android:value"
             android:name="com.hover.ApiKey"
-            android:value="37742114c194367e94202cfd0c682aa0"/>
+            android:value="37742114c194367e94202cfd0c682aa0"
+            tools:replace="android:value"/>
+
+        <service
+            android:name="com.hover.tester.NotificationReceiverService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name="com.hover.tester.WakeUpReceiver"
+            android:enabled="true"
+            android:exported="true">
+        </receiver>
+
+        <service
+            android:name="com.hover.tester.WakeUpService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

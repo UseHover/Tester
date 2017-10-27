@@ -117,11 +117,13 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		saveExtras();
 	}
 
-	void addAndSaveExtras(HoverParameters.Builder hpb) {
+	void addAndSaveExtras(HoverParameters.Builder hpb) throws NullPointerException {
 		for (int i = 0; i < mVariableAdapter.getItemCount(); i++) {
 			ActionVariable va = ((VariableAdapter.ViewHolder) variableRecycler.findViewHolderForAdapterPosition(i)).mVariable;
 			Log.e(TAG, "Adding Extra: " + va.mName + ": " + va.mValue);
 			va.save(getActivity());
+			if (va.mValue == null || va.mValue.isEmpty())
+				throw new NullPointerException("You must provide a value for " + va.mName);
 			hpb.extra(va.mName, va.mValue);
 			if (va.mName.equals("amount"))
 				hpb.extra("currency", mService.mCurrencyIso);

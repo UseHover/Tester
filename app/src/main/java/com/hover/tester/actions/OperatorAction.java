@@ -28,8 +28,8 @@ public class OperatorAction {
 		mOpId = opId;
 		mSlug = jsonAct.getString("slug");
 		mName = jsonAct.getString("name");
-		JSONArray variables = jsonAct.getJSONArray("variables");
-		Log.d(TAG, "variable length: " + variables.length());
+		JSONArray variables = jsonAct.getJSONArray("params");
+		Log.d(TAG, "params length: " + variables.length());
 		mVariables = new ActionVariable[variables.length()];
 		for (int v = 0; v < variables.length(); v++)
 			mVariables[v] = new ActionVariable(variables.getString(v));

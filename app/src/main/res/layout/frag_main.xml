@@ -13,7 +13,15 @@
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.hover.tester.MainActivity"
-        tools:listitem="@layout/service_li"/>
+        tools:listitem="@layout/service_li"
+        tools:layout_height="380dp"/>
+
+    <android.support.v4.widget.ContentLoadingProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"/>
 
     <Button android:id="@+id/add_integration_btn"
             android:layout_width="match_parent"

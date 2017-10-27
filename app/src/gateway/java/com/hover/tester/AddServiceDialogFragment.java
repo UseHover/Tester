@@ -52,7 +52,7 @@ public class AddServiceDialogFragment extends DialogFragment {
 	private AlertDialog serviceChoiceDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		builder.setTitle(R.string.choose_service)
-			.setItems(HoverIntegratonListService.getServices(getActivity()), new DialogInterface.OnClickListener() {
+			.setItems(HoverIntegratonListService.getServicesList(getActivity()), new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialogInterface, int i) {
 					addIntegration(HoverIntegratonListService.getServiceId(i, getActivity()));

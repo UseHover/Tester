@@ -5,15 +5,21 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.R;
+import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HoverIntegratonListService extends NetworkService {
-	public final static String TAG = "HoverIntegratonListService", SERVICES = "saved_services", SIM_IDS = "sim_ids",
-		ID = "id", NAME = "name";
+	public final static String TAG = "HoverIntegratonListService", SERVICES = "saved_services",
+			SIM_IDS = "sim_ids", ID = "id", NAME = "name", ACTIONS = "actions";
 
 	public HoverIntegratonListService() {
 		super(TAG);
@@ -36,7 +42,7 @@ public class HoverIntegratonListService extends NetworkService {
 		editor.apply();
 	}
 
-	public static CharSequence[] getServices(Context c) {
+	public static CharSequence[] getServicesList(Context c) {
 		try {
 			JSONArray json = new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null));
 			CharSequence[] list = new CharSequence[json.length()];
@@ -48,11 +54,47 @@ public class HoverIntegratonListService extends NetworkService {
 		}
 	}
 
+	public static CharSequence[] getActionsList(int serviceId, Context c) {
+		try {
+			JSONArray json = getServiceJson(serviceId, c).getJSONArray(ACTIONS);
+			CharSequence[] list = new CharSequence[json.length()];
+			for (int j = 0; j < json.length(); j++)
+				list[j] = json.getJSONObject(j).getString(NAME);
+			return list;
+		} catch (Exception e) {
+			return new CharSequence[0];
+		}
+	}
+
+	private static JSONObject getServiceJson(int id, Context c) throws JSONException {
+		JSONArray json = new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null));
+		CharSequence[] list = new CharSequence[json.length()];
+		for (int j = 0; j < json.length(); j++) {
+			if (json.getJSONObject(j).getInt(ID) == id)
+				return json.getJSONObject(j);
+		}
+		throw new JSONException("Could not find service in json");
+	}
+
+	private List<OperatorAction> getActionsFromSdk(int serviceId, Context c) {
+		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(serviceId, c);
+		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
+		try {
+			for (int a = 0; a < jsonActions.length(); a++)
+				actions.add(new OperatorAction(jsonActions.getJSONObject(a), serviceId));
+		} catch (JSONException e) { Log.e("HIntegratonListService", "Exception processing actions from json", e); }
+		return actions;
+	}
+
 	public static int getServiceId(int index, Context c) {
 		try {
 			return new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null)).getJSONObject(index).getInt(ID);
 		} catch (JSONException e) {
 			return -1;
 		}
+	}
+
+	public static JSONObject getAction(int serviceId, int index, Context c) throws JSONException {
+		return getServiceJson(serviceId, c).getJSONArray(ACTIONS).getJSONObject(index);
 	}
 }

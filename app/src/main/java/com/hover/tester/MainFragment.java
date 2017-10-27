@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -21,11 +22,12 @@ import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.network.NetworkOps;
 import com.hover.tester.services.OperatorService;
+import com.hover.tester.services.SaveFinishedListener;
 import com.hover.tester.services.ServiceAdapter;
 
 import java.util.HashMap;
 
-public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SaveFinishedListener {
 	public static final String TAG = "MainFragment";
 	public static final int SERVICE_LOADER = 0;
 	public OnListFragmentInteractionListener mListener;
@@ -103,6 +105,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	}
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		if (getView() != null) ((ContentLoadingProgressBar) getView().findViewById(R.id.loading_progress)).hide();
 		if (loader.getId() == SERVICE_LOADER) {
 			mServiceAdapter.swapCursor(cursor);
 			Log.e(TAG, "service cursor count: " + mServiceAdapter.getItemCount());
@@ -121,7 +124,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
 	public void createActionAdapter(int id) {
 		if (getView() != null && getView().findViewWithTag(id) != null) {
-			RecyclerView list = getView().findViewWithTag(id);
+			RecyclerView list = (RecyclerView) getView().findViewWithTag(id);
 			ActionAdapter adapter = new ActionAdapter(getContext(), null, mListener);
 			list.setAdapter(adapter);
 			if (mActionAdapters == null)
@@ -131,6 +134,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		}
 	}
 
+	@Override
+	public void onSaveCompleted() {
+		update();
+	}
 	public void update() {
 		getLoaderManager().restartLoader(SERVICE_LOADER, null, this);
 	}

@@ -1,7 +1,6 @@
 package com.hover.tester;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,11 +9,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,7 +24,10 @@ import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
 import com.hover.tester.network.NetworkOps;
 import com.hover.tester.services.OperatorService;
+import com.hover.tester.services.SaveServiceTask;
 import com.hover.tester.utils.NetworkReceiver;
+
+import org.json.JSONException;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	private NetworkReceiver mNetworkReceiver = null;
 	private MainFragment mFrag;
 	private OperatorService pendingOpService;
+	private OperatorAction pendingAction;
 	public static final int INTEGRATE_REQUEST = 111;
 
 	@Override
@@ -59,10 +64,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public void pickIntegration(View view) {
-		if (NetworkOps.isConnected(this)) {
-			DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.CHOOSE_SERVICE_STEP, null);
-			newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
-		}
+		WakeUpHelper.sendWakeIntent(this);
+//		if (NetworkOps.isConnected(this)) {
+//			DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.CHOOSE_SERVICE_STEP, null);
+//			newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
+//		}
 	}
 
 	@Override
@@ -80,13 +86,35 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 		newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
 	}
 
-	public void savePin(String pin) {
-		pendingOpService.setPin(KeyStoreHelper.encrypt(pendingOpService.mId, pin, this));
+	public void savePin(final String pin) {
 		Snackbar.make(findViewById(R.id.nest_container), "Saving Service " + pendingOpService.mName, Snackbar.LENGTH_LONG).show();
-		pendingOpService.save(this);
-		mFrag.update();
+		((ContentLoadingProgressBar) findViewById(R.id.loading_progress)).show();
+		new SaveServiceTask(pin, mFrag, this).execute(pendingOpService);
+		pickAction(pendingOpService.mId);
+//		Decrypt: KeyStoreHelper.decrypt(operatorService.getPin(), OpService.mId, c);
+	}
 
-//		Decrypt: decrypt(OperatorService.getPin(alias, c), c);
+	public void pickAction(View v) {
+		pickAction((int) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.action_list).getTag());
+	}
+	public void pickAction(int serviceId) {
+		DialogFragment newFragment = AddActionDialogFragment.newInstance(AddActionDialogFragment.CHOOSE_ACTION_STEP, serviceId);
+		newFragment.show(getSupportFragmentManager(), AddActionDialogFragment.TAG);
+	}
+	public void addAction(int serviceId, int actionIdx) {
+		try {
+			pendingAction = new OperatorAction(HoverIntegratonListService.getAction(serviceId, actionIdx, this), serviceId);
+			pendingAction.save(this);
+			DialogFragment newFragment = AddActionDialogFragment.newInstance(AddActionDialogFragment.CHOOSE_TRIGGER_STEP, pendingAction.mId);
+			newFragment.show(getSupportFragmentManager(), AddActionDialogFragment.TAG);
+		} catch (JSONException e) {
+
+		}
+	}
+	public void setTrigger(int actionId, int triggerChoice) {
+		int step = triggerChoice == AddActionDialogFragment.FCM_TRIGGER ? AddActionDialogFragment.FCM_DEETS_STEP : AddActionDialogFragment.SCHEDULE_DEETS_STEP;
+		DialogFragment newFragment = AddActionDialogFragment.newInstance(step, actionId);
+		newFragment.show(getSupportFragmentManager(), AddActionDialogFragment.TAG);
 	}
 
 	@Override

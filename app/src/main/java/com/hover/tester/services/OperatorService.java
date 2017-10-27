@@ -34,7 +34,6 @@ public class OperatorService {
 		mOpSlug = data.getStringExtra("opSlug");
 		mCountryIso = data.getStringExtra("countryName");
 		mCurrencyIso = data.getStringExtra("currency");
-		mActions = getActionsFromSdk(c);
 	}
 
 	public OperatorService(Cursor cursor, Context c) {
@@ -43,22 +42,10 @@ public class OperatorService {
 		mOpSlug = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_OP_SLUG));
 		mCountryIso = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_COUNTRY));
 		mCurrencyIso = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_CURRENCY));
-		mActions = getActionsFromSdk(c);
-	}
-
-	private List<OperatorAction> getActionsFromSdk(Context c) {
-		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(mId, c);
-		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
-		try {
-			for (int a = 0; a < jsonActions.length(); a++)
-				actions.add(new OperatorAction(jsonActions.getJSONObject(a), mId));
-		} catch (JSONException e) { Log.e(TAG, "Exception processing actions from json", e); }
-		return actions;
 	}
 
 	public OperatorService save(Context c) {
 		mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.OperatorServiceEntry.CONTENT_URI, getBasicContentValues()));
-		saveActions(c);
 		return this;
 	}
 

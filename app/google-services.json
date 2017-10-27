@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "339711149440",
+    "firebase_url": "https://hover-gateway.firebaseio.com",
+    "project_id": "hover-gateway",
+    "storage_bucket": "hover-gateway.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339711149440:android:ac14f4830954f606",
+        "android_client_info": {
+          "package_name": "com.hover.tester.gateway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339711149440-pcen5plrbqp7j9rj7jc2u16miv5n17bs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-O1YvDgiQk5Ocg9sFHoMN52mwvk9KXtI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339711149440:android:0242204e57d112a4",
+        "android_client_info": {
+          "package_name": "com.hover.tester"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339711149440-pcen5plrbqp7j9rj7jc2u16miv5n17bs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-O1YvDgiQk5Ocg9sFHoMN52mwvk9KXtI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

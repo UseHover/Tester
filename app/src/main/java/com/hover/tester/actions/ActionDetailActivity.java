@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.BuildConfig;
@@ -57,10 +58,14 @@ public class ActionDetailActivity extends AppCompatActivity {
 			OperatorAction action = frag.mAction;
 			HoverParameters.Builder hpb = new HoverParameters.Builder(ActionDetailActivity.this)
 					.request(action.mSlug).from(action.mOpId);
-			frag.addAndSaveExtras(hpb);
-			Log.e(TAG, BuildConfig.BUILD_TYPE);
-			if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
-			startActivityForResult(hpb.buildIntent(), 0);
+			try {
+				frag.addAndSaveExtras(hpb);
+				Log.e(TAG, BuildConfig.BUILD_TYPE);
+				if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+				startActivityForResult(hpb.buildIntent(), 0);
+			} catch (NullPointerException e) {
+				Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 

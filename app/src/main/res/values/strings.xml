@@ -12,7 +12,7 @@
     <string name="change_integration">Change Integration</string>
     <string name="turn_on_internet">Please connect to the internet</string>
 
-    <string name="choose_service">Choose Service</string>
+    <string name="choose_action">Choose Action</string>
 
     <string name="detected_actions">Detected Actions</string>
 
@@ -20,14 +20,26 @@
     <string name="results">Results</string>
     <string name="transaction_header">Transaction %1$d</string>
 
-    <string name="error_integration">Failed to add an integration</string>
-    <string name="error_network">Failed. Please make sure you are connected to the internet</string>
-
     <string name="title">Action Name</string>
     <string name="subtitle">Service Name</string>
 
+    <!--Dialogs-->
+    <string name="choose_service">Choose Service</string>
     <string name="enter_pin">Enter PIN</string>
+    <string name="add_action">Add Action</string>
+    <string name="choose_trigger">Choose Action Trigger</string>
+    <string-array name="trigger_choices">
+        <item>On a Schedule</item>
+        <item>Via FCM</item>
+    </string-array>
+    <string name="set_schedule">Set Schedule</string>
+    <string name="enter_fcm_deets">Enter FCM Details</string>
+
     <string name="save">Save</string>
     <string name="next">Next</string>
     <string name="cancel">Cancel</string>
+
+    <string name="error_integration">Failed to add an integration</string>
+    <string name="error_variables">You must enter values for all variables</string>
+    <string name="error_network">Failed. Please make sure you are connected to the internet</string>
 </resources>
