@@ -1,11 +1,8 @@
 package com.hover.tester.actions;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -18,21 +15,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.hover.sdk.main.HoverParameters;
-import com.hover.tester.MainActivity;
+import com.hover.tester.schedules.Scheduler;
 import com.hover.tester.WakeUpHelper;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
-import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
-import com.hover.tester.database.DbHelper;
 
 public class ActionDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	public static final String TAG = "ActionDetailFragment";
 	private static final int VARIABLE_LOADER = 0, RESULT_LOADER = 1;
 	OperatorService mService;
 	OperatorAction mAction;
+	Scheduler mSchedule;
 	RecyclerView variableRecycler;
 	private VariableAdapter mVariableAdapter;
 	private ResultAdapter mResultAdapter;
@@ -51,13 +48,14 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 				return;
 			}
 			mService = OperatorService.load(mAction.mOpId, getContext());
-			fillToolbar();
+			mSchedule = Scheduler.load(mAction.mId, getActivity());
 		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.frag_action_detail, container, false);
+		fillInfo(root);
 		addVariableView(root);
 		addResultView(root);
 		return root;
@@ -66,12 +64,24 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (getArguments().containsKey(WakeUpHelper.SOURCE) && getActivity() != null)
-			((ActionDetailActivity) getActivity()).makeRequest(getArguments());
+		if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
+			if (getArguments().getString(WakeUpHelper.SOURCE).equals(WakeUpHelper.FCM))
+				((ActionDetailActivity) getActivity()).makeRequest(getArguments());
+			else
+				((ActionDetailActivity) getActivity()).makeRequest(getView());
+		}
 	}
 
-	private void fillToolbar() {
+	private void fillInfo(View view) {
 		((ActionDetailActivity) getActivity()).setTitle(mAction.mName, mService.mOpSlug + " " + mService.mName);
+		if (mSchedule != null) {
+			view.findViewById(R.id.add_schedule).setVisibility(View.GONE);
+			((TextView) view.findViewById(R.id.schedule_text)).setText(getString(R.string.schedule, mSchedule.getString(getActivity())));
+			view.findViewById(R.id.schedule_info).setVisibility(View.VISIBLE);
+		} else {
+			view.findViewById(R.id.add_schedule).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.schedule_info).setVisibility(View.GONE);
+		}
 	}
 
 	private void addVariableView(View root) {

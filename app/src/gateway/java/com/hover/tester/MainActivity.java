@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,6 +23,7 @@ import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
 import com.hover.tester.network.NetworkOps;
+import com.hover.tester.schedules.AbstractScheduleActivity;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.services.SaveServiceTask;
 import com.hover.tester.utils.NetworkReceiver;
@@ -32,12 +32,11 @@ import org.json.JSONException;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity implements MainFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AbstractScheduleActivity implements MainFragment.OnListFragmentInteractionListener, GatewayIntegrationInterface {
 	public final static String TAG = "MainActivity";
 	private NetworkReceiver mNetworkReceiver = null;
 	private MainFragment mFrag;
 	private OperatorService pendingOpService;
-	private OperatorAction pendingAction;
 	public static final int INTEGRATE_REQUEST = 111;
 
 	@Override
@@ -70,8 +69,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 
 	public void pickIntegration(View view) {
 		if (NetworkOps.isConnected(this)) {
-			DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.CHOOSE_SERVICE_STEP, null);
-			newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
+			DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.CHOOSE_SERVICE_STEP, -1, null);
+			newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
 		}
 	}
 
@@ -86,10 +85,11 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 
 	public void onIntegrateSuccess(Intent data) {
 		pendingOpService = new OperatorService(data, this);
-		DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.ENTER_PIN_STEP, pendingOpService.mName);
-		newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
+		DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.ENTER_PIN_STEP, -1, pendingOpService.mName);
+		newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
 	}
 
+	@Override
 	public void savePin(final String pin) {
 		Snackbar.make(findViewById(R.id.nest_container), "Saving Service " + pendingOpService.mName, Snackbar.LENGTH_LONG).show();
 		((ContentLoadingProgressBar) findViewById(R.id.loading_progress)).show();
@@ -101,24 +101,20 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	public void pickAction(View v) {
 		pickAction((int) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.action_list).getTag());
 	}
+	@Override
 	public void pickAction(int serviceId) {
-		DialogFragment newFragment = AddActionDialogFragment.newInstance(AddActionDialogFragment.CHOOSE_ACTION_STEP, serviceId);
-		newFragment.show(getSupportFragmentManager(), AddActionDialogFragment.TAG);
+		DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.CHOOSE_ACTION_STEP, serviceId, null);
+		newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
 	}
+	@Override
 	public void addAction(int serviceId, int actionIdx) {
 		try {
-			pendingAction = new OperatorAction(HoverIntegratonListService.getAction(serviceId, actionIdx, this), serviceId);
-			pendingAction.save(this);
-			DialogFragment newFragment = AddActionDialogFragment.newInstance(AddActionDialogFragment.CHOOSE_TRIGGER_STEP, pendingAction.mId);
-			newFragment.show(getSupportFragmentManager(), AddActionDialogFragment.TAG);
+			OperatorAction newAction = new OperatorAction(HoverIntegratonListService.getAction(serviceId, actionIdx, this), serviceId);
+			newAction.save(this);
+			addSchedule(newAction.mId);
 		} catch (JSONException e) {
-
+			Toast.makeText(this, "Could not save action, please try again", Toast.LENGTH_SHORT).show();
 		}
-	}
-	public void setTrigger(int actionId, int triggerChoice) {
-		int step = triggerChoice == AddActionDialogFragment.FCM_TRIGGER ? AddActionDialogFragment.FCM_DEETS_STEP : AddActionDialogFragment.SCHEDULE_DEETS_STEP;
-		DialogFragment newFragment = AddActionDialogFragment.newInstance(step, actionId);
-		newFragment.show(getSupportFragmentManager(), AddActionDialogFragment.TAG);
 	}
 
 	@Override

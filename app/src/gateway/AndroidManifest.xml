@@ -9,7 +9,7 @@
             tools:replace="android:value"/>
 
         <service
-            android:name="com.hover.tester.NotificationReceiverService"
+            android:name="com.hover.tester.notifications.NotificationReceiverService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -18,7 +18,7 @@
         </service>
 
         <service
-            android:name="com.hover.tester.FirebaseDeviceIDService">
+            android:name="com.hover.tester.notifications.FirebaseDeviceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>

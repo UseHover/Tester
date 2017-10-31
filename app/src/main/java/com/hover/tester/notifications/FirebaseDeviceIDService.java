@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.notifications;
 
 import android.util.Log;
 

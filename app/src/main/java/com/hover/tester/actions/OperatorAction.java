@@ -26,6 +26,7 @@ public class OperatorAction {
 
 	public OperatorAction(JSONObject jsonAct, int opId) throws JSONException {
 		mOpId = opId;
+		mId = jsonAct.getInt("id");
 		mSlug = jsonAct.getString("slug");
 		mName = jsonAct.getString("name");
 		JSONArray variables = jsonAct.getJSONArray("params");
@@ -49,7 +50,9 @@ public class OperatorAction {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
+				Log.e(TAG, "id before save is: " + mId);
 				mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.OperatorActionEntry.CONTENT_URI, getBasicContentValues()));
+				Log.e(TAG, "id after save is: " + mId);
 				for (ActionVariable variable: mVariables) {
 					variable.mActionId = mId;
 					variable.save(c);
@@ -60,6 +63,7 @@ public class OperatorAction {
 
 	private ContentValues getBasicContentValues() {
 		ContentValues cv = new ContentValues();
+		cv.put(Contract.OperatorActionEntry.COLUMN_ENTRY_ID, mId);
 		cv.put(Contract.OperatorActionEntry.COLUMN_NAME, mName);
 		cv.put(Contract.OperatorActionEntry.COLUMN_SLUG, mSlug);
 		cv.put(Contract.OperatorActionEntry.COLUMN_SERVICE_ID, mOpId);

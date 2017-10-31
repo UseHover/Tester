@@ -1,6 +1,7 @@
 package com.hover.tester;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,27 +16,38 @@ import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.network.HoverIntegratonListService;
 
 
-public class AddServiceDialogFragment extends DialogFragment {
-	public final static String TAG = "AddServiceFragment", STEP = "step", TITLE = "title";
-	public static int CHOOSE_SERVICE_STEP = 0, ENTER_PIN_STEP = 1;
+public class AddIntegrationDialogFragment extends DialogFragment {
+	public final static String TAG = "AddServiceFragment", STEP = "step", ID = "service_id", TITLE = "title";
+	public static int CHOOSE_SERVICE_STEP = 0, ENTER_PIN_STEP = 1, CHOOSE_ACTION_STEP = 2;
+	private GatewayIntegrationInterface mListener;
 	private int mStep;
 	private String mPin;
 
-	public AddServiceDialogFragment() { }
+	public AddIntegrationDialogFragment() { }
 
-	public static AddServiceDialogFragment newInstance(int step, String title) {
-		AddServiceDialogFragment frag = new AddServiceDialogFragment();
+	public static AddIntegrationDialogFragment newInstance(int step, int serviceId, String title) {
+		AddIntegrationDialogFragment frag = new AddIntegrationDialogFragment();
 		Bundle args = new Bundle();
 		args.putInt(STEP, step);
-		 if (title != null) args.putString(TITLE, title);
+		if (serviceId != -1) args.putInt(ID, serviceId);
+		if (title != null) args.putString(TITLE, title);
 		frag.setArguments(args);
 		return frag;
+	}
+
+	@Override
+	public void onAttach(Context c) {
+		super.onAttach(c);
+		try { mListener = (GatewayIntegrationInterface) c;
+		} catch (ClassCastException oops) { oops.printStackTrace(); }
 	}
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mStep = getArguments().getInt(STEP);
+		if (mStep == CHOOSE_ACTION_STEP)
+			return actionChoiceDialog();
 		if (mStep == ENTER_PIN_STEP)
 			return createPinEntry();
 		else
@@ -73,7 +85,7 @@ public class AddServiceDialogFragment extends DialogFragment {
 			.setView(R.layout.pin_entry)
 			.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					((MainActivity) getActivity()).savePin(mPin);
+					if (mListener != null) mListener.savePin(mPin);
 				}
 			}).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -107,5 +119,18 @@ public class AddServiceDialogFragment extends DialogFragment {
 					d.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
 			}
 		});
+	}
+
+	private AlertDialog actionChoiceDialog() {
+		final int id = getArguments().getInt(ID);
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		builder.setTitle(R.string.choose_action)
+				.setItems(HoverIntegratonListService.getActionsList(id, getActivity()), new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialogInterface, int i) {
+						if (mListener != null) mListener.addAction(id, i);
+					}
+				});
+		return builder.create();
 	}
 }

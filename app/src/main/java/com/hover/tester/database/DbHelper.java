@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 5;
+	public static final int DATABASE_VERSION = 6;
 	public static final String DATABASE_NAME = "services.db";
 
 	public DbHelper(Context context) {
@@ -27,12 +27,23 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String ACTION_TABLE_CREATE = "create table "
 			+ Contract.OperatorActionEntry.TABLE_NAME + "("
-			+ Contract.OperatorActionEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
+			+ Contract.OperatorActionEntry.COLUMN_ENTRY_ID + " integer primary key, "
 			+ Contract.OperatorActionEntry.COLUMN_NAME + " text not null, "
 			+ Contract.OperatorActionEntry.COLUMN_SLUG + " text not null, "
 			+ Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " integer not null, "
 			+ Contract.OperatorActionEntry.COLUMN_VARIABLES + " text, "
 			+ "UNIQUE (" + Contract.OperatorActionEntry.COLUMN_SERVICE_ID + ", " + Contract.OperatorActionEntry.COLUMN_SLUG + ") ON CONFLICT REPLACE"
+			+ ");";
+
+	private static final String SCHEDULE_TABLE_CREATE = "create table "
+			+ Contract.ActionScheduleEntry.TABLE_NAME + "("
+			+ Contract.ActionScheduleEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
+			+ Contract.ActionScheduleEntry.COLUMN_ACTION_ID + " integer not null, "
+			+ Contract.ActionScheduleEntry.COLUMN_TYPE + " integer not null, "
+			+ Contract.ActionScheduleEntry.COLUMN_DAY + " integer, "
+			+ Contract.ActionScheduleEntry.COLUMN_HOUR + " integer, "
+			+ Contract.ActionScheduleEntry.COLUMN_MIN + " integer, "
+			+ "UNIQUE (" + Contract.ActionScheduleEntry.COLUMN_ACTION_ID + ") ON CONFLICT REPLACE"
 			+ ");";
 
 	private static final String VARIABLE_TABLE_CREATE = "create table "
@@ -58,18 +69,21 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String SQL_DELETE_SERVICES = "DROP TABLE IF EXISTS " + Contract.OperatorServiceEntry.TABLE_NAME;
 	private static final String SQL_DELETE_ACTIONS = "DROP TABLE IF EXISTS " + Contract.OperatorActionEntry.TABLE_NAME;
+	private static final String SQL_DELETE_SCHEDULES = "DROP TABLE IF EXISTS " + Contract.ActionScheduleEntry.TABLE_NAME;
 	private static final String SQL_DELETE_VARIABLES = "DROP TABLE IF EXISTS " + Contract.ActionVariableEntry.TABLE_NAME;
 	private static final String SQL_DELETE_RESULTS = "DROP TABLE IF EXISTS " + Contract.ActionResultEntry.TABLE_NAME;
 
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(SERVICE_TABLE_CREATE);
 		db.execSQL(ACTION_TABLE_CREATE);
+		db.execSQL(SCHEDULE_TABLE_CREATE);
 		db.execSQL(VARIABLE_TABLE_CREATE);
 		db.execSQL(RESULT_TABLE_CREATE);
 	}
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		db.execSQL(SQL_DELETE_SERVICES);
 		db.execSQL(SQL_DELETE_ACTIONS);
+		db.execSQL(SQL_DELETE_SCHEDULES);
 		db.execSQL(SQL_DELETE_VARIABLES);
 		db.execSQL(SQL_DELETE_RESULTS);
 		onCreate(db);

@@ -98,6 +98,4 @@ public class OperatorService {
 		database.close();
 		return service;
 	}
-
-
 }

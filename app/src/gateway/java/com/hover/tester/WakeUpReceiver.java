@@ -10,7 +10,7 @@ public class WakeUpReceiver extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.e(TAG, "Received broadcast");
+		Log.e(TAG, "Received broadcast. Source: " + intent.getStringExtra(WakeUpHelper.SOURCE));
 
 		Intent i = new Intent(context, WakeUpService.class);
 		i.putExtras(intent.getExtras());

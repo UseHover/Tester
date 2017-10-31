@@ -14,7 +14,8 @@ public class TesterContentProvider extends ContentProvider {
 	public static final int ROUTE_ACTIONS = 1, ROUTE_ACTIONS_ID = 2,
 			ROUTE_VARIABLES = 3, ROUTE_VARIABLES_ID = 4,
 			ROUTE_RESULTS = 5, ROUTE_RESULTS_ID = 6,
-			ROUTE_SERVICES = 7, ROUTE_SERVICES_ID = 8;
+			ROUTE_SERVICES = 7, ROUTE_SERVICES_ID = 8,
+			ROUTE_SCHEDULES = 9, ROUTE_SCHEDULES_ID = 10;
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	static {
@@ -22,6 +23,8 @@ public class TesterContentProvider extends ContentProvider {
 		sUriMatcher.addURI(AUTHORITY, "services/*", ROUTE_SERVICES_ID);
 		sUriMatcher.addURI(AUTHORITY, "actions", ROUTE_ACTIONS);
 		sUriMatcher.addURI(AUTHORITY, "actions/*", ROUTE_ACTIONS_ID);
+		sUriMatcher.addURI(AUTHORITY, "schedules", ROUTE_SCHEDULES);
+		sUriMatcher.addURI(AUTHORITY, "schedules/*", ROUTE_SCHEDULES_ID);
 		sUriMatcher.addURI(AUTHORITY, "variables", ROUTE_VARIABLES);
 		sUriMatcher.addURI(AUTHORITY, "variables/*", ROUTE_VARIABLES_ID);
 		sUriMatcher.addURI(AUTHORITY, "results", ROUTE_RESULTS);
@@ -48,6 +51,10 @@ public class TesterContentProvider extends ContentProvider {
 				cursor = db.query(Contract.OperatorActionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_ACTIONS_ID:
 				cursor = db.query(Contract.OperatorActionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
+			case ROUTE_SCHEDULES:
+				cursor = db.query(Contract.ActionScheduleEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
+			case ROUTE_SCHEDULES_ID:
+				cursor = db.query(Contract.ActionScheduleEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_VARIABLES:
 				cursor = db.query(Contract.ActionVariableEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_VARIABLES_ID:
@@ -81,6 +88,12 @@ public class TesterContentProvider extends ContentProvider {
 				break;
 			case ROUTE_ACTIONS_ID:
 				count = db.update(Contract.OperatorActionEntry.TABLE_NAME, values, selection, selectionArgs);
+				break;
+			case ROUTE_SCHEDULES:
+				count = db.update(Contract.ActionScheduleEntry.TABLE_NAME, values, selection, selectionArgs);
+				break;
+			case ROUTE_SCHEDULES_ID:
+				count = db.update(Contract.ActionScheduleEntry.TABLE_NAME, values, selection, selectionArgs);
 				break;
 			case ROUTE_VARIABLES:
 				count = db.update(Contract.ActionVariableEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -120,6 +133,10 @@ public class TesterContentProvider extends ContentProvider {
 				id = db.insertOrThrow(Contract.OperatorActionEntry.TABLE_NAME, null, values);
 				result = Uri.parse(Contract.OperatorActionEntry.CONTENT_URI + "/" + id);
 				break;
+			case ROUTE_SCHEDULES:
+				id = db.insertOrThrow(Contract.ActionScheduleEntry.TABLE_NAME, null, values);
+				result = Uri.parse(Contract.ActionScheduleEntry.CONTENT_URI + "/" + id);
+				break;
 			case ROUTE_VARIABLES:
 				id = db.insertOrThrow(Contract.ActionVariableEntry.TABLE_NAME, null, values);
 				result = Uri.parse(Contract.ActionVariableEntry.CONTENT_URI + "/" + id);
@@ -130,6 +147,7 @@ public class TesterContentProvider extends ContentProvider {
 				break;
 			case ROUTE_SERVICES_ID:
 			case ROUTE_ACTIONS_ID:
+			case ROUTE_SCHEDULES_ID:
 			case ROUTE_VARIABLES_ID:
 			case ROUTE_RESULTS_ID:
 				throw new UnsupportedOperationException("Insert not supported on URI: " + uri);
@@ -161,6 +179,10 @@ public class TesterContentProvider extends ContentProvider {
 				return Contract.OperatorActionEntry.CONTENT_TYPE;
 			case ROUTE_ACTIONS_ID:
 				return Contract.OperatorActionEntry.CONTENT_ITEM_TYPE;
+			case ROUTE_SCHEDULES:
+				return Contract.ActionScheduleEntry.CONTENT_TYPE;
+			case ROUTE_SCHEDULES_ID:
+				return Contract.ActionScheduleEntry.CONTENT_ITEM_TYPE;
 			case ROUTE_VARIABLES:
 				return Contract.ActionVariableEntry.CONTENT_TYPE;
 			case ROUTE_VARIABLES_ID:

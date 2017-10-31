@@ -27,6 +27,13 @@ public class WakeUpHelper {
 		setAlarm(wake, now(), c);
 	}
 
+	public static Intent createScheduledIntent(Context c, int actionId) {
+		Intent wake = new Intent(c, WakeUpReceiver.class);
+		wake.putExtra(OperatorAction.ID, actionId);
+		wake.putExtra(SOURCE, TIMER);
+		return wake;
+	}
+
 	public static void setAlarm(Intent wake, long time, Context c) {
 		AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
 		if (android.os.Build.VERSION.SDK_INT >= 19)

@@ -16,6 +16,14 @@
 
     <string name="detected_actions">Detected Actions</string>
 
+    <string name="add_schedule">Add Schedule</string>
+    <string name="change_schedule">Change</string>
+    <string name="schedule">Schedule: %1$s</string>
+    <string name="hourly">Hourly</string>
+    <string name="daily">Daily at %1$s</string>
+    <string name="weekly">Weekly on %1$s at %2$s</string>
+
+
     <string name="never">never run</string>
     <string name="results">Results</string>
     <string name="transaction_header">Transaction %1$d</string>
@@ -27,17 +35,28 @@
     <string name="choose_service">Choose Service</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="add_action">Add Action</string>
-    <string name="choose_trigger">Choose Action Trigger</string>
-    <string-array name="trigger_choices">
-        <item>On a Schedule</item>
-        <item>Via FCM</item>
+    <string name="add_schedule_q">Add a Schedule?</string>
+    <string-array name="schedule_choices">
+        <item>Hourly</item>
+        <item>Daily</item>
+        <item>Weekly</item>
     </string-array>
-    <string name="set_schedule">Set Schedule</string>
-    <string name="enter_fcm_deets">Enter FCM Details</string>
+
+    <string-array name="day_choices">
+        <item>Sunday</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+    </string-array>
 
     <string name="save">Save</string>
     <string name="next">Next</string>
+    <string name="done">Done</string>
     <string name="cancel">Cancel</string>
+    <string name="no_thanks">No Thanks</string>
 
     <string name="error_integration">Failed to add an integration</string>
     <string name="error_variables">You must enter values for all variables</string>

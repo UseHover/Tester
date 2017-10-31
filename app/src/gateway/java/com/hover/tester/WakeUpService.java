@@ -10,6 +10,8 @@ import android.os.PowerManager;
 import android.util.Log;
 
 import com.hover.tester.actions.ActionDetailActivity;
+import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.schedules.AlarmSchedulerService;
 
 public class WakeUpService extends Service {
 	public final static String TAG = "WakeUpService";
@@ -24,6 +26,8 @@ public class WakeUpService extends Service {
 			releaseWakeLock();
 		else {
 			getWakeLock();
+			if (i.hasExtra(AlarmSchedulerService.INTERVAL))
+				scheduleNextAlarm(i);
 			startTransaction(i);
 		}
 
@@ -36,6 +40,12 @@ public class WakeUpService extends Service {
 		i.putExtras(intent.getExtras());
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(i);
+	}
+
+	private void scheduleNextAlarm(Intent i) {
+		Intent intent = new Intent(this, AlarmSchedulerService.class);
+		intent.putExtra(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
+		startService(intent);
 	}
 
 	private void getWakeLock() {

@@ -10,7 +10,7 @@ public final class Contract {
 	public static final String CONTENT_AUTHORITY = "com.hover.tester.provider";
 	public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 	private static final String PATH_SERVICES = "services", PATH_ACTIONS = "actions",
-			PATH_VARIABLES = "variables", PATH_RESULTS = "results";
+			PATH_SCHEDULES = "schedules", PATH_VARIABLES = "variables", PATH_RESULTS = "results";
 
 	public static abstract class OperatorServiceEntry implements BaseColumns {
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.tester.services";
@@ -37,6 +37,19 @@ public final class Contract {
 		public static final String COLUMN_SLUG = "action_slug";
 		public static final String COLUMN_SERVICE_ID = "action_service_id";
 		public static final String COLUMN_VARIABLES = "action_variables";
+	}
+
+	public static abstract class ActionScheduleEntry implements BaseColumns {
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.tester.schedules";
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.tester.schedule";
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_SCHEDULES).build();
+		public static final String TABLE_NAME = "schedules";
+		public static final String COLUMN_ENTRY_ID = "_id";
+		public static final String COLUMN_ACTION_ID = "schedule_action_id";
+		public static final String COLUMN_TYPE = "schedule_type";
+		public static final String COLUMN_DAY = "schedule_day";
+		public static final String COLUMN_HOUR = "schedule_hour";
+		public static final String COLUMN_MIN = "schedule_min";
 	}
 
 	public static abstract class ActionVariableEntry implements BaseColumns {
@@ -85,6 +98,15 @@ public final class Contract {
 		OperatorActionEntry.COLUMN_SLUG,
 		OperatorActionEntry.COLUMN_SERVICE_ID,
 		OperatorActionEntry.COLUMN_VARIABLES
+	};
+
+	public static String[] SCHEDULE_PROJECTION = {
+			ActionScheduleEntry.COLUMN_ENTRY_ID,
+			ActionScheduleEntry.COLUMN_ACTION_ID,
+			ActionScheduleEntry.COLUMN_TYPE,
+			ActionScheduleEntry.COLUMN_DAY,
+			ActionScheduleEntry.COLUMN_HOUR,
+			ActionScheduleEntry.COLUMN_MIN
 	};
 
 	public static String[] VARIABLE_PROJECTION = {

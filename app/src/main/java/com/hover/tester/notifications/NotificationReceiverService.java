@@ -1,9 +1,10 @@
-package com.hover.tester;
+package com.hover.tester.notifications;
 
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.hover.tester.WakeUpHelper;
 
 public class NotificationReceiverService extends FirebaseMessagingService {
 	public static final String TAG = "NotificationReceiver";

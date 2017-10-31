@@ -7,6 +7,45 @@
     android:orientation="vertical"
     android:padding="@dimen/standard_padding">
 
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginTop="@dimen/standard_padding">
+
+        <Button android:id="@+id/add_schedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_schedule"
+            android:onClick="addSchedule"/>
+
+        <LinearLayout android:id="@+id/schedule_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView android:id="@+id/schedule_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/schedule"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:textColor="@color/HoverYellow"
+                android:text="@string/change_schedule"
+                android:onClick="addSchedule"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="@dimen/standard_padding"
+        android:background="@color/lightGray" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/variable_list"
         android:name="com.hover.tester.ActionDetailFragment"

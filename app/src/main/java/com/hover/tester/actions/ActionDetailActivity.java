@@ -18,8 +18,9 @@ import com.hover.tester.MainActivity;
 import com.hover.tester.R;
 import com.hover.tester.WakeUpHelper;
 import com.hover.tester.WakeUpService;
+import com.hover.tester.schedules.AbstractScheduleActivity;
 
-public class ActionDetailActivity extends AppCompatActivity {
+public class ActionDetailActivity extends AbstractScheduleActivity {
 	public static final String TAG = "ActionDetailActivity";
 
 	@Override
@@ -98,7 +99,7 @@ public class ActionDetailActivity extends AppCompatActivity {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}
-//		shutDown();
+		releaseWake();
 	}
 
 	private void restoreFrag(Bundle savedInstanceState) {
@@ -107,8 +108,10 @@ public class ActionDetailActivity extends AppCompatActivity {
 			Bundle args = new Bundle();
 
 			Log.e(TAG, "Restoring frag. Action Id: " + i.getIntExtra(OperatorAction.ID, -1));
-			if (i.getIntExtra(OperatorAction.ID, -1) == -1)
-				shutDown();
+			if (i.getIntExtra(OperatorAction.ID, -1) == -1) {
+				releaseWake();
+				return;
+			}
 
 			args.putAll(i.getExtras());
 			args.putInt(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
@@ -121,13 +124,21 @@ public class ActionDetailActivity extends AppCompatActivity {
 		}
 	}
 
-	void shutDown() {
+	void releaseWake() {
 		Intent i = new Intent(this, WakeUpService.class);
 		i.putExtra(WakeUpHelper.CMD, WakeUpHelper.DONE);
 		startService(i);
-//
-//		Intent a = new Intent(this, MainActivity.class);
-//		startActivity(a);
+	}
+
+	void shutDown() {
+		releaseWake();
+		finish();
+	}
+
+	public void addSchedule(View view) {
+		try {
+			addSchedule(((ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail)).mAction.mId);
+		} catch (NullPointerException e) { Toast.makeText(this, "Could not start scheduler, try again", Toast.LENGTH_SHORT).show(); }
 	}
 
 	@Override
