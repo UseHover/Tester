@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.MainActivity;
+import com.hover.tester.WakeUpHelper;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.utils.Utils;
@@ -41,9 +42,14 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 
 		if (getArguments().containsKey(OperatorAction.ID)) {
 			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
+			if (mAction == null) {
+				((ActionDetailActivity) getActivity()).shutDown();
+				return;
+			}
 			mService = OperatorService.load(mAction.mOpId, getContext());
 			fillToolbar();
 		}
@@ -57,14 +63,15 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		return root;
 	}
 
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (getArguments().containsKey(WakeUpHelper.SOURCE) && getActivity() != null)
+			((ActionDetailActivity) getActivity()).makeRequest(getArguments());
+	}
+
 	private void fillToolbar() {
 		((ActionDetailActivity) getActivity()).setTitle(mAction.mName, mService.mOpSlug + " " + mService.mName);
-
-//		CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) getActivity().findViewById(R.id.toolbar_layout);
-//		if (appBarLayout != null) {
-//				((ActionDetailActivity) getActivity()).getSupportActionBar().setSubtitle("Hellow");
-//			appBarLayout.setTitle(mAction.mName);
-//		}
 	}
 
 	private void addVariableView(View root) {

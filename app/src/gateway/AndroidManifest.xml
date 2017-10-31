@@ -17,6 +17,13 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name="com.hover.tester.FirebaseDeviceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
         <receiver
             android:name="com.hover.tester.WakeUpReceiver"
             android:enabled="true"

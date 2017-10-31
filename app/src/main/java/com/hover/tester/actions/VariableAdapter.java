@@ -32,6 +32,7 @@ public class VariableAdapter extends RecyclerViewCursorAdapter<VariableAdapter.V
 	public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
 		holder.mVariable = new ActionVariable(cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)),
 			cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_VALUE)), mAction.mId);
+		holder.mView.setTag(holder.mVariable.mName);
 		holder.mTextLayout.setHint(holder.mVariable.mName);
 		holder.mEdit.setText(holder.mVariable.mValue);
 		holder.mEdit.addTextChangedListener(new TextWatcher() {

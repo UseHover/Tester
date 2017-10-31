@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
@@ -43,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
+
+		String token = FirebaseInstanceId.getInstance().getToken();
+		if (token != null && !token.isEmpty()) Log.e(TAG, FirebaseInstanceId.getInstance().getToken());
+
 		setContentView(R.layout.activity_main);
 		mFrag = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
@@ -64,11 +69,10 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public void pickIntegration(View view) {
-		WakeUpHelper.sendWakeIntent(this);
-//		if (NetworkOps.isConnected(this)) {
-//			DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.CHOOSE_SERVICE_STEP, null);
-//			newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
-//		}
+		if (NetworkOps.isConnected(this)) {
+			DialogFragment newFragment = AddServiceDialogFragment.newInstance(AddServiceDialogFragment.CHOOSE_SERVICE_STEP, null);
+			newFragment.show(getSupportFragmentManager(), AddServiceDialogFragment.TAG);
+		}
 	}
 
 	@Override

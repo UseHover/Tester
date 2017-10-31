@@ -16,6 +16,8 @@ import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.BuildConfig;
 import com.hover.tester.MainActivity;
 import com.hover.tester.R;
+import com.hover.tester.WakeUpHelper;
+import com.hover.tester.WakeUpService;
 
 public class ActionDetailActivity extends AppCompatActivity {
 	public static final String TAG = "ActionDetailActivity";
@@ -52,21 +54,40 @@ public class ActionDetailActivity extends AppCompatActivity {
 		}
 	}
 
+	void makeRequest(Bundle extras) {
+		try {
+			ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
+			HoverParameters.Builder hpb = startRequest(frag);
+			for (String key : extras.keySet())
+				hpb.extra(key, extras.get(key).toString());
+			makeRequest(hpb);
+		} catch (NullPointerException e) {
+			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show(); // FIXME: Generate failed status report
+		}
+	}
 	public void makeRequest(View view) {
-		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
+		try {
+			ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
+			HoverParameters.Builder hpb = startRequest(frag);
+			frag.addAndSaveExtras(hpb);
+			makeRequest(hpb);
+		} catch (NullPointerException e) {
+			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show();
+		}
+	}
+
+	private HoverParameters.Builder startRequest(ActionDetailFragment frag) {
 		if (frag != null) {
 			OperatorAction action = frag.mAction;
-			HoverParameters.Builder hpb = new HoverParameters.Builder(ActionDetailActivity.this)
-					.request(action.mSlug).from(action.mOpId);
-			try {
-				frag.addAndSaveExtras(hpb);
-				Log.e(TAG, BuildConfig.BUILD_TYPE);
-				if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
-				startActivityForResult(hpb.buildIntent(), 0);
-			} catch (NullPointerException e) {
-				Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show();
-			}
+			Log.e(TAG, "Starting action: " + action.mSlug + " " + action.mOpId);
+			return new HoverParameters.Builder(ActionDetailActivity.this).request(action.mSlug).from(action.mOpId);
 		}
+		return null;
+	}
+	private void makeRequest(HoverParameters.Builder hpb) {
+		Log.e(TAG, BuildConfig.BUILD_TYPE);
+		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
 	@Override
@@ -77,12 +98,20 @@ public class ActionDetailActivity extends AppCompatActivity {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}
+//		shutDown();
 	}
 
 	private void restoreFrag(Bundle savedInstanceState) {
 		if (savedInstanceState == null) {
+			Intent i = getIntent();
 			Bundle args = new Bundle();
-			args.putInt(OperatorAction.ID, getIntent().getIntExtra(OperatorAction.ID, 1));
+
+			Log.e(TAG, "Restoring frag. Action Id: " + i.getIntExtra(OperatorAction.ID, -1));
+			if (i.getIntExtra(OperatorAction.ID, -1) == -1)
+				shutDown();
+
+			args.putAll(i.getExtras());
+			args.putInt(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
 
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);
@@ -90,6 +119,15 @@ public class ActionDetailActivity extends AppCompatActivity {
 					.add(R.id.action_detail, fragment)
 					.commit();
 		}
+	}
+
+	void shutDown() {
+		Intent i = new Intent(this, WakeUpService.class);
+		i.putExtra(WakeUpHelper.CMD, WakeUpHelper.DONE);
+		startService(i);
+//
+//		Intent a = new Intent(this, MainActivity.class);
+//		startActivity(a);
 	}
 
 	@Override
