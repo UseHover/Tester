@@ -24,7 +24,7 @@ import com.hover.tester.schedules.AbstractScheduleActivity;
 
 public class ActionDetailActivity extends AbstractScheduleActivity {
 	public static final String TAG = "ActionDetailActivity";
-	private String mSrc;
+	String mSrc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hover.sdk.main.HoverParameters;
+import com.hover.tester.MainActivity;
 import com.hover.tester.schedules.Scheduler;
 import com.hover.tester.WakeUpHelper;
 import com.hover.tester.services.OperatorService;
@@ -63,7 +64,9 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		if (mAction != null) {
 			fillView(getView());
 			if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
-				if (getArguments().getString(WakeUpHelper.SOURCE).equals(WakeUpHelper.FCM))
+				if (!MainActivity.meetsAllRequirements(getActivity()))
+					((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Permissions required. App needs manual intervention"));
+				else if (getArguments().getString(WakeUpHelper.SOURCE).equals(WakeUpHelper.FCM))
 					((ActionDetailActivity) getActivity()).makeRequest(getArguments());
 				else
 					((ActionDetailActivity) getActivity()).makeRequest(getView());

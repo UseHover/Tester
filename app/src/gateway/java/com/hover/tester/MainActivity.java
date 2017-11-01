@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
@@ -141,6 +142,13 @@ public class MainActivity extends AbstractScheduleActivity implements MainFragme
 	}
 
 	public static boolean meetsAllRequirements(Context c) {
+		return meetsAppRequirements(c) && hasSmsPerm(c) && HoverIntegrationActivity.isAccessibilityEnabled(c) && HoverIntegrationActivity.isOverlayEnabled(c);
+	}
+	public static boolean hasSmsPerm(Context c) {
+		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+	}
+
+	public static boolean meetsAppRequirements(Context c) {
 		return hasPhonePerm(c) && hasWakeLockPerm(c) && usableAndroidVersion();
 	}
 	public static boolean hasPhonePerm(Context c) {
