@@ -29,10 +29,10 @@ public class GatewayManagerService extends Service {
 	public int onStartCommand(Intent i, int flags, int startId) {
 		if (i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.START))
 			start(i);
-		else if (i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.UPDATE))
+		else if (mReport != null && i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.UPDATE))
 			mReport.update(i.getIntExtra(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, -1),
 					i.getStringExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG), i.getStringExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE));
-		else
+		else if (mReport != null)
 			end(i, false);
 		return START_STICKY;
 	}

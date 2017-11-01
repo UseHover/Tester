@@ -88,9 +88,11 @@ public class VolleySingleton {
 	}
 
 	public static String uploadJsonNow(Context c, int requestType, String url_end, final JSONObject json) throws InterruptedException, ExecutionException, TimeoutException {
-		String url = c.getString(R.string.hsdk_url_builder, c.getString(R.string.hsdk_base_url), url_end);
+		return uploadJsonNowAbsolute(c, requestType, c.getString(R.string.hsdk_url_builder, c.getString(R.string.hsdk_base_url), url_end), json);
+	}
+	public static String uploadJsonNowAbsolute(Context c, int requestType, String full_url, final JSONObject json) throws InterruptedException, ExecutionException, TimeoutException {
 		RequestFuture<String> future = RequestFuture.newFuture();
-		VolleySingleton.getInstance(c).addToRequestQueue(new StringRequest(requestType, url, future, future) {
+		VolleySingleton.getInstance(c).addToRequestQueue(new StringRequest(requestType, full_url, future, future) {
 			@Override
 			public byte[] getBody() throws AuthFailureError { return json.toString().getBytes(); }
 			@Override

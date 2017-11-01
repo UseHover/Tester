@@ -118,7 +118,7 @@ public class StatusReport {
 	private Map<String, String> getExtras(Intent i) {
 		Map<String, String> extras = new HashMap<>();
 		for (String key : i.getExtras().keySet())
-			mExtras.put(key, i.getExtras().get(key).toString());
+			extras.put(key, i.getExtras().get(key).toString());
 		return extras;
 	}
 }

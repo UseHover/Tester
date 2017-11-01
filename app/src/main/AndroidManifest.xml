@@ -52,6 +52,7 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
+                <action android:name="com.hover.tester.gateway.CONFIRMED_TRANSACTION"/>
                 <action android:name="com.hover.tester.CONFIRMED_TRANSACTION"/>
             </intent-filter>
         </receiver>

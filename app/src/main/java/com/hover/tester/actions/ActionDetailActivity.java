@@ -24,6 +24,7 @@ import com.hover.tester.schedules.AbstractScheduleActivity;
 
 public class ActionDetailActivity extends AbstractScheduleActivity {
 	public static final String TAG = "ActionDetailActivity";
+	private String mSrc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,9 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 		setUpToolbar();
 		restoreFrag(savedInstanceState);
 	}
+
+	@Override
+	protected void onNewIntent(Intent intent) { mSrc = intent.hasExtra(WakeUpHelper.SOURCE) ? intent.getStringExtra(WakeUpHelper.SOURCE) : null; }
 
 	private void setUpToolbar() {
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -102,7 +106,8 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}
-		updateGatewayManager(resultCode, data);
+		if (mSrc != null)
+			updateGatewayManager(resultCode, data);
 	}
 
 	private void restoreFrag(Bundle savedInstanceState) {

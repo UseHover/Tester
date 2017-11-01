@@ -44,6 +44,7 @@ public class MainActivity extends AbstractScheduleActivity implements MainFragme
 		super.onCreate(savedInstanceState);
 		Fabric.with(this, new Crashlytics());
 
+		WakeUpHelper.releaseAlarms(this);
 		String token = FirebaseInstanceId.getInstance().getToken();
 		if (token != null && !token.isEmpty()) Log.e(TAG, FirebaseInstanceId.getInstance().getToken());
 

@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 6;
+	public static final int DATABASE_VERSION = 7;
 	public static final String DATABASE_NAME = "services.db";
 
 	public DbHelper(Context context) {
@@ -22,7 +22,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP + " long, "
 			+ Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE + " text, "
 			+ Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG + " text, "
-			+ Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE + " text, "
+			+ Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE + " text "
 			+ ");";
 
 	private static final String SERVICE_TABLE_CREATE = "create table "

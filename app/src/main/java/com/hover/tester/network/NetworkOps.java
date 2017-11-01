@@ -31,9 +31,12 @@ public class NetworkOps {
 	}
 
 	private HttpsURLConnection makeRequest(String urlEnd, String type, JSONObject data) throws IOException {
+		URL url = new URL(mContext.getString(R.string.url_builder, mContext.getString(R.string.base_url), urlEnd));
+		return makeRequest(url, type, data);
+	}
+	private HttpsURLConnection makeRequest(URL url, String type, JSONObject data) throws IOException {
 		if (!isConnected(mContext)) throw new IOException(mContext.getString(R.string.error_network));
 
-		URL url = new URL(mContext.getString(R.string.url_builder, mContext.getString(R.string.base_url), urlEnd));
 		Log.i(TAG, "hitting URl: " + url);
 		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 		conn.setReadTimeout(10000);
@@ -88,8 +91,8 @@ public class NetworkOps {
 		return "failure";
 	}
 
-	public String upload(String urlEnd, JSONObject object, String httpType) throws IOException {
-		HttpsURLConnection conn = makeRequest(urlEnd, httpType, object);
+	public String upload(String url, JSONObject object, String httpType) throws IOException {
+		HttpsURLConnection conn = makeRequest(new URL(url), httpType, object);
 		responseCode = conn.getResponseCode();
 		Log.i(TAG, "response code: " + responseCode);
 		InputStream is = conn.getInputStream();
