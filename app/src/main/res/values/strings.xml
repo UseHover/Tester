@@ -4,6 +4,7 @@
 
     <string name="base_url">https://www.usehover.com/sdk/</string>
     <string name="service_list_endpoint">list-services</string>
+    <string name="hover_status_endpoint">status-report</string>
     <string name="url_builder">%1$s%2$s</string>
 
     <string name="update_config">Update Config</string>

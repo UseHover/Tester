@@ -14,10 +14,12 @@ import android.widget.Toast;
 
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.BuildConfig;
+import com.hover.tester.GatewayManagerService;
 import com.hover.tester.MainActivity;
 import com.hover.tester.R;
 import com.hover.tester.WakeUpHelper;
 import com.hover.tester.WakeUpService;
+import com.hover.tester.database.Contract;
 import com.hover.tester.schedules.AbstractScheduleActivity;
 
 public class ActionDetailActivity extends AbstractScheduleActivity {
@@ -61,7 +63,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			HoverParameters.Builder hpb = startRequest(frag);
 			for (String key : extras.keySet())
 				hpb.extra(key, extras.get(key).toString());
-			makeRequest(hpb);
+			makeRequest(hpb, frag);
 		} catch (NullPointerException e) {
 			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show(); // FIXME: Generate failed status report
 		}
@@ -71,7 +73,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
 			HoverParameters.Builder hpb = startRequest(frag);
 			frag.addAndSaveExtras(hpb);
-			makeRequest(hpb);
+			makeRequest(hpb, frag);
 		} catch (NullPointerException e) {
 			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show();
 		}
@@ -85,9 +87,10 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 		}
 		return null;
 	}
-	private void makeRequest(HoverParameters.Builder hpb) {
+	private void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		Log.e(TAG, BuildConfig.BUILD_TYPE);
 		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+		hpb.extra("pin", frag.mService.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
@@ -99,7 +102,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}
-		releaseWake();
+		updateGatewayManager(resultCode, data);
 	}
 
 	private void restoreFrag(Bundle savedInstanceState) {
@@ -109,7 +112,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 
 			Log.e(TAG, "Restoring frag. Action Id: " + i.getIntExtra(OperatorAction.ID, -1));
 			if (i.getIntExtra(OperatorAction.ID, -1) == -1) {
-				releaseWake();
+				updateGatewayManager(RESULT_CANCELED, new Intent(i).putExtra("error", "No Action ID specified"));
 				return;
 			}
 
@@ -124,14 +127,18 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 		}
 	}
 
-	void releaseWake() {
-		Intent i = new Intent(this, WakeUpService.class);
-		i.putExtra(WakeUpHelper.CMD, WakeUpHelper.DONE);
+	void updateGatewayManager(int resultCode, Intent data) {
+		Intent i = new Intent(this, GatewayManagerService.class);
+		i.putExtra(OperatorAction.ID, data.getIntExtra(OperatorAction.ID, -1));
+		if (resultCode == RESULT_CANCELED) {
+			i.putExtra(GatewayManagerService.CMD, GatewayManagerService.DONE);
+			i.putExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE, data.getStringExtra("error"));
+		} else {
+			i.putExtra(GatewayManagerService.CMD, GatewayManagerService.UPDATE);
+			i.putExtra(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, data.getIntExtra("transaction_id", -1));
+			i.putExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG, data.getStringExtra("response_message"));
+		}
 		startService(i);
-	}
-
-	void shutDown() {
-		releaseWake();
 		finish();
 	}
 

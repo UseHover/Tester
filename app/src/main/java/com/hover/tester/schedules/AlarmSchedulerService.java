@@ -48,8 +48,7 @@ public class AlarmSchedulerService extends IntentService {
 			getScheduled();
 			if (mHourly.size() > 6 || mDaily.size() > 24)
 				Log.e(TAG, "Too many scheduled!"); // FIXME!
-			else
-				setAlarms();
+			setAlarms();
 		}
 	}
 

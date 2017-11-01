@@ -15,10 +15,13 @@ public class TesterContentProvider extends ContentProvider {
 			ROUTE_VARIABLES = 3, ROUTE_VARIABLES_ID = 4,
 			ROUTE_RESULTS = 5, ROUTE_RESULTS_ID = 6,
 			ROUTE_SERVICES = 7, ROUTE_SERVICES_ID = 8,
-			ROUTE_SCHEDULES = 9, ROUTE_SCHEDULES_ID = 10;
+			ROUTE_SCHEDULES = 9, ROUTE_SCHEDULES_ID = 10,
+			ROUTE_REPORTS = 11, ROUTE_REPORTS_ID = 12;
 
 	private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	static {
+		sUriMatcher.addURI(AUTHORITY, "reports", ROUTE_REPORTS);
+		sUriMatcher.addURI(AUTHORITY, "reports/*", ROUTE_REPORTS_ID);
 		sUriMatcher.addURI(AUTHORITY, "services", ROUTE_SERVICES);
 		sUriMatcher.addURI(AUTHORITY, "services/*", ROUTE_SERVICES_ID);
 		sUriMatcher.addURI(AUTHORITY, "actions", ROUTE_ACTIONS);
@@ -43,6 +46,10 @@ public class TesterContentProvider extends ContentProvider {
 		int uriMatch = sUriMatcher.match(uri);
 		Cursor cursor;
 		switch (uriMatch) {
+			case ROUTE_REPORTS:
+				cursor = db.query(Contract.StatusReportEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
+			case ROUTE_REPORTS_ID:
+				cursor = db.query(Contract.StatusReportEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_SERVICES:
 				cursor = db.query(Contract.OperatorServiceEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_SERVICES_ID:
@@ -77,6 +84,12 @@ public class TesterContentProvider extends ContentProvider {
 		final int match = sUriMatcher.match(uri);
 		int count;
 		switch (match) {
+			case ROUTE_REPORTS:
+				count = db.update(Contract.StatusReportEntry.TABLE_NAME, values, selection, selectionArgs);
+				break;
+			case ROUTE_REPORTS_ID:
+				count = db.update(Contract.StatusReportEntry.TABLE_NAME, values, selection, selectionArgs);
+				break;
 			case ROUTE_SERVICES:
 				count = db.update(Contract.OperatorServiceEntry.TABLE_NAME, values, selection, selectionArgs);
 				break;
@@ -125,6 +138,10 @@ public class TesterContentProvider extends ContentProvider {
 		long id;
 		Uri result;
 		switch (match) {
+			case ROUTE_REPORTS:
+				id = db.insertOrThrow(Contract.StatusReportEntry.TABLE_NAME, null, values);
+				result = Uri.parse(Contract.StatusReportEntry.CONTENT_URI + "/" + id);
+				break;
 			case ROUTE_SERVICES:
 				id = db.insertOrThrow(Contract.OperatorServiceEntry.TABLE_NAME, null, values);
 				result = Uri.parse(Contract.OperatorServiceEntry.CONTENT_URI + "/" + id);
@@ -145,6 +162,7 @@ public class TesterContentProvider extends ContentProvider {
 				id = db.insertOrThrow(Contract.ActionResultEntry.TABLE_NAME, null, values);
 				result = Uri.parse(Contract.ActionResultEntry.CONTENT_URI + "/" + id);
 				break;
+			case ROUTE_REPORTS_ID:
 			case ROUTE_SERVICES_ID:
 			case ROUTE_ACTIONS_ID:
 			case ROUTE_SCHEDULES_ID:
@@ -171,6 +189,10 @@ public class TesterContentProvider extends ContentProvider {
 	public String getType(Uri uri) {
 		final int match = sUriMatcher.match(uri);
 		switch (match) {
+			case ROUTE_REPORTS:
+				return Contract.StatusReportEntry.CONTENT_TYPE;
+			case ROUTE_REPORTS_ID:
+				return Contract.StatusReportEntry.CONTENT_ITEM_TYPE;
 			case ROUTE_SERVICES:
 				return Contract.OperatorServiceEntry.CONTENT_TYPE;
 			case ROUTE_SERVICES_ID:

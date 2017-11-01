@@ -9,8 +9,24 @@ public final class Contract {
 
 	public static final String CONTENT_AUTHORITY = "com.hover.tester.provider";
 	public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-	private static final String PATH_SERVICES = "services", PATH_ACTIONS = "actions",
+	private static final String PATH_REPORTS = "reports", PATH_SERVICES = "services", PATH_ACTIONS = "actions",
 			PATH_SCHEDULES = "schedules", PATH_VARIABLES = "variables", PATH_RESULTS = "results";
+
+	public static abstract class StatusReportEntry implements BaseColumns {
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.tester.reports";
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.tester.report";
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_REPORTS).build();
+		public static final String TABLE_NAME = "reports";
+		public static final String COLUMN_ENTRY_ID = "_id";
+		public static final String COLUMN_STATUS = "status";
+		public static final String COLUMN_ACTION_ID = "action_id";
+		public static final String COLUMN_TRANSACTION_ID = "transaction_id";
+		public static final String COLUMN_START_TIMESTAMP = "start_time";
+		public static final String COLUMN_FINISH_TIMESTAMP = "end_time";
+		public static final String COLUMN_FAILURE_MESSAGE = "fail_msg";
+		public static final String COLUMN_FINAL_SESSION_MSG = "final_session_msg";
+		public static final String COLUMN_CONFIRMATION_MESSAGE = "confirm_msg";
+	}
 
 	public static abstract class OperatorServiceEntry implements BaseColumns {
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.tester.services";
@@ -77,6 +93,18 @@ public final class Contract {
 		public static final String COLUMN_RETURN_VALUES = "result_values";
 	}
 
+	public static String[] REPORT_PROJECTION = {
+		StatusReportEntry.COLUMN_ENTRY_ID,
+		StatusReportEntry.COLUMN_STATUS,
+		StatusReportEntry.COLUMN_ACTION_ID,
+		StatusReportEntry.COLUMN_TRANSACTION_ID,
+		StatusReportEntry.COLUMN_START_TIMESTAMP,
+		StatusReportEntry.COLUMN_FINISH_TIMESTAMP,
+		StatusReportEntry.COLUMN_FAILURE_MESSAGE,
+		StatusReportEntry.COLUMN_FINAL_SESSION_MSG,
+		StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE
+	};
+
 	public static String[] SERVICE_PROJECTION = {
 		OperatorServiceEntry.COLUMN_ENTRY_ID,
 		OperatorServiceEntry.COLUMN_SERVICE_ID,
@@ -101,28 +129,28 @@ public final class Contract {
 	};
 
 	public static String[] SCHEDULE_PROJECTION = {
-			ActionScheduleEntry.COLUMN_ENTRY_ID,
-			ActionScheduleEntry.COLUMN_ACTION_ID,
-			ActionScheduleEntry.COLUMN_TYPE,
-			ActionScheduleEntry.COLUMN_DAY,
-			ActionScheduleEntry.COLUMN_HOUR,
-			ActionScheduleEntry.COLUMN_MIN
+		ActionScheduleEntry.COLUMN_ENTRY_ID,
+		ActionScheduleEntry.COLUMN_ACTION_ID,
+		ActionScheduleEntry.COLUMN_TYPE,
+		ActionScheduleEntry.COLUMN_DAY,
+		ActionScheduleEntry.COLUMN_HOUR,
+		ActionScheduleEntry.COLUMN_MIN
 	};
 
 	public static String[] VARIABLE_PROJECTION = {
-			ActionVariableEntry.COLUMN_ENTRY_ID,
-			ActionVariableEntry.COLUMN_ACTION_ID,
-			ActionVariableEntry.COLUMN_NAME,
-			ActionVariableEntry.COLUMN_VALUE
+		ActionVariableEntry.COLUMN_ENTRY_ID,
+		ActionVariableEntry.COLUMN_ACTION_ID,
+		ActionVariableEntry.COLUMN_NAME,
+		ActionVariableEntry.COLUMN_VALUE
 	};
 
 	public static String[] RESULT_PROJECTION = {
-			ActionResultEntry.COLUMN_ENTRY_ID,
-			ActionResultEntry.COLUMN_SDK_ID,
-			ActionResultEntry.COLUMN_ACTION_ID,
-			ActionResultEntry.COLUMN_TEXT,
-			ActionResultEntry.COLUMN_STATUS,
-			ActionResultEntry.COLUMN_TIMESTAMP,
-			ActionResultEntry.COLUMN_RETURN_VALUES
+		ActionResultEntry.COLUMN_ENTRY_ID,
+		ActionResultEntry.COLUMN_SDK_ID,
+		ActionResultEntry.COLUMN_ACTION_ID,
+		ActionResultEntry.COLUMN_TEXT,
+		ActionResultEntry.COLUMN_STATUS,
+		ActionResultEntry.COLUMN_TIMESTAMP,
+		ActionResultEntry.COLUMN_RETURN_VALUES
 	};
 }

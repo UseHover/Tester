@@ -59,7 +59,7 @@ public class HoverIntegratonListService extends NetworkService {
 			JSONArray json = getServiceJson(serviceId, c).getJSONArray(ACTIONS);
 			CharSequence[] list = new CharSequence[json.length()];
 			for (int j = 0; j < json.length(); j++)
-				list[j] = json.getJSONObject(j).getString(NAME);
+				list[j] = json.getJSONObject(j).getString(ID) + ". " + json.getJSONObject(j).getString(NAME);
 			return list;
 		} catch (Exception e) {
 			return new CharSequence[0];

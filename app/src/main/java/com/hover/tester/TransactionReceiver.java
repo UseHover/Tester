@@ -8,6 +8,7 @@ import android.util.Log;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.ActionResult;
 import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.database.Contract;
 import com.hover.tester.utils.Utils;
 
 public class TransactionReceiver extends BroadcastReceiver {
@@ -24,7 +25,17 @@ public class TransactionReceiver extends BroadcastReceiver {
 			ar.mText = i.getStringExtra("response_message");
 			ar.save(context);
 		}
+		notifyGatewayManager(context, i);
 		openActivity(context, i);
+	}
+
+	private void notifyGatewayManager(Context c, Intent intent) {
+		Intent i = new Intent(c, GatewayManagerService.class);
+		i.putExtra(GatewayManagerService.CMD, GatewayManagerService.DONE);
+		i.putExtra(OperatorAction.ID, intent.getIntExtra(OperatorAction.ID, -1));
+		i.putExtra(StatusReport.STATUS, StatusReport.SUCCESS);
+		i.putExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, intent.getStringExtra("response_message"));
+		c.startService(i);
 	}
 
 	private void openActivity(Context c, Intent i) {

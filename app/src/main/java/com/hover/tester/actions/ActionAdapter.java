@@ -31,7 +31,7 @@ public class ActionAdapter extends RecyclerViewCursorAdapter<ActionAdapter.ViewH
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
 		holder.mAction = new OperatorAction(cursor, getContext());
-		holder.mNameView.setText(holder.mAction.mName);
+		holder.mNameView.setText(holder.mAction.mId + ". " + holder.mAction.mName);
 
 		if (holder.mAction.mLastResult != null) {
 			if (holder.mAction.mLastResult.mTimeStamp != 0L)

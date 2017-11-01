@@ -12,6 +12,19 @@ public class DbHelper extends SQLiteOpenHelper {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
 
+	private static final String REPORT_TABLE_CREATE = "create table "
+			+ Contract.StatusReportEntry.TABLE_NAME + "("
+			+ Contract.StatusReportEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
+			+ Contract.StatusReportEntry.COLUMN_STATUS + " integer not null, "
+			+ Contract.StatusReportEntry.COLUMN_ACTION_ID + " integer not null, "
+			+ Contract.StatusReportEntry.COLUMN_TRANSACTION_ID + " integer, "
+			+ Contract.StatusReportEntry.COLUMN_START_TIMESTAMP + " long not null, "
+			+ Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP + " long, "
+			+ Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE + " text, "
+			+ Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG + " text, "
+			+ Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE + " text, "
+			+ ");";
+
 	private static final String SERVICE_TABLE_CREATE = "create table "
 			+ Contract.OperatorServiceEntry.TABLE_NAME + "("
 			+ Contract.OperatorServiceEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
@@ -67,6 +80,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ "UNIQUE (" + Contract.ActionResultEntry.COLUMN_SDK_ID + ") ON CONFLICT REPLACE"
 			+ ");";
 
+	private static final String SQL_DELETE_REPORTS = "DROP TABLE IF EXISTS " + Contract.StatusReportEntry.TABLE_NAME;
 	private static final String SQL_DELETE_SERVICES = "DROP TABLE IF EXISTS " + Contract.OperatorServiceEntry.TABLE_NAME;
 	private static final String SQL_DELETE_ACTIONS = "DROP TABLE IF EXISTS " + Contract.OperatorActionEntry.TABLE_NAME;
 	private static final String SQL_DELETE_SCHEDULES = "DROP TABLE IF EXISTS " + Contract.ActionScheduleEntry.TABLE_NAME;
@@ -74,6 +88,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String SQL_DELETE_RESULTS = "DROP TABLE IF EXISTS " + Contract.ActionResultEntry.TABLE_NAME;
 
 	public void onCreate(SQLiteDatabase db) {
+		db.execSQL(REPORT_TABLE_CREATE);
 		db.execSQL(SERVICE_TABLE_CREATE);
 		db.execSQL(ACTION_TABLE_CREATE);
 		db.execSQL(SCHEDULE_TABLE_CREATE);
@@ -81,6 +96,7 @@ public class DbHelper extends SQLiteOpenHelper {
 		db.execSQL(RESULT_TABLE_CREATE);
 	}
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL(SQL_DELETE_REPORTS);
 		db.execSQL(SQL_DELETE_SERVICES);
 		db.execSQL(SQL_DELETE_ACTIONS);
 		db.execSQL(SQL_DELETE_SCHEDULES);

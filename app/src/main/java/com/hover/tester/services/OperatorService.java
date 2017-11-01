@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.sdk.utils.Utils;
+import com.hover.tester.KeyStoreHelper;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
@@ -79,8 +80,20 @@ public class OperatorService {
 	public static int getId(Cursor cursor) {
 		return cursor.getInt(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_SERVICE_ID));
 	}
-	public static String getPin(Cursor cursor) {
-		return cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_PIN));
+	public String getPin(Context c) {
+		String encryptedpin = null;
+		SQLiteDatabase database = new DbHelper(c).getReadableDatabase();
+		Cursor cursor = database.query(Contract.OperatorServiceEntry.TABLE_NAME, Contract.SERVICE_PIN_PROJECTION,
+				Contract.OperatorServiceEntry.COLUMN_SERVICE_ID + " = " + mId,
+				null, null, null, null);
+		if (cursor.moveToFirst())
+			encryptedpin = cursor.getString(cursor.getColumnIndex(Contract.OperatorServiceEntry.COLUMN_PIN));
+		cursor.close();
+		database.close();
+		if (encryptedpin != null)
+			return KeyStoreHelper.decrypt(encryptedpin, mId, c);
+		else
+			return null;
 	}
 	public void setPin(String value) {
 		mEncryptedPin = value;

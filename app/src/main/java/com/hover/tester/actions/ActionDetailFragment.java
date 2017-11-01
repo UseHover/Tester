@@ -44,7 +44,7 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		if (getArguments().containsKey(OperatorAction.ID)) {
 			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
 			if (mAction == null) {
-				((ActionDetailActivity) getActivity()).shutDown();
+				((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Action not found. Has it been added in the user interface?"));
 				return;
 			}
 			mService = OperatorService.load(mAction.mOpId, getContext());
@@ -54,26 +54,31 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View root = inflater.inflate(R.layout.frag_action_detail, container, false);
-		fillInfo(root);
-		addVariableView(root);
-		addResultView(root);
-		return root;
+		return inflater.inflate(R.layout.frag_action_detail, container, false);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
-			if (getArguments().getString(WakeUpHelper.SOURCE).equals(WakeUpHelper.FCM))
-				((ActionDetailActivity) getActivity()).makeRequest(getArguments());
-			else
-				((ActionDetailActivity) getActivity()).makeRequest(getView());
+		if (mAction != null) {
+			fillView(getView());
+			if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
+				if (getArguments().getString(WakeUpHelper.SOURCE).equals(WakeUpHelper.FCM))
+					((ActionDetailActivity) getActivity()).makeRequest(getArguments());
+				else
+					((ActionDetailActivity) getActivity()).makeRequest(getView());
+			}
 		}
 	}
 
+	private void fillView(View root) {
+		fillInfo(root);
+		addVariableView(root);
+		addResultView(root);
+	}
+
 	private void fillInfo(View view) {
-		((ActionDetailActivity) getActivity()).setTitle(mAction.mName, mService.mOpSlug + " " + mService.mName);
+		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mOpSlug + " " + mService.mName);
 		if (mSchedule != null) {
 			view.findViewById(R.id.add_schedule).setVisibility(View.GONE);
 			((TextView) view.findViewById(R.id.schedule_text)).setText(getString(R.string.schedule, mSchedule.getString(getActivity())));

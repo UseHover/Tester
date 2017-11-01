@@ -9,10 +9,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
-import com.hover.tester.actions.ActionDetailActivity;
-import com.hover.tester.actions.OperatorAction;
-import com.hover.tester.schedules.AlarmSchedulerService;
-
 public class WakeUpService extends Service {
 	public final static String TAG = "WakeUpService";
 	public static PowerManager.WakeLock mWakeLock;
@@ -20,32 +16,22 @@ public class WakeUpService extends Service {
 
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
-		Log.e(TAG, "Service running. CMD: " + i.getStringExtra(WakeUpHelper.CMD));
+		Log.e(TAG, "Service running. CMD: " + i.getStringExtra(GatewayManagerService.CMD));
 
-		if (i.hasExtra(WakeUpHelper.CMD) && i.getStringExtra(WakeUpHelper.CMD).equals(WakeUpHelper.DONE))
+		if (i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.DONE))
 			releaseWakeLock();
 		else {
 			getWakeLock();
-			if (i.hasExtra(AlarmSchedulerService.INTERVAL))
-				scheduleNextAlarm(i);
-			startTransaction(i);
+			startGatewayManager(i);
+			WakeUpReceiver.completeWakefulIntent(i);
 		}
-
-		WakeUpReceiver.completeWakefulIntent(i);
 		return START_NOT_STICKY;
 	}
 
-	private void startTransaction(Intent intent) {
-		final Intent i = new Intent(this, ActionDetailActivity.class);
+	private void startGatewayManager(Intent intent) {
+		final Intent i = new Intent(this, GatewayManagerService.class);
 		i.putExtras(intent.getExtras());
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		startActivity(i);
-	}
-
-	private void scheduleNextAlarm(Intent i) {
-		Intent intent = new Intent(this, AlarmSchedulerService.class);
-		intent.putExtra(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
-		startService(intent);
+		startService(i);
 	}
 
 	private void getWakeLock() {
@@ -64,8 +50,10 @@ public class WakeUpService extends Service {
 	}
 
 	private void releaseWakeLock() {
-		if (mWakeLock != null && mWakeLock.isHeld())
+		if (mWakeLock != null && mWakeLock.isHeld()) {
 			mWakeLock.release();
+			mWakeLock = null;
+		}
 		stopSelf();
 	}
 

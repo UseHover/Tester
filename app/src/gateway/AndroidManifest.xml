@@ -16,9 +16,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
-        <service
-            android:name="com.hover.tester.notifications.FirebaseDeviceIDService">
+        <service android:name="com.hover.tester.notifications.FirebaseDeviceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
@@ -34,6 +32,15 @@
             android:name="com.hover.tester.WakeUpService"
             android:enabled="true"
             android:exported="true">
+        </service>
+        <service
+            android:name="com.hover.tester.GatewayManagerService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+        <service
+            android:name="com.hover.tester.ReportUpService"
+            android:exported="false">
         </service>
     </application>
 
