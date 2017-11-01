@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.hover.tester.WakeUpHelper;
+import com.hover.tester.WakeUpReceiver;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
@@ -35,37 +36,37 @@ public class AlarmSchedulerService extends IntentService {
 			if (mActionSchedule != null) {
 				switch (mActionSchedule.getType()) {
 					case 2:
-						setAlarm(mActionSchedule.getId(), getTime(mActionSchedule), AlarmManager.INTERVAL_DAY * 7);
+						setAlarm(mActionSchedule.getId(), WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY * 7);
 						break;
 					case 1:
-						setAlarm(mActionSchedule.getId(), getTime(mActionSchedule), AlarmManager.INTERVAL_DAY);
+						setAlarm(mActionSchedule.getId(), WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY);
 						break;
 					default:
-						setAlarm(mActionSchedule.getId(), getPlusHour(), AlarmManager.INTERVAL_HOUR);
+						setAlarm(mActionSchedule.getId(), WakeUpHelper.getPlusHour(), AlarmManager.INTERVAL_HOUR);
 				}
 			}
 		} else {
 			getScheduled();
 			if (mHourly.size() > 6 || mDaily.size() > 24)
-				Log.e(TAG, "Too many scheduled!"); // FIXME!
+				Log.e(TAG, "Too many scheduled!");
 			setAlarms();
 		}
 	}
 
 	private void setAlarms() {
 		for (Scheduler s : mWeekly)
-			setAlarm(s.getId(), getTime(s), AlarmManager.INTERVAL_DAY * 7);
+			setAlarm(s.getId(), WakeUpHelper.getScheduleTime(s), AlarmManager.INTERVAL_DAY * 7);
 		for (Scheduler c : mDaily)
-			setAlarm(c.getId(), getTime(c), AlarmManager.INTERVAL_DAY);
+			setAlarm(c.getId(), WakeUpHelper.getScheduleTime(c), AlarmManager.INTERVAL_DAY);
 		int i = 0;
 		for (Scheduler h : mHourly) {
-			setAlarm(h.getId(), getTime(i), AlarmManager.INTERVAL_HOUR);
+			setAlarm(h.getId(), WakeUpHelper.getScheduleTime(i, mHourly.size()), AlarmManager.INTERVAL_HOUR);
 			i++;
 		}
 	}
 
 	public void setAlarm(int actionId, long when, long interval) {
-		Intent wake = WakeUpHelper.createScheduledIntent(this, actionId);
+		Intent wake = createScheduledIntent(this, actionId);
 		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		if (android.os.Build.VERSION.SDK_INT >= 19) {
 			wake.putExtra(INTERVAL, interval);
@@ -74,30 +75,23 @@ public class AlarmSchedulerService extends IntentService {
 			alarm.setRepeating(AlarmManager.RTC_WAKEUP, when, interval, PendingIntent.getBroadcast(this, actionId, wake, PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
-	private long getTime(Scheduler s) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(System.currentTimeMillis());
-		if (s.getType() == Scheduler.WEEKLY) {
-			cal.add(Calendar.WEEK_OF_MONTH, 1);
-			cal.set(Calendar.DAY_OF_WEEK, s.getDay());
-		} else
-			cal.add(Calendar.DAY_OF_YEAR, 1);
-		cal.set(Calendar.HOUR_OF_DAY, s.getHour());
-		cal.set(Calendar.MINUTE, s.getMin());
-		return cal.getTimeInMillis();
+	private Intent createScheduledIntent(Context c, int actionId) {
+		Intent wake = new Intent(c, WakeUpReceiver.class);
+		wake.putExtra(OperatorAction.ID, actionId);
+		wake.putExtra(WakeUpHelper.SOURCE, WakeUpHelper.TIMER);
+		addActionVariableValues(actionId, wake);
+		return wake;
 	}
-	private long getTime(int hourlyPos) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(System.currentTimeMillis());
-		cal.add(Calendar.HOUR, 1);
-		cal.set(Calendar.MINUTE, hourlyPos * 60/mHourly.size());
-		return cal.getTimeInMillis();
-	}
-	private long getPlusHour() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(System.currentTimeMillis());
-		cal.add(Calendar.HOUR, 1);
-		return cal.getTimeInMillis();
+
+	private void addActionVariableValues(int actionId, Intent wake) {
+		Cursor cursor = getContentResolver().query(Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
+				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + actionId, null, null);
+		cursor.moveToFirst();
+		if (!cursor.isAfterLast()) {
+			wake.putExtra(cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)),
+					cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_VALUE)));
+		}
+		cursor.close();
 	}
 
 	private void getScheduled() {

@@ -10,11 +10,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Utils {
-	public static final String TAG = "Utils", OPERATOR = "operator_slug", ACTION = "action", ACTIVE = "active",
-						COUNTRY = "country", CURRENCY = "currency", SERVICE = "service_id",
-						AMOUNT = "amount", PHONE = "phone", MERCHANT = "merchant",
-						PAYBILL = "paybill", PAYBILL_ACCT = "paybill_acct",
-						RECIPIENT_NRC = "recipient_nrc", WITHDRAWAL_CODE = "withdrawal_code";
+	public static final String TAG = "Utils", ACTION = "action";
 
 	public static final String[] parsableValues = new String[]{ "code", "currency", "balance", "amount", "who" };
 

@@ -47,6 +47,7 @@ public class ReportUpService extends NetworkService {
 			Log.e(TAG, "Slack upload response: " + hoverResponse);
 //				VolleySingleton.uploadJsonNow(this, Request.Method.POST, getString(R.string.hover_status_endpoint), report);
 		} catch (NullPointerException | JSONException | InterruptedException | TimeoutException | ExecutionException e) {
+			Log.e(TAG, "Failed to upload to hover", e);
 		}
 	}
 
@@ -58,6 +59,7 @@ public class ReportUpService extends NetworkService {
 				Log.e(TAG, "Webhook upload response: " + hoverResponse);
 			}
 		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException e) {
+			Log.e(TAG, "Failed to upload to webhook", e);
 		}
 	}
 
