@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.android.volley.Request;
+import com.crashlytics.android.Crashlytics;
 import com.hover.tester.database.Contract;
 import com.hover.tester.network.NetworkOps;
 import com.hover.tester.network.NetworkService;
@@ -33,10 +34,10 @@ public class ReportUpService extends NetworkService {
 		if (intent.getIntExtra(Contract.StatusReportEntry.COLUMN_ENTRY_ID, -1) != -1) {
 			try {
 				JSONObject report = new StatusReport(intent.getIntExtra(Contract.StatusReportEntry.COLUMN_ENTRY_ID, -1), this).getJson();
-				Log.e(TAG, "Uploading! " + report);
+				Log.i(TAG, "Uploading! " + report);
 				uploadToHover(report);
 				uploadToWebhook(report);
-			} catch (JSONException e) {}
+			} catch (JSONException e) { Crashlytics.logException(e); }
 		}
 	}
 
@@ -44,10 +45,10 @@ public class ReportUpService extends NetworkService {
 		try {
 			String webhook = "https://hooks.slack.com/services/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";
 			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, createSlackJson(report));
-			Log.e(TAG, "Slack upload response: " + hoverResponse);
 //				VolleySingleton.uploadJsonNow(this, Request.Method.POST, getString(R.string.hover_status_endpoint), report);
 		} catch (NullPointerException | JSONException | InterruptedException | TimeoutException | ExecutionException e) {
-			Log.e(TAG, "Failed to upload to hover", e);
+			Log.d(TAG, "Failed to upload to hover", e);
+			Crashlytics.logException(e);
 		}
 	}
 
@@ -56,10 +57,11 @@ public class ReportUpService extends NetworkService {
 			String webhook = Utils.getSharedPrefs(this).getString(NotificationReceiverService.WEBHOOK, null);
 			if (webhook != null) {
 				String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, report);
-				Log.e(TAG, "Webhook upload response: " + hoverResponse);
+				Log.d(TAG, "Webhook upload response: " + hoverResponse);
 			}
 		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException e) {
 			Log.e(TAG, "Failed to upload to webhook", e);
+			Crashlytics.logException(e);
 		}
 	}
 

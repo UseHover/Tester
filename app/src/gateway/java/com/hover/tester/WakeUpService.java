@@ -16,7 +16,7 @@ public class WakeUpService extends Service {
 
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
-		Log.e(TAG, "Service running. CMD: " + i.getStringExtra(GatewayManagerService.CMD));
+		Log.i(TAG, "Service running. CMD: " + i.getStringExtra(GatewayManagerService.CMD));
 
 		if (i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.DONE))
 			releaseWakeLock();

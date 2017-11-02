@@ -16,7 +16,7 @@ public class WakeUpReceiver extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.e(TAG, "Received broadcast. Source: " + intent.getStringExtra(WakeUpHelper.SOURCE));
+		Log.i(TAG, "Received broadcast. Source: " + intent.getStringExtra(WakeUpHelper.SOURCE));
 
 		if (!WakeUpHelper.alarmsLocked(context))
 			wakeService(context, intent);

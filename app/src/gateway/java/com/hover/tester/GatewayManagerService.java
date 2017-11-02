@@ -27,7 +27,7 @@ public class GatewayManagerService extends Service {
 
 	@Override
 	public int onStartCommand(Intent i, int flags, int startId) {
-		Log.e(TAG, "Gateway manager CMD: " + i.getStringExtra(GatewayManagerService.CMD));
+		Log.i(TAG, "Gateway manager CMD: " + i.getStringExtra(GatewayManagerService.CMD));
 		if (i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.START))
 			start(i);
 		else if (mReport != null && i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.UPDATE)) {
@@ -81,11 +81,11 @@ public class GatewayManagerService extends Service {
 	}
 
 	public void startTimer() {
-		Log.d(TAG, "starting timer");
+		Log.d(TAG, "Starting timer");
 		cancelTimer();
 		cdt = new CountDownTimer(TIMER_LENGTH, TIMER_LENGTH/6) {
 			public void onTick(long millisUntilFinished) { Log.d(TAG, "Time left: " + millisUntilFinished); }
-			public void onFinish() { Log.e(TAG, "Expired. Notifying"); end(null, true); }
+			public void onFinish() { Log.d(TAG, "Gateway timer expired, notifying"); end(null, true); }
 		}.start();
 	}
 

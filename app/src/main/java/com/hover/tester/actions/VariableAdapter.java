@@ -39,7 +39,6 @@ public class VariableAdapter extends RecyclerViewCursorAdapter<VariableAdapter.V
 			@Override public void afterTextChanged(Editable s) { }
 			@Override public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 			@Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-				Log.e(TAG, "Saving: " + holder.mVariable.mName + ": " + s.toString());
 				holder.mVariable.mValue = s.toString();
 			}
 		});

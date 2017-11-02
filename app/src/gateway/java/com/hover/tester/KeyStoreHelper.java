@@ -6,6 +6,8 @@ import android.security.KeyPairGeneratorSpec;
 import android.util.Base64;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
@@ -49,7 +51,7 @@ public class KeyStoreHelper {
 			String encryptedText  = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
 			return encryptedText;
 		} catch (Exception e) {
-			Sentry.capture(e);
+			Crashlytics.logException(e);
 			Log.e("Key Store failure", e.toString());
 		}
 		return null;
@@ -75,7 +77,7 @@ public class KeyStoreHelper {
 
 			return new String(bytes, 0, bytes.length, "UTF-8");
 		} catch (Exception e) {
-			Sentry.capture(e);
+			Crashlytics.logException(e);
 			Log.e("Key Store failure", e.toString());
 		}
 		return null;
@@ -111,7 +113,7 @@ public class KeyStoreHelper {
 				generator.generateKeyPair();
 			}
 		} catch (Exception e) {
-			Sentry.capture(e);
+			Crashlytics.logException(e);
 			Log.e("Key Store failure", e.toString());
 		}
 	}

@@ -108,7 +108,6 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		Log.d(TAG, "creating loader");
 		if (id == VARIABLE_LOADER)
 			return new CursorLoader(getActivity(), Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
 				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, null);
@@ -144,7 +143,6 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	void addAndSaveExtras(HoverParameters.Builder hpb) throws NullPointerException {
 		for (int i = 0; i < mVariableAdapter.getItemCount(); i++) {
 			ActionVariable va = ((VariableAdapter.ViewHolder) variableRecycler.findViewHolderForAdapterPosition(i)).mVariable;
-			Log.e(TAG, "Adding Extra: " + va.mName + ": " + va.mValue);
 			va.save(getActivity());
 			if (va.mValue == null || va.mValue.isEmpty())
 				throw new NullPointerException("You must provide a value for " + va.mName);
@@ -171,14 +169,10 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	}
 
 	void showResult(int resultCode, Intent data) {
-		Log.e(TAG, "showing snack. trans id: " + data.getLongExtra("transaction_id", -1));
-		if (resultCode == Activity.RESULT_OK) {
-			Log.e(TAG, data.getStringExtra("response_message"));
+		if (resultCode == Activity.RESULT_OK)
 			Snackbar.make(getView(), "Request Sent. " + data.getStringExtra("response_message"), Snackbar.LENGTH_LONG).show();
-		} else if (data != null && data.hasExtra("result")) {
-			Log.e(TAG, data.getStringExtra("result"));
+		else if (data != null && data.hasExtra("result"))
 			Snackbar.make(getView(), "Failure. " + data.getStringExtra("result"), Snackbar.LENGTH_LONG).show();
-		}
 		getLoaderManager().initLoader(RESULT_LOADER, null, this);
 	}
 }

@@ -147,7 +147,7 @@ public class TesterContentProvider extends ContentProvider {
 				result = Uri.parse(Contract.OperatorServiceEntry.CONTENT_URI + "/" + id);
 				break;
 			case ROUTE_ACTIONS:
-				id = db.insertOrThrow(Contract.OperatorActionEntry.TABLE_NAME, null, values);
+				id = db.replace(Contract.OperatorActionEntry.TABLE_NAME, null, values);
 				result = Uri.parse(Contract.OperatorActionEntry.CONTENT_URI + "/" + id);
 				break;
 			case ROUTE_SCHEDULES:

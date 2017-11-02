@@ -11,7 +11,8 @@ public class ActionVariable {
 	public String mName, mValue;
 	public int mActionId;
 
-	public ActionVariable(String name) {
+	public ActionVariable(int actionId, String name) {
+		mActionId = actionId;
 		mName = name;
 	}
 
@@ -33,7 +34,7 @@ public class ActionVariable {
 	private ContentValues getContentValues() {
 		ContentValues cv = new ContentValues();
 		cv.put(Contract.ActionVariableEntry.COLUMN_NAME, mName);
-		cv.put(Contract.ActionVariableEntry.COLUMN_VALUE, mValue);
+		if (mValue != null) cv.put(Contract.ActionVariableEntry.COLUMN_VALUE, mValue);
 		cv.put(Contract.ActionVariableEntry.COLUMN_ACTION_ID, mActionId);
 		return cv;
 	}

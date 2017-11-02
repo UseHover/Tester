@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hover.tester.WakeUpHelper;
 import com.hover.tester.WakeUpReceiver;
@@ -48,7 +49,7 @@ public class AlarmSchedulerService extends IntentService {
 		} else {
 			getScheduled();
 			if (mHourly.size() > 6 || mDaily.size() > 24)
-				Log.e(TAG, "Too many scheduled!");
+				Toast.makeText(this, "Warning, too many actions scheduled! It is highly recommended that you reduce the number or frequency.", Toast.LENGTH_SHORT).show();
 			setAlarms();
 		}
 	}
@@ -88,7 +89,6 @@ public class AlarmSchedulerService extends IntentService {
 				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + actionId, null, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Log.e(TAG, "Adding extra. " + cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)) + " : " + cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_VALUE)));
 			wake.putExtra(cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)),
 					cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_VALUE)));
 			if (cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)).equals("amount"))

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 
@@ -45,6 +46,7 @@ public class StatusReport {
 			mSessionMsg = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG));
 			mConfirmMsg = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE));
 		} else {
+			Crashlytics.log("Failed to get cursor for Status Report");
 			Log.d(TAG, "didn't get cursor...");
 		}
 		cursor.close();
@@ -55,7 +57,6 @@ public class StatusReport {
 			@Override
 			public void run() {
 				mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.StatusReportEntry.CONTENT_URI, getStartContentValues()));
-				Log.e(TAG, "id after save is: " + mId);
 			}
 		}).start();
 		return this;
@@ -119,7 +120,7 @@ public class StatusReport {
 		Map<String, String> extras = new HashMap<>();
 		for (String key : i.getExtras().keySet()) {
 			if (i.getExtras().get(key) != null) extras.put(key, i.getExtras().get(key).toString());
-			else Log.e(TAG, "extra " + key + " was null");
+			else Crashlytics.log("Status Report extra " + key + " was null. Action Id: " + mActionId);
 		}
 		return extras;
 	}

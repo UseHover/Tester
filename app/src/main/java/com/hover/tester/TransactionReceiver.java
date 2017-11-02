@@ -17,7 +17,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.e(TAG, "Transaction received. Trans id: " + i.getLongExtra("_id", -1) + ", Action: " + i.getStringExtra(Utils.ACTION));
+		Log.i(TAG, "Transaction received. Trans id: " + i.getLongExtra("_id", -1) + ", Action: " + i.getStringExtra(Utils.ACTION));
 		ActionResult ar = ActionResult.getBySdkId((int) i.getLongExtra("_id", -1), context);
 		if (ar != null) {
 			ar.mStatus = ActionResult.STATUS_SUCCEEDED;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.R;
 import com.hover.tester.actions.OperatorAction;
@@ -32,6 +33,7 @@ public class HoverIntegratonListService extends NetworkService {
 			String services = netOps.download(getString(R.string.service_list_endpoint) + (i.hasExtra(SIM_IDS) ? "?sims[]" + i.getStringExtra(SIM_IDS) : ""));
 			saveServices(services);
 		} catch (Exception e) {
+			Crashlytics.logException(e);
 			Log.d("HoverListService", "download failed", e);
 		}
 	}
@@ -50,6 +52,7 @@ public class HoverIntegratonListService extends NetworkService {
 				list[j] = json.getJSONObject(j).getInt(ID) + ": " + json.getJSONObject(j).getString(NAME);
 			return list;
 		} catch (Exception e) {
+			Crashlytics.logException(e);
 			return new CharSequence[0];
 		}
 	}
@@ -62,6 +65,7 @@ public class HoverIntegratonListService extends NetworkService {
 				list[j] = json.getJSONObject(j).getString(ID) + ". " + json.getJSONObject(j).getString(NAME);
 			return list;
 		} catch (Exception e) {
+			Crashlytics.logException(e);
 			return new CharSequence[0];
 		}
 	}
@@ -82,7 +86,10 @@ public class HoverIntegratonListService extends NetworkService {
 		try {
 			for (int a = 0; a < jsonActions.length(); a++)
 				actions.add(new OperatorAction(jsonActions.getJSONObject(a), serviceId));
-		} catch (JSONException e) { Log.e("HIntegratonListService", "Exception processing actions from json", e); }
+		} catch (JSONException e) {
+			Crashlytics.logException(e);
+			Log.d("HIntegratonListService", "Exception processing actions from SDK", e);
+		}
 		return actions;
 	}
 
@@ -90,6 +97,7 @@ public class HoverIntegratonListService extends NetworkService {
 		try {
 			return new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null)).getJSONObject(index).getInt(ID);
 		} catch (JSONException e) {
+			Crashlytics.logException(e);
 			return -1;
 		}
 	}

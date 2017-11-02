@@ -22,7 +22,7 @@ public class Scheduler {
 	public Scheduler() {}
 
 	public Scheduler(Cursor cursor) {
-		Log.e(TAG, "creating schedule from cursor");
+		Log.i(TAG, "Creating schedule from cursor");
 		mActionId = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_ACTION_ID));
 		mType = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_TYPE));
 		if (mType != HOURLY) {
@@ -69,7 +69,6 @@ public class Scheduler {
 			@Override
 			public void run() {
 				int id = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.ActionScheduleEntry.CONTENT_URI, getContentValues()));
-				Log.e(TAG, "Saved schedule: " + id + " for action: " + mActionId);
 				c.startService(new Intent(c, AlarmSchedulerService.class));
 			}
 		}).start();
@@ -83,7 +82,7 @@ public class Scheduler {
 		if (cursor.moveToFirst())
 			schedule = new Scheduler(cursor);
 		else
-			Log.e(TAG, "schedule cursor was null");
+			Log.d(TAG, "schedule cursor was null");
 		cursor.close();
 		database.close();
 		return schedule;

@@ -30,10 +30,9 @@ public class OperatorAction {
 		mSlug = jsonAct.getString("slug");
 		mName = jsonAct.getString("name");
 		JSONArray variables = jsonAct.getJSONArray("params");
-		Log.d(TAG, "params length: " + variables.length());
 		mVariables = new ActionVariable[variables.length()];
 		for (int v = 0; v < variables.length(); v++)
-			mVariables[v] = new ActionVariable(variables.getString(v));
+			mVariables[v] = new ActionVariable(mId, variables.getString(v));
 	}
 
 	public OperatorAction(Cursor c, Context context) {
@@ -50,13 +49,9 @@ public class OperatorAction {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Log.e(TAG, "id before save is: " + mId);
 				mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.OperatorActionEntry.CONTENT_URI, getBasicContentValues()));
-				Log.e(TAG, "id after save is: " + mId);
-				for (ActionVariable variable: mVariables) {
-					variable.mActionId = mId;
+				for (ActionVariable variable: mVariables)
 					variable.save(c);
-				}
 			}
 		}).start();
 	}

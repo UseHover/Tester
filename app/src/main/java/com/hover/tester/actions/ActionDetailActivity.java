@@ -82,14 +82,14 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	private HoverParameters.Builder startRequest(ActionDetailFragment frag) {
 		if (frag != null) {
 			OperatorAction action = frag.mAction;
-			Log.e(TAG, "Starting action: " + action.mSlug + " " + action.mOpId);
+			Log.i(TAG, "Starting request: " + action.mSlug + " " + action.mOpId);
 			return new HoverParameters.Builder(ActionDetailActivity.this).request(action.mSlug).from(action.mOpId);
 		}
 		return null;
 	}
 	private void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-		Log.e(TAG, BuildConfig.BUILD_TYPE);
-		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+//		Log.e(TAG, BuildConfig.BUILD_TYPE);
+//		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
 		hpb.extra("pin", frag.mService.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
@@ -110,7 +110,6 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			Intent i = getIntent();
 			Bundle args = new Bundle();
 
-			Log.e(TAG, "Restoring frag. Action Id: " + i.getIntExtra(OperatorAction.ID, -1));
 			if (i.getIntExtra(OperatorAction.ID, -1) == -1) {
 				updateGatewayManager(RESULT_CANCELED, new Intent(i).putExtra("error", "No Action ID specified"));
 				return;
@@ -128,7 +127,6 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	}
 
 	void updateGatewayManager(int resultCode, Intent data) {
-		Log.e(TAG, "updating gateway manager. Result is cancelled: " + (resultCode == RESULT_CANCELED));
 		Intent i = new Intent(this, GatewayManagerService.class);
 		i.putExtra(OperatorAction.ID, data.getIntExtra(OperatorAction.ID, -1));
 		if (resultCode == RESULT_CANCELED) {
@@ -137,12 +135,9 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 		} else {
 			i.putExtra(GatewayManagerService.CMD, GatewayManagerService.UPDATE);
 			i.putExtra(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, data.getIntExtra("transaction_id", -1));
-			Log.e(TAG, "response_msg: " + data.getStringExtra("response_message"));
 			i.putExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG, data.getStringExtra("response_message"));
 		}
-		Log.e(TAG, "Hellow?");
 		startService(i);
-		Log.e(TAG, "finishing");
 		finish();
 	}
 

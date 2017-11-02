@@ -12,7 +12,6 @@ public abstract class AbstractScheduleActivity extends AppCompatActivity impleme
 	public void addSchedule(int actionId) {
 		mScheduler = Scheduler.getInstance();
 		mScheduler.setId(actionId);
-		Log.e(TAG, "Schedule Action Id set to " + actionId);
 		DialogFragment newFragment = AddScheduleDialogFragment.newInstance(AddScheduleDialogFragment.ADD_SCHEDULE_STEP, actionId);
 		newFragment.show(getSupportFragmentManager(), AddScheduleDialogFragment.TAG);
 	}
@@ -21,7 +20,6 @@ public abstract class AbstractScheduleActivity extends AppCompatActivity impleme
 	public void setType(int type) {
 		if (mScheduler == null) mScheduler = Scheduler.getInstance();
 		mScheduler.setType(type);
-		Log.e(TAG, "set type, Schedule Action Id is " + mScheduler.getId());
 		if (type == 0)
 			saveSchedule();
 	}
@@ -31,7 +29,6 @@ public abstract class AbstractScheduleActivity extends AppCompatActivity impleme
 		if (mScheduler == null) mScheduler = Scheduler.getInstance();
 		if (day != -1)
 			mScheduler.setDay(day);
-		Log.e(TAG, "set day, Schedule Action Id is " + mScheduler.getId());
 		DialogFragment newFragment = AddScheduleDialogFragment.newInstance(AddScheduleDialogFragment.TIME_PICKER_STEP, mScheduler.getId());
 		newFragment.show(getSupportFragmentManager(), AddScheduleDialogFragment.TAG);
 	}
@@ -40,7 +37,6 @@ public abstract class AbstractScheduleActivity extends AppCompatActivity impleme
 	public void setTime(int hour, int min) {
 		if (mScheduler == null) mScheduler = Scheduler.getInstance();
 		mScheduler.setTime(hour, min);
-		Log.e(TAG, "set time, Schedule Action Id is " + mScheduler.getId());
 		saveSchedule();
 	}
 
@@ -48,7 +44,5 @@ public abstract class AbstractScheduleActivity extends AppCompatActivity impleme
 	public void saveSchedule() {
 		if (mScheduler == null) mScheduler = Scheduler.getInstance();
 		mScheduler.save(this);
-		Log.e(TAG, "saved. Schedule Action Id is " + mScheduler.getId());
-
 	}
 }

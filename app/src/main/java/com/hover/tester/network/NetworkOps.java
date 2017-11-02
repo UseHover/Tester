@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.hover.tester.R;
 
 import org.json.JSONException;
@@ -75,19 +76,15 @@ public class NetworkOps {
 
 	public String download(String urlEnd) throws IOException {
 		InputStream is = null;
-		try {
-			Log.i(TAG, "making request: " + urlEnd);
-			HttpsURLConnection conn = makeRequest(urlEnd, "GET", null);
-			responseCode = conn.getResponseCode();
-			Log.i(TAG, "response code: " + responseCode);
-			if (responseCode == 200) {
-				is = conn.getInputStream();
-				return convertStreamToString(is);
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "API Key Error", e);
-			return e.getMessage();
-		} finally {	if (is != null) { try { is.close(); } catch (IOException e) {} } }
+		Log.i(TAG, "making request: " + urlEnd);
+		HttpsURLConnection conn = makeRequest(urlEnd, "GET", null);
+		responseCode = conn.getResponseCode();
+		Log.i(TAG, "response code: " + responseCode);
+		if (responseCode == 200) {
+			is = conn.getInputStream();
+			return convertStreamToString(is);
+		}
+		if (is != null) { try { is.close(); } catch (IOException e) {} }
 		return "failure";
 	}
 
@@ -111,11 +108,13 @@ public class NetworkOps {
 			}
 		} catch (IOException e) {
 			Log.d(TAG, "Failed to convert download to String", e);
+			Crashlytics.logException(e);
 		} finally {
 			try {
 				is.close();
 			} catch (IOException e) {
 				Log.d(TAG, "Failed close input stream", e);
+				Crashlytics.logException(e);
 			}
 		}
 		return sb.toString();

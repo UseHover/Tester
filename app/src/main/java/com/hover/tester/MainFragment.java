@@ -106,13 +106,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (getView() != null) ((ContentLoadingProgressBar) getView().findViewById(R.id.loading_progress)).hide();
-		if (loader.getId() == SERVICE_LOADER) {
+		if (loader.getId() == SERVICE_LOADER)
 			mServiceAdapter.swapCursor(cursor);
-			Log.e(TAG, "service cursor count: " + mServiceAdapter.getItemCount());
-		} else if (mActionAdapters != null && mActionAdapters.get(loader.getId()) != null) {
+		else if (mActionAdapters != null && mActionAdapters.get(loader.getId()) != null)
 			mActionAdapters.get(loader.getId()).swapCursor(cursor);
-			Log.e(TAG, "service " + loader.getId() + " actions cursor count: " + mActionAdapters.get(loader.getId()).getItemCount());
-		}
 	}
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {

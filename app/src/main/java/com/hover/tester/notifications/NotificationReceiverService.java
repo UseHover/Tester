@@ -22,7 +22,7 @@ public class NotificationReceiverService extends FirebaseMessagingService {
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		if (remoteMessage.getData().size() > 0) {
-			Log.e(TAG, "Message data payload: " + remoteMessage.getData());
+			Log.i(TAG, "Received notification. Message data payload: " + remoteMessage.getData());
 			if (remoteMessage.getData().containsKey(WEBHOOK))
 				setWebhook(remoteMessage.getData().get(WEBHOOK));
 			if (remoteMessage.getData().containsKey(OperatorAction.ID))

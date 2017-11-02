@@ -47,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 
 		WakeUpHelper.releaseAlarms(this);
 		String token = FirebaseInstanceId.getInstance().getToken();
-		if (token != null && !token.isEmpty()) Log.e(TAG, FirebaseInstanceId.getInstance().getToken());
+		if (token != null && !token.isEmpty())
+			Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
 
 		setContentView(R.layout.activity_main);
 		mFrag = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
