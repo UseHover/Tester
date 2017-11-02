@@ -24,7 +24,6 @@ import com.hover.tester.schedules.AbstractScheduleActivity;
 
 public class ActionDetailActivity extends AbstractScheduleActivity {
 	public static final String TAG = "ActionDetailActivity";
-	String mSrc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +32,6 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 		setUpToolbar();
 		restoreFrag(savedInstanceState);
 	}
-
-	@Override
-	protected void onNewIntent(Intent intent) { mSrc = intent.hasExtra(WakeUpHelper.SOURCE) ? intent.getStringExtra(WakeUpHelper.SOURCE) : null; }
 
 	private void setUpToolbar() {
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -106,8 +102,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}
-		if (mSrc != null)
-			updateGatewayManager(resultCode, data);
+		updateGatewayManager(resultCode, data);
 	}
 
 	private void restoreFrag(Bundle savedInstanceState) {
@@ -133,6 +128,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	}
 
 	void updateGatewayManager(int resultCode, Intent data) {
+		Log.e(TAG, "updating gateway manager. Result is cancelled: " + (resultCode == RESULT_CANCELED));
 		Intent i = new Intent(this, GatewayManagerService.class);
 		i.putExtra(OperatorAction.ID, data.getIntExtra(OperatorAction.ID, -1));
 		if (resultCode == RESULT_CANCELED) {
@@ -141,9 +137,12 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 		} else {
 			i.putExtra(GatewayManagerService.CMD, GatewayManagerService.UPDATE);
 			i.putExtra(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, data.getIntExtra("transaction_id", -1));
+			Log.e(TAG, "response_msg: " + data.getStringExtra("response_message"));
 			i.putExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG, data.getStringExtra("response_message"));
 		}
+		Log.e(TAG, "Hellow?");
 		startService(i);
+		Log.e(TAG, "finishing");
 		finish();
 	}
 

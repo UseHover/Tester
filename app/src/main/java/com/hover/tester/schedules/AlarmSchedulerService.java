@@ -77,9 +77,9 @@ public class AlarmSchedulerService extends IntentService {
 
 	private Intent createScheduledIntent(Context c, int actionId) {
 		Intent wake = new Intent(c, WakeUpReceiver.class);
+		addActionVariableValues(actionId, wake);
 		wake.putExtra(OperatorAction.ID, actionId);
 		wake.putExtra(WakeUpHelper.SOURCE, WakeUpHelper.TIMER);
-		addActionVariableValues(actionId, wake);
 		return wake;
 	}
 
@@ -87,9 +87,13 @@ public class AlarmSchedulerService extends IntentService {
 		Cursor cursor = getContentResolver().query(Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
 				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + actionId, null, null);
 		cursor.moveToFirst();
-		if (!cursor.isAfterLast()) {
+		while (!cursor.isAfterLast()) {
+			Log.e(TAG, "Adding extra. " + cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)) + " : " + cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_VALUE)));
 			wake.putExtra(cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)),
 					cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_VALUE)));
+			if (cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)).equals("amount"))
+				wake.putExtra("currency", "USD");
+			cursor.moveToNext();
 		}
 		cursor.close();
 	}

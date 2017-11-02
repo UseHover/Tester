@@ -66,10 +66,8 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 			if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
 				if (!MainActivity.meetsAllRequirements(getActivity()))
 					((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Permissions required. App needs manual intervention"));
-				else if (getArguments().getString(WakeUpHelper.SOURCE).equals(WakeUpHelper.FCM))
-					((ActionDetailActivity) getActivity()).makeRequest(getArguments());
 				else
-					((ActionDetailActivity) getActivity()).makeRequest(getView());
+					((ActionDetailActivity) getActivity()).makeRequest(getArguments());
 			}
 		}
 	}
@@ -139,7 +137,8 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	@Override
 	public void onPause() {
 		super.onPause();
-		saveExtras();
+		if (mVariableAdapter != null && variableRecycler != null)
+			saveExtras();
 	}
 
 	void addAndSaveExtras(HoverParameters.Builder hpb) throws NullPointerException {
@@ -156,8 +155,10 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	}
 
 	void saveExtras() {
-		for (int i = 0; i < mVariableAdapter.getItemCount(); i++)
-			((VariableAdapter.ViewHolder) variableRecycler.findViewHolderForAdapterPosition(i)).mVariable.save(getActivity());
+		for (int i = 0; i < mVariableAdapter.getItemCount(); i++) {
+			if (variableRecycler.findViewHolderForAdapterPosition(i) != null)
+				((VariableAdapter.ViewHolder) variableRecycler.findViewHolderForAdapterPosition(i)).mVariable.save(getActivity());
+		}
 	}
 
 	void showResult(int resultCode, Intent data) {
