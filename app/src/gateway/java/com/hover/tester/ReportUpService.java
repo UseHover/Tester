@@ -44,9 +44,9 @@ public class ReportUpService extends NetworkService {
 	private void uploadToHover(JSONObject report) {
 		try {
 			String webhook = "https://hooks.slack.com/services/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";
-			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, createSlackJson(report));
-//				VolleySingleton.uploadJsonNow(this, Request.Method.POST, getString(R.string.hover_status_endpoint), report);
-		} catch (NullPointerException | JSONException | InterruptedException | TimeoutException | ExecutionException e) {
+//			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, createSlackJson(report));
+			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, getString(R.string.hover_status_endpoint), report);
+		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException e) {
 			Log.d(TAG, "Failed to upload to hover", e);
 			Crashlytics.logException(e);
 		}

@@ -148,6 +148,6 @@ public class StatusReport {
 			String key = (String) keys.next();
 			map.put(key, extras.getString(key));
 		}
-		return map;
+		return map.size() > 0 ? map : null;
 	}
 }

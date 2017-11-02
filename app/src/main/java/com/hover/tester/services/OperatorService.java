@@ -4,22 +4,16 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
-import com.hover.sdk.utils.Utils;
 import com.hover.tester.KeyStoreHelper;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class OperatorService {

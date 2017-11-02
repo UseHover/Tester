@@ -12,6 +12,12 @@ import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.utils.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class TransactionReceiver extends BroadcastReceiver {
 	public final static String TAG = "TransactionReceiver";
 	public TransactionReceiver() { }
@@ -49,8 +55,28 @@ public class TransactionReceiver extends BroadcastReceiver {
 		i.putExtra(OperatorAction.ID, intent.getIntExtra(OperatorAction.ID, -1));
 		i.putExtra(StatusReport.STATUS, StatusReport.SUCCESS);
 		i.putExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, intent.getStringExtra("response_message"));
-		i.putExtra(StatusReport.TRANSACTION, intent.getExtras().toString());
+		i.putExtra(StatusReport.TRANSACTION, convertTinfoToJsonString(intent.getExtras(), new JSONObject()));
 		c.startService(i);
+	}
+
+	private String convertTinfoToJsonString(Bundle extras, JSONObject json) {
+		for (String key : extras.keySet()) {
+			if (extras.get(key) != null) {
+				try {
+					if (key.equals("transaction_extras")) {
+						for (Map.Entry<String, String> entry : ((HashMap<String, String>) extras.get(key)).entrySet()) {
+							if (entry.getKey().equals("server_uuid"))
+								json.put("uuid", entry.getValue());
+							else
+								json.put(entry.getKey(), entry.getValue());
+						}
+					}
+					else if (extras.get(key) != null && !extras.get(key).toString().isEmpty())
+						json.put(key, extras.get(key).toString());
+				} catch (NullPointerException | JSONException e) { }
+			}
+		}
+		return json.toString();
 	}
 
 	private void openActivity(Context c, Intent i) {

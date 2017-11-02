@@ -22,8 +22,6 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.security.auth.x500.X500Principal;
 
-import io.sentry.Sentry;
-
 public class KeyStoreHelper {
 
 	public static String encrypt(int serviceId, String value, Context c) {
