@@ -20,12 +20,13 @@ public final class Contract {
 		public static final String COLUMN_ENTRY_ID = "_id";
 		public static final String COLUMN_STATUS = "status";
 		public static final String COLUMN_ACTION_ID = "action_id";
-		public static final String COLUMN_TRANSACTION_ID = "transaction_id";
+		public static final String COLUMN_TRANSACTION = "transaction_info";
 		public static final String COLUMN_START_TIMESTAMP = "start_time";
 		public static final String COLUMN_FINISH_TIMESTAMP = "end_time";
 		public static final String COLUMN_FAILURE_MESSAGE = "fail_msg";
 		public static final String COLUMN_FINAL_SESSION_MSG = "final_session_msg";
 		public static final String COLUMN_CONFIRMATION_MESSAGE = "confirm_msg";
+		public static final String COLUMN_EXTRAS = "extras";
 	}
 
 	public static abstract class OperatorServiceEntry implements BaseColumns {
@@ -97,12 +98,13 @@ public final class Contract {
 		StatusReportEntry.COLUMN_ENTRY_ID,
 		StatusReportEntry.COLUMN_STATUS,
 		StatusReportEntry.COLUMN_ACTION_ID,
-		StatusReportEntry.COLUMN_TRANSACTION_ID,
+		StatusReportEntry.COLUMN_TRANSACTION,
 		StatusReportEntry.COLUMN_START_TIMESTAMP,
 		StatusReportEntry.COLUMN_FINISH_TIMESTAMP,
 		StatusReportEntry.COLUMN_FAILURE_MESSAGE,
 		StatusReportEntry.COLUMN_FINAL_SESSION_MSG,
-		StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE
+		StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE,
+		StatusReportEntry.COLUMN_EXTRAS
 	};
 
 	public static String[] SERVICE_PROJECTION = {

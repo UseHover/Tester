@@ -136,7 +136,6 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 			i.putExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE, data.getStringExtra("error"));
 		} else {
 			i.putExtra(GatewayManagerService.CMD, GatewayManagerService.UPDATE);
-			i.putExtra(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, data.getIntExtra("transaction_id", -1));
 			i.putExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG, data.getStringExtra("response_message"));
 		}
 		startService(i);

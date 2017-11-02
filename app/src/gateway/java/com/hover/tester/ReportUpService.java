@@ -33,7 +33,7 @@ public class ReportUpService extends NetworkService {
 	protected void onHandleIntent(Intent intent) {
 		if (intent.getIntExtra(Contract.StatusReportEntry.COLUMN_ENTRY_ID, -1) != -1) {
 			try {
-				JSONObject report = new StatusReport(intent.getIntExtra(Contract.StatusReportEntry.COLUMN_ENTRY_ID, -1), this).getJson();
+				JSONObject report = new StatusReport(intent.getIntExtra(Contract.StatusReportEntry.COLUMN_ENTRY_ID, -1), this).getJson(this);
 				Log.i(TAG, "Uploading! " + report);
 				uploadToHover(report);
 				uploadToWebhook(report);
@@ -80,7 +80,7 @@ public class ReportUpService extends NetworkService {
 			JSONObject field = new JSONObject();
 			field.put("title", key);
 			field.put("value", reportJson.get(key));
-			field.put("short", (!key.equals("confirmation_message") && !key.equals("final_session_message")));
+			field.put("short", key.equals("id") && key.equals("action_id") || key.equals("operator_id") || key.equals("status") || key.equals("started_timestamp") || key.equals("finished_timestamp"));
 			fields.put(field);
 		}
 

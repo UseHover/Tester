@@ -17,12 +17,13 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ Contract.StatusReportEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
 			+ Contract.StatusReportEntry.COLUMN_STATUS + " integer not null, "
 			+ Contract.StatusReportEntry.COLUMN_ACTION_ID + " integer not null, "
-			+ Contract.StatusReportEntry.COLUMN_TRANSACTION_ID + " integer, "
+			+ Contract.StatusReportEntry.COLUMN_TRANSACTION + " text, "
 			+ Contract.StatusReportEntry.COLUMN_START_TIMESTAMP + " long not null, "
 			+ Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP + " long, "
 			+ Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE + " text, "
 			+ Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG + " text, "
-			+ Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE + " text "
+			+ Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE + " text, "
+			+ Contract.StatusReportEntry.COLUMN_EXTRAS + " text "
 			+ ");";
 
 	private static final String SERVICE_TABLE_CREATE = "create table "

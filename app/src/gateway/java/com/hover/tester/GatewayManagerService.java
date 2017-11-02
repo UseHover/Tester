@@ -31,8 +31,7 @@ public class GatewayManagerService extends Service {
 		if (i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.START))
 			start(i);
 		else if (mReport != null && i.hasExtra(GatewayManagerService.CMD) && i.getStringExtra(GatewayManagerService.CMD).equals(GatewayManagerService.UPDATE)) {
-			mReport.update(i.getIntExtra(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, -1),
-					i.getStringExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG), i.getStringExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE));
+			mReport.update(i.getStringExtra(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG), i.getStringExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE));
 		} else if (mReport != null)
 			end(i, false);
 		else
@@ -52,7 +51,7 @@ public class GatewayManagerService extends Service {
 			cancelTimer();
 			updateReport(i);
 		} else
-			updateReport(StatusReport.FAILURE, null, "Timeout Reached");
+			updateReport(StatusReport.FAILURE, null, "Timeout Reached", null);
 		WakeUpHelper.releaseAlarms(this);
 		releaseWakeLock();
 		stopSelf();
@@ -67,10 +66,12 @@ public class GatewayManagerService extends Service {
 
 	private void updateReport(Intent i) {
 		updateReport(i.getIntExtra(StatusReport.STATUS, StatusReport.FAILURE),
-				i.getStringExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE), i.getStringExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE));
+				i.getStringExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE),
+				i.getStringExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE),
+				i.getStringExtra(StatusReport.TRANSACTION));
 	}
-	private void updateReport(int status, String confirmMsg, String failMsg) {
-		mReport.update(status, confirmMsg, failMsg, this);
+	private void updateReport(int status, String confirmMsg, String failMsg, String transaction_info) {
+		mReport.update(status, confirmMsg, failMsg, transaction_info, this);
 		mReport.upload(this);
 	}
 

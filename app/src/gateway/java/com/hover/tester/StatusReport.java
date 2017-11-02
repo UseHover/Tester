@@ -15,14 +15,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class StatusReport {
-	public final static String TAG = "StatusReport", STATUS = "status";
+	public final static String TAG = "StatusReport", STATUS = "status", TRANSACTION = "transaction";
 	public final static int PENDING = 0, FAILURE = 1, SUCCESS = 2;
 
-	private int mId, mActionId, mStatus, mTransactionId;
-	private String mSrc, mSessionMsg, mConfirmMsg, mFailureMsg;
+	private int mId, mActionId, mStatus;
+	private String mSrc, mSessionMsg, mConfirmMsg, mFailureMsg, mTransaction;
 	private Map<String, String> mExtras;
 	private long mStartTime, mEndTime;
 
@@ -42,9 +43,14 @@ public class StatusReport {
 			mStatus = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_STATUS));
 			mStartTime = cursor.getLong(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_START_TIMESTAMP));
 			mEndTime = cursor.getLong(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP));
+			mTransaction = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_TRANSACTION));
 			mFailureMsg = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE));
 			mSessionMsg = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG));
 			mConfirmMsg = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE));
+			try {
+				String s = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_EXTRAS));
+				if (s != null) mExtras = getExtras(new JSONObject(s));
+			} catch (NullPointerException | JSONException e) { }
 		} else {
 			Crashlytics.log("Failed to get cursor for Status Report");
 			Log.d(TAG, "didn't get cursor...");
@@ -62,15 +68,15 @@ public class StatusReport {
 		return this;
 	}
 
-	public void update(int transactionId, String sessionMsg, String failMsg) {
-		mTransactionId = transactionId;
+	public void update(String sessionMsg, String failMsg) {
 		mSessionMsg = sessionMsg;
 		mFailureMsg = failMsg;
 	}
 
-	public void update(int status, String confirmMsg, String failMsg, final Context c) {
+	public void update(int status, String confirmMsg, String failMsg, String transaction_info, final Context c) {
 		mStatus = status;
 		mConfirmMsg = confirmMsg;
+		mTransaction = transaction_info;
 		if (mFailureMsg == null) mFailureMsg = failMsg;
 		mEndTime = System.currentTimeMillis();
 		c.getContentResolver().update(
@@ -83,17 +89,26 @@ public class StatusReport {
 		c.startService(i);
 	}
 
-	public JSONObject getJson() throws JSONException {
+	public JSONObject getJson(Context c) throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put("id", mId);
 		json.put("action_id", mActionId);
+		json.put("operator_id", getServiceId(c));
 		json.put("status", mStatus == SUCCESS ? "success" : "failure");
 		json.put("started_timestamp", mStartTime);
 		json.put("finished_timestamp", mEndTime);
 		json.put("final_session_message", mSessionMsg);
 		json.put("confirmation_message", mConfirmMsg);
 		json.put("failure_message", mFailureMsg);
+		json.put("transaction", mTransaction);
+		if (mExtras != null && mExtras.size() > 0)
+			json.put("input_extras", new JSONObject(mExtras));
 		return json;
+	}
+
+	private int getServiceId(Context c) {
+		OperatorAction a = OperatorAction.load(mActionId, c);
+		return a != null ? a.mOpId : -1;
 	}
 
 	private ContentValues getStartContentValues() {
@@ -101,7 +116,8 @@ public class StatusReport {
 		cv.put(Contract.StatusReportEntry.COLUMN_ACTION_ID, mActionId);
 		cv.put(Contract.StatusReportEntry.COLUMN_START_TIMESTAMP, mStartTime);
 		cv.put(Contract.StatusReportEntry.COLUMN_STATUS, mStatus);
-//		cv.put(Contract.StatusReportEntry.COLUMN_INPUT_EXTRAS, mExtras);
+		if (mExtras != null && mExtras.size() > 0)
+			cv.put(Contract.StatusReportEntry.COLUMN_EXTRAS, new JSONObject(mExtras).toString());
 		return cv;
 	}
 
@@ -109,7 +125,7 @@ public class StatusReport {
 		ContentValues cv = new ContentValues();
 		cv.put(Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP, mEndTime);
 		cv.put(Contract.StatusReportEntry.COLUMN_STATUS, mStatus);
-		cv.put(Contract.StatusReportEntry.COLUMN_TRANSACTION_ID, mTransactionId);
+		cv.put(Contract.StatusReportEntry.COLUMN_TRANSACTION, mTransaction);
 		cv.put(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE, mFailureMsg);
 		cv.put(Contract.StatusReportEntry.COLUMN_FINAL_SESSION_MSG, mSessionMsg);
 		cv.put(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, mConfirmMsg);
@@ -123,5 +139,15 @@ public class StatusReport {
 			else Crashlytics.log("Status Report extra " + key + " was null. Action Id: " + mActionId);
 		}
 		return extras;
+	}
+
+	private HashMap<String, String> getExtras(JSONObject extras) throws JSONException {
+		HashMap<String, String> map = new HashMap<>(extras.length());
+		Iterator keys = extras.keys();
+		while (keys.hasNext()) {
+			String key = (String) keys.next();
+			map.put(key, extras.getString(key));
+		}
+		return map;
 	}
 }
