@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		if (intent.getAction().equals(NetworkReceiver.ACTION) && NetworkOps.isConnected(this)) {
+		if (NetworkOps.isConnected(this)) {
 			unregisterNetReceiver();
 			getServices();
 		}

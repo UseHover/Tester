@@ -34,6 +34,7 @@
 
     <!--Dialogs-->
     <string name="choose_service">Choose Service</string>
+    <string name="services_downloading">Still downloading services, try again in a minute</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="add_action">Add Action</string>
     <string name="add_schedule_q">Add a Schedule?</string>
@@ -53,6 +54,7 @@
         <item>Saturday</item>
     </string-array>
 
+    <string name="ok">Ok</string>
     <string name="save">Save</string>
     <string name="next">Next</string>
     <string name="done">Done</string>

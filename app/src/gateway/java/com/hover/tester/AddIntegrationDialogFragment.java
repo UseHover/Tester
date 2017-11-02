@@ -64,13 +64,22 @@ public class AddIntegrationDialogFragment extends DialogFragment {
 
 	private AlertDialog serviceChoiceDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(R.string.choose_service)
-			.setItems(HoverIntegratonListService.getServicesList(getActivity()), new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialogInterface, int i) {
-					addIntegration(HoverIntegratonListService.getServiceId(i, getActivity()));
+		CharSequence[] list = HoverIntegratonListService.getServicesList(getActivity());
+		if (list.length == 0) {
+			builder.setTitle(R.string.services_downloading).setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dismiss();
 				}
-		});
+			});
+		} else {
+			builder.setTitle(R.string.choose_service)
+					.setItems(list, new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							addIntegration(HoverIntegratonListService.getServiceId(i, getActivity()));
+						}
+					});
+		}
 		return builder.create();
 	}
 
