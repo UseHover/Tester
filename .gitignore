@@ -12,3 +12,4 @@ gradlew.bat
 /hover.sdk
 settings.gradle
 gradle.properties
+*.apk
