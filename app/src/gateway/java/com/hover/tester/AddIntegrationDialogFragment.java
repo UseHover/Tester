@@ -12,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.network.HoverIntegratonListService;
 
@@ -39,7 +40,7 @@ public class AddIntegrationDialogFragment extends DialogFragment {
 	public void onAttach(Context c) {
 		super.onAttach(c);
 		try { mListener = (GatewayIntegrationInterface) c;
-		} catch (ClassCastException oops) { oops.printStackTrace(); }
+		} catch (ClassCastException e) { Crashlytics.logException(e); }
 	}
 
 	@Override

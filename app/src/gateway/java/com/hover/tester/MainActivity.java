@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 			newAction.save(this);
 			Snackbar.make(findViewById(R.id.nest_container), "Saving Action: " + newAction.mName + ", one moment", Snackbar.LENGTH_LONG).show();
 		} catch (JSONException e) {
+			Crashlytics.logException(e);
 			Toast.makeText(this, "Could not save action, please try again", Toast.LENGTH_SHORT).show();
 		}
 	}

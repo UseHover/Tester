@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.crashlytics.android.Crashlytics;
 import com.hover.tester.R;
 
 
@@ -38,7 +39,7 @@ public class AddScheduleDialogFragment extends DialogFragment implements Adapter
 	public void onAttach(Context c) {
 		super.onAttach(c);
 		try { mListener = (SchedulerInterface) c;
-		} catch (ClassCastException oops) { oops.printStackTrace(); }
+		} catch (ClassCastException e) { Crashlytics.logException(e); }
 	}
 
 	@Override

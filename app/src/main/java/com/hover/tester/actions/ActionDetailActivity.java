@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.main.HoverParameters;
 import com.hover.tester.BuildConfig;
 import com.hover.tester.GatewayManagerService;
@@ -61,11 +62,12 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	void makeRequest(Bundle extras) {
 		try {
 			HoverParameters.Builder hpb = startRequest(getFrag());
-			for (String key : extras.keySet())
-				hpb.extra(key, extras.get(key).toString());
+			for (String key : extras.keySet()) {
+				if (extras.get(key) != null) hpb.extra(key, extras.get(key).toString());
+			}
 			makeRequest(hpb, getFrag());
 		} catch (NullPointerException e) {
-			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show(); // FIXME: Generate failed status report
+			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show();
 		}
 	}
 	public void makeRequest(View view) {
@@ -147,7 +149,10 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 				addSchedule(getFrag().mAction.mId);
 			else if (getFrag().getView() != null)
 				Snackbar.make(getFrag().getView(), "Please fill out all variable fields before setting a Schedule", Snackbar.LENGTH_LONG).show();
-		} catch (NullPointerException e) { Toast.makeText(this, "Could not start scheduler, try again", Toast.LENGTH_SHORT).show(); }
+		} catch (NullPointerException e) {
+			Crashlytics.logException(e);
+			Toast.makeText(this, "Could not start scheduler, try again", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private ActionDetailFragment getFrag() {
