@@ -3,6 +3,7 @@ package com.hover.tester.actions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -59,18 +60,17 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 
 	void makeRequest(Bundle extras) {
 		try {
-			ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
-			HoverParameters.Builder hpb = startRequest(frag);
+			HoverParameters.Builder hpb = startRequest(getFrag());
 			for (String key : extras.keySet())
 				hpb.extra(key, extras.get(key).toString());
-			makeRequest(hpb, frag);
+			makeRequest(hpb, getFrag());
 		} catch (NullPointerException e) {
 			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show(); // FIXME: Generate failed status report
 		}
 	}
 	public void makeRequest(View view) {
 		try {
-			ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
+			ActionDetailFragment frag = getFrag();
 			HoverParameters.Builder hpb = startRequest(frag);
 			frag.addAndSaveExtras(hpb);
 			makeRequest(hpb, frag);
@@ -97,7 +97,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	@Override
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		ActionDetailFragment frag = (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
+		ActionDetailFragment frag = getFrag();
 		if (frag != null) {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
@@ -148,8 +148,15 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 
 	public void addSchedule(View view) {
 		try {
-			addSchedule(((ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail)).mAction.mId);
+			if (!getFrag().hasMissingExtras())
+				addSchedule(getFrag().mAction.mId);
+			else if (getFrag().getView() != null)
+				Snackbar.make(getFrag().getView(), "Please fill out all variable fields before setting a Schedule", Snackbar.LENGTH_LONG).show();
 		} catch (NullPointerException e) { Toast.makeText(this, "Could not start scheduler, try again", Toast.LENGTH_SHORT).show(); }
+	}
+
+	private ActionDetailFragment getFrag() {
+		return (ActionDetailFragment) getSupportFragmentManager().findFragmentById(R.id.action_detail);
 	}
 
 	@Override

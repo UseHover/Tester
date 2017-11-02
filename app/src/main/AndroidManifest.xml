@@ -29,7 +29,8 @@
             android:name=".actions.ActionDetailActivity"
             android:label=""
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.hover.tester.MainActivity"/>

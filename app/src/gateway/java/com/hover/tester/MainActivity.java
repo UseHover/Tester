@@ -11,6 +11,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +25,6 @@ import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
 import com.hover.tester.network.NetworkOps;
-import com.hover.tester.schedules.AbstractScheduleActivity;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.services.SaveServiceTask;
 import com.hover.tester.utils.NetworkReceiver;
@@ -33,7 +33,7 @@ import org.json.JSONException;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AbstractScheduleActivity implements MainFragment.OnListFragmentInteractionListener, GatewayIntegrationInterface {
+public class MainActivity extends AppCompatActivity implements MainFragment.OnListFragmentInteractionListener, GatewayIntegrationInterface {
 	public final static String TAG = "MainActivity";
 	private NetworkReceiver mNetworkReceiver = null;
 	private MainFragment mFrag;
@@ -113,7 +113,7 @@ public class MainActivity extends AbstractScheduleActivity implements MainFragme
 		try {
 			OperatorAction newAction = new OperatorAction(HoverIntegratonListService.getAction(serviceId, actionIdx, this), serviceId);
 			newAction.save(this);
-			addSchedule(newAction.mId);
+			Snackbar.make(findViewById(R.id.nest_container), "Saving Action: " + newAction.mName + ", one moment", Snackbar.LENGTH_LONG).show();
 		} catch (JSONException e) {
 			Toast.makeText(this, "Could not save action, please try again", Toast.LENGTH_SHORT).show();
 		}

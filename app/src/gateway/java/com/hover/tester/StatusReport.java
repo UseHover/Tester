@@ -117,8 +117,10 @@ public class StatusReport {
 
 	private Map<String, String> getExtras(Intent i) {
 		Map<String, String> extras = new HashMap<>();
-		for (String key : i.getExtras().keySet())
-			extras.put(key, i.getExtras().get(key).toString());
+		for (String key : i.getExtras().keySet()) {
+			if (i.getExtras().get(key) != null) extras.put(key, i.getExtras().get(key).toString());
+			else Log.e(TAG, "extra " + key + " was null");
+		}
 		return extras;
 	}
 }

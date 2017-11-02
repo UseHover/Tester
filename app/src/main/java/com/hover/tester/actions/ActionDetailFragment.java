@@ -154,6 +154,15 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		}
 	}
 
+	boolean hasMissingExtras() {
+		for (int i = 0; i < mVariableAdapter.getItemCount(); i++) {
+			ActionVariable va = ((VariableAdapter.ViewHolder) variableRecycler.findViewHolderForAdapterPosition(i)).mVariable;
+			if (va.mValue == null || va.mValue.isEmpty())
+				return true;
+		}
+		return false;
+	}
+
 	void saveExtras() {
 		for (int i = 0; i < mVariableAdapter.getItemCount(); i++) {
 			if (variableRecycler.findViewHolderForAdapterPosition(i) != null)

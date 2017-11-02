@@ -48,9 +48,9 @@ public class WakeUpHelper {
 	public static long getScheduleTime(int hourlyPos, int numHourly) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(System.currentTimeMillis());
-		cal.add(Calendar.SECOND, 10);
-//		cal.add(Calendar.HOUR, 1);
-//		cal.set(Calendar.MINUTE, hourlyPos * 60/numHourly);
+//		cal.add(Calendar.SECOND, 10);
+		cal.add(Calendar.HOUR, 1);
+		cal.set(Calendar.MINUTE, hourlyPos * 60/numHourly);
 		return cal.getTimeInMillis();
 	}
 	public static long getPlusHour() {
