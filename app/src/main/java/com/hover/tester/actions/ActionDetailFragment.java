@@ -64,9 +64,11 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		if (mAction != null) {
 			fillView(getView());
 			if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
-				if (!MainActivity.meetsAllRequirements(getActivity()))
-					((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Permissions required. App needs manual intervention"));
-				else
+				if (!MainActivity.meetsAllRequirements(getActivity())) {
+					String msg = "Permissions required. App needs manual intervention";
+					Snackbar.make(getView(), msg, Snackbar.LENGTH_LONG).show();
+					((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", msg));
+				} else
 					((ActionDetailActivity) getActivity()).makeRequest(getArguments());
 			}
 		}
