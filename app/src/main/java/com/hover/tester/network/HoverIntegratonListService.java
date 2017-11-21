@@ -80,18 +80,18 @@ public class HoverIntegratonListService extends NetworkService {
 		throw new JSONException("Could not find service in json");
 	}
 
-	private List<OperatorAction> getActionsFromSdk(int serviceId, Context c) {
-		JSONArray jsonActions = HoverIntegrationActivity.getActionsList(serviceId, c);
-		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
-		try {
-			for (int a = 0; a < jsonActions.length(); a++)
-				actions.add(new OperatorAction(jsonActions.getJSONObject(a), serviceId));
-		} catch (JSONException e) {
-			Crashlytics.logException(e);
-			Log.d("HIntegratonListService", "Exception processing actions from SDK", e);
-		}
-		return actions;
-	}
+//	private List<OperatorAction> getActionsFromSdk(int serviceId, Context c) {
+//		JSONArray jsonActions = HoverHelper.getActionsList(serviceId, c);
+//		List<OperatorAction> actions = new ArrayList<>(jsonActions.length());
+//		try {
+//			for (int a = 0; a < jsonActions.length(); a++)
+//				actions.add(new OperatorAction(jsonActions.getJSONObject(a), serviceId));
+//		} catch (JSONException e) {
+//			Crashlytics.logException(e);
+//			Log.d("HIntegratonListService", "Exception processing actions from SDK", e);
+//		}
+//		return actions;
+//	}
 
 	public static int getServiceId(int index, Context c) {
 		try {

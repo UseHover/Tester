@@ -65,7 +65,7 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 
 	void controlFlow() {
 		View view = getView();
-		if (MainActivity.hasPhonePerm(getContext()) && NetworkOps.isConnected(getContext()) && OperatorService.count(getContext()) == 0 && getActivity() != null)
+		if (MainActivity.hasPhonePerm(getContext()) && NetworkOps.isConnected(getContext()) && getActivity() != null) //&& OperatorService.count(getContext()) == 0)
 			((MainActivity) getActivity()).getServices();
 
 		if (!MainActivity.meetsAppRequirements(getContext()))

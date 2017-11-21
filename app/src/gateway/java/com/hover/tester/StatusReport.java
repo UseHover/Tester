@@ -91,7 +91,6 @@ public class StatusReport {
 
 	public JSONObject getJson(Context c) throws JSONException {
 		JSONObject json = new JSONObject();
-		json.put("id", mId);
 		json.put("action_id", mActionId);
 		json.put("operator_id", getServiceId(c));
 		json.put("status", mStatus == SUCCESS ? "success" : "failure");

@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-
-import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.KeyStoreHelper;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;

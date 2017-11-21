@@ -17,8 +17,6 @@ public class WakeUpHelper {
 			SOURCE = "source", FCM = "fcm", TIMER = "timer",
 			ALARM_IN_USE = "alarm_in_use";
 
-
-
 	public static void setExactAlarm(Intent wake, long time, int id, Context c) {
 		AlarmManager alarm = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
 		if (android.os.Build.VERSION.SDK_INT >= 19)
