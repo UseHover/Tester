@@ -16,6 +16,7 @@ repositories {
     maven { url "https://maven.google.com" }
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'http://maven.usehover.com/snapshots' }
+    maven { url 'http://maven.usehover.com/releases' }
 }
 
 android {
@@ -73,7 +74,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    releaseImplementation('com.hover:android-sdk:0.14.6') { transitive = true }
+    releaseImplementation('com.hover:android-sdk:0.14.7') { transitive = true }
     debugApi project(':hover.sdk')
 
     releaseImplementation 'com.android.volley:volley:1.0.0'

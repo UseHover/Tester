@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +15,7 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +23,6 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.sdk.utils.HoverHelper;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
@@ -72,6 +74,31 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public void pickIntegration(View view) {
+//		TelephonyManager tm = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
+//
+//		if (Build.VERSION.SDK_INT >= 26 && hasPhonePerm(this)) {
+//			final Handler h = new Handler();
+//			try {
+//				tm.sendUssdRequest("*149*01*4*5#", new TelephonyManager.UssdResponseCallback() {
+//					@Override
+//					public void onReceiveUssdResponse(final TelephonyManager telephonyManager, String request, CharSequence response) {
+//						super.onReceiveUssdResponse(telephonyManager, request, response);
+//						Log.e(TAG, "Success");
+//						Log.e(TAG, "Got response: " + response + " for request: " + request);
+////						if (Build.VERSION.SDK_INT >= 26)
+////							telephonyManager.sendUssdRequest("4", this, h);
+//					}
+//
+//					@Override
+//					public void onReceiveUssdResponseFailed(final TelephonyManager telephonyManager, String request, int failureCode) {
+//						super.onReceiveUssdResponseFailed(telephonyManager, request, failureCode);
+//						Log.e(TAG, "Fail");
+//						Log.e(TAG, "Request: " + request + " failed: " + failureCode);
+//					}
+//				}, h);
+//			} catch (SecurityException e) { Log.e(TAG, "Security Exception", e); }
+//		}
+
 		if (NetworkOps.isConnected(this)) {
 			DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.CHOOSE_SERVICE_STEP, -1, null);
 			newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);

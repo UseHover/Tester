@@ -3,11 +3,6 @@
           xmlns:tools="http://schemas.android.com/tools">
 
     <application>
-        <meta-data
-            android:name="com.hover.ApiKey"
-            android:value="37742114c194367e94202cfd0c682aa0"
-            tools:replace="android:value"/>
-
         <service
             android:name="com.hover.tester.notifications.NotificationReceiverService"
             android:enabled="true"
@@ -16,6 +11,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
         <service android:name="com.hover.tester.notifications.FirebaseDeviceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
@@ -33,15 +29,22 @@
             android:enabled="true"
             android:exported="true">
         </service>
+
         <service
             android:name="com.hover.tester.GatewayManagerService"
             android:enabled="true"
             android:exported="false">
         </service>
+
         <service
             android:name="com.hover.tester.ReportUpService"
             android:exported="false">
         </service>
+
+        <meta-data
+            android:name="com.hover.ApiKey"
+            android:value="37742114c194367e94202cfd0c682aa0"
+            tools:replace="android:value"/>
     </application>
 
 </manifest>
