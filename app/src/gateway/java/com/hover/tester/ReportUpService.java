@@ -43,8 +43,7 @@ public class ReportUpService extends NetworkService {
 
 	private void uploadToHover(JSONObject report) {
 		try {
-			String webhook = "https://hooks.slack.com/services/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";
-//			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, createSlackJson(report));
+//			String webhook = "https://hooks.slack.com/services/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";
 			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, getString(R.string.hover_status_endpoint), report);
 		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException e) {
 			Log.d(TAG, "Failed to upload to hover", e);
@@ -56,10 +55,14 @@ public class ReportUpService extends NetworkService {
 		try {
 			String webhook = Utils.getSharedPrefs(this).getString(NotificationReceiverService.WEBHOOK, null);
 			if (webhook != null) {
-				String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, report);
-				Log.d(TAG, "Webhook upload response: " + hoverResponse);
+				String webhookResponse;
+				if (Utils.getSharedPrefs(this).getBoolean(NotificationReceiverService.IS_SLACK_WEBHOOK, false))
+					webhookResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, createSlackJson(report));
+				else
+					webhookResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, report);
+				Log.d(TAG, "Webhook upload response: " + webhookResponse);
 			}
-		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException e) {
+		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException | JSONException e) {
 			Log.e(TAG, "Failed to upload to webhook", e);
 			Crashlytics.logException(e);
 		}

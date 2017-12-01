@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
+import com.hover.tester.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -100,6 +102,8 @@ public class StatusReport {
 		json.put("confirmation_message", mConfirmMsg);
 		json.put("failure_message", mFailureMsg);
 		json.put("transaction", mTransaction);
+		json.put("hover_device_id", Utils.getDeviceId(c));
+		json.put("firebase_token", FirebaseInstanceId.getInstance().getToken());
 		if (mExtras != null && mExtras.size() > 0)
 			json.put("input_extras", new JSONObject(mExtras));
 		return json;

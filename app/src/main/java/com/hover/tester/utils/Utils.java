@@ -1,8 +1,13 @@
 package com.hover.tester.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +45,14 @@ public class Utils {
 		for (int curr = 0; curr < s.length; curr++)
 			numbers[curr] = Integer.parseInt(s[curr]);
 		return numbers;
+	}
+
+	public static String getDeviceId(Context c) {
+		try {
+			if (Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+				return ((TelephonyManager) c.getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
+		} catch (SecurityException | NullPointerException e) { Log.d(TAG, "Failed to get telephony device ID", e);}
+		return "Unknown, no phone state permission";
 	}
 
 	public static String[] getListFromString(String fromDb) {
