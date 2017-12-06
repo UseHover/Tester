@@ -68,9 +68,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		if (NetworkOps.isConnected(getContext()) && getActivity() != null) //&& MainActivity.hasPhonePerm(getContext()) && OperatorService.count(getContext()) == 0)
 			((MainActivity) getActivity()).getServices();
 
-//		if (!MainActivity.meetsAppRequirements(getContext()))
-//			askForPerms(view);
-		if (!NetworkOps.isConnected(getContext()))
+		if (!MainActivity.meetsAppRequirements(getContext()))
+			askForPerms(view);
+		else if (!NetworkOps.isConnected(getContext()))
 			askForNet(view);
 		else
 			showIntegrations(view);
