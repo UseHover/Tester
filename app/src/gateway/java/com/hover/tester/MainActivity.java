@@ -28,6 +28,7 @@ import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
 import com.hover.tester.network.NetworkOps;
+import com.hover.tester.notifications.DeviceInfoService;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.services.SaveServiceTask;
 import com.hover.tester.utils.NetworkReceiver;
@@ -60,7 +61,9 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		if (NetworkOps.isConnected(this)) {
+		if (intent.hasExtra("uploadFirebaseToken"))
+			startService(new Intent(this, DeviceInfoService.class));
+		else if (NetworkOps.isConnected(this)) {
 			unregisterNetReceiver();
 			getServices();
 		}
