@@ -1,5 +1,6 @@
 package com.hover.tester.notifications;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -14,6 +15,6 @@ public class FirebaseDeviceIDService extends FirebaseInstanceIdService {
 		String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 		Log.i(TAG, "Refreshed token: " + refreshedToken);
 		FirebaseMessaging.getInstance().subscribeToTopic("global");
-//		sendRegistrationToServer(refreshedToken);
+		startService(new Intent(this, DeviceInfoService.class));
 	}
 }
