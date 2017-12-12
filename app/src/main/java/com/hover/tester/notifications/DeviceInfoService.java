@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 public class DeviceInfoService extends NetworkService {
-	public final static String TAG = "DeviceInfoService";
+	public final static String TAG = "DeviceInfoService", UPLOAD_DEVICE_INFO = "uploadFirebaseToken";
 
 	public DeviceInfoService() {
 		super(TAG);
@@ -29,6 +29,7 @@ public class DeviceInfoService extends NetworkService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		try {
+			Log.i(TAG, "Uploading device info");
 			String webhook = "https://hooks.slack.com/services/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";
 			String hoverResponse = VolleySingleton.uploadJsonNowAbsolute(this, Request.Method.POST, webhook, createSlackJson());
 		} catch (NullPointerException | InterruptedException | TimeoutException | ExecutionException | JSONException e) {

@@ -57,13 +57,14 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 		setContentView(R.layout.activity_main);
 		mFrag = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+		if (getIntent().hasExtra(DeviceInfoService.UPLOAD_DEVICE_INFO))
+			startService(new Intent(this, DeviceInfoService.class));
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		if (intent.hasExtra("uploadFirebaseToken"))
-			startService(new Intent(this, DeviceInfoService.class));
-		else if (NetworkOps.isConnected(this)) {
+		if (NetworkOps.isConnected(this)) {
 			unregisterNetReceiver();
 			getServices();
 		}
