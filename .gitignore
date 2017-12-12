@@ -13,3 +13,4 @@ gradlew.bat
 settings.gradle
 gradle.properties
 *.apk
+app/gateway/*

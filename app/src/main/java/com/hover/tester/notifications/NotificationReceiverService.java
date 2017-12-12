@@ -5,27 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.crashlytics.android.Crashlytics;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.hover.tester.R;
 import com.hover.tester.WakeUpHelper;
 import com.hover.tester.WakeUpReceiver;
 import com.hover.tester.actions.OperatorAction;
-import com.hover.tester.network.VolleySingleton;
 import com.hover.tester.utils.Utils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 public class NotificationReceiverService extends FirebaseMessagingService {
 	public static final String TAG = "NotificationReceiver", WEBHOOK = "webhook", IS_SLACK_WEBHOOK = "is_slack_webhook";
