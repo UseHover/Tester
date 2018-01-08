@@ -83,7 +83,7 @@ dependencies {
         transitive = true
         exclude group: 'com.android.support'
     }
-//    debugApi project(':hover.sdk')
+    debugApi project(':hover.sdk')
 
     releaseImplementation 'com.android.volley:volley:1.0.0'
     implementation 'com.android.support:gridlayout-v7:25.4.0'

@@ -91,7 +91,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	}
 	private void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 //		Log.e(TAG, BuildConfig.BUILD_TYPE);
-//		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
 		hpb.extra("pin", frag.mService.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
