@@ -53,9 +53,9 @@ public class ResultAdapter extends RecyclerViewCursorAdapter<ResultAdapter.ViewH
 
 	private void showResultDialog(final ViewHolder holder) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-		builder.setTitle(getContext().getString(R.string.transaction_header, holder.mResult.mSdkId))
+		builder.setTitle(getContext().getString(R.string.transaction_header, holder.mResult.mId))
 				.setIcon(getIcon(holder))
-				.setMessage(holder.mResult.mText + "\r\n \r\n" + holder.mResult.mDetails);
+				.setMessage(holder.mResult.mSdkUuid + "\r\n \r\n" + holder.mResult.mText + "\r\n \r\n" + holder.mResult.mDetails);
 		AlertDialog dialog = builder.create();
 		dialog.show();
 	}

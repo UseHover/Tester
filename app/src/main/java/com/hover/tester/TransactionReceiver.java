@@ -24,8 +24,8 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.i(TAG, "Transaction received. Trans id: " + i.getLongExtra("_id", -1) + ", Action: " + i.getStringExtra(Utils.ACTION));
-		ActionResult ar = ActionResult.getBySdkId((int) i.getLongExtra("_id", -1), context);
+		Log.e(TAG, "Transaction received. Trans id: " + i.getLongExtra("_id", -1) + ", Action: " + i.getStringExtra(Utils.ACTION));
+		ActionResult ar = ActionResult.getByUuid(i.getStringExtra("uuid"), context);
 		if (ar != null) {
 			ar.mStatus = ActionResult.STATUS_SUCCEEDED;
 			ar.mTimeStamp = i.getLongExtra("response_timestamp", 0L);
@@ -64,12 +64,8 @@ public class TransactionReceiver extends BroadcastReceiver {
 			if (extras.get(key) != null) {
 				try {
 					if (key.equals("transaction_extras")) {
-						for (Map.Entry<String, String> entry : ((HashMap<String, String>) extras.get(key)).entrySet()) {
-							if (entry.getKey().equals("server_uuid"))
-								json.put("uuid", entry.getValue());
-							else
-								json.put(entry.getKey(), entry.getValue());
-						}
+						for (Map.Entry<String, String> entry : ((HashMap<String, String>) extras.get(key)).entrySet())
+							json.put(entry.getKey(), entry.getValue());
 					}
 					else if (extras.get(key) != null && !extras.get(key).toString().isEmpty())
 						json.put(key, extras.get(key).toString());

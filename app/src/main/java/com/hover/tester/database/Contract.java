@@ -86,7 +86,7 @@ public final class Contract {
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_RESULTS).build();
 		public static final String TABLE_NAME = "results";
 		public static final String COLUMN_ENTRY_ID = "_id";
-		public static final String COLUMN_SDK_ID = "transaction_id";
+		public static final String COLUMN_SDK_UUID = "uuid";
 		public static final String COLUMN_ACTION_ID = "variable_action_id";
 		public static final String COLUMN_TEXT = "result_text";
 		public static final String COLUMN_STATUS = "result_status";
@@ -148,7 +148,7 @@ public final class Contract {
 
 	public static String[] RESULT_PROJECTION = {
 		ActionResultEntry.COLUMN_ENTRY_ID,
-		ActionResultEntry.COLUMN_SDK_ID,
+		ActionResultEntry.COLUMN_SDK_UUID,
 		ActionResultEntry.COLUMN_ACTION_ID,
 		ActionResultEntry.COLUMN_TEXT,
 		ActionResultEntry.COLUMN_STATUS,
