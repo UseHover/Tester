@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public static boolean meetsAppRequirements(Context c) {
-		return hasPhonePerm(c) && hasWakeLockPerm(c) && usableAndroidVersion();
+		return hasPhonePerm(c); // && hasWakeLockPerm(c) && usableAndroidVersion();
 	}
 	public static boolean hasPhonePerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;

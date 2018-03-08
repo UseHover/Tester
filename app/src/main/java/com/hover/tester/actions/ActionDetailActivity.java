@@ -91,7 +91,8 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	}
 	private void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 //		Log.e(TAG, BuildConfig.BUILD_TYPE);
-//		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+//		if (BuildConfig.BUILD_TYPE.equals("debug"))
+		hpb.debugMode();
 		hpb.extra("pin", frag.mService.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
@@ -100,7 +101,7 @@ public class ActionDetailActivity extends AbstractScheduleActivity {
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		ActionDetailFragment frag = getFrag();
-		if (frag != null) {
+		if (frag != null && data != null) {
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}
