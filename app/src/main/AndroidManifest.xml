@@ -58,12 +58,21 @@
             </intent-filter>
         </receiver>
 
+        <receiver
+            android:name=".utils.UpdateReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hover.tester.gateway.CONFIG_UPDATED"/>
+                <action android:name="com.hover.tester.CONFIG_UPDATED"/>
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".schedules.AlarmSchedulerService"
             android:enabled="true"
             android:exported="false">
         </service>
-
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -71,6 +80,7 @@
         <meta-data
             android:name="com.hover.ApiKey"
             android:value="b97c1dd86d4d49caaf70c2303f7ede05"/>
+
     </application>
 
 </manifest>

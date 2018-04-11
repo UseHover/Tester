@@ -51,7 +51,6 @@
         app:fabSize="normal"
         app:layout_anchor="@+id/nest_container"
         app:layout_anchorGravity="bottom|end"
-        android:onClick="updateConfig"
-        android:visibility="gone" />
+        android:onClick="updateConfig" />
 
 </android.support.design.widget.CoordinatorLayout>

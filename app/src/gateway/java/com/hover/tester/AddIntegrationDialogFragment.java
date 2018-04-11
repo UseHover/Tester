@@ -88,6 +88,7 @@ public class AddIntegrationDialogFragment extends DialogFragment {
 		Intent integrationIntent = new Intent(getActivity(), HoverIntegrationActivity.class);
 		integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { id });
 //		integrationIntent.putExtra(HoverIntegrationActivity.PERM_LEVEL, Permission.TEST);
+//		integrationIntent.putExtra("single_choice", false);
 		getActivity().startActivityForResult(integrationIntent, MainActivity.INTEGRATE_REQUEST);
 	}
 

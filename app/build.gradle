@@ -78,6 +78,7 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation "android.arch.lifecycle:extensions:1.1.1"
 
     releaseImplementation('com.hover:android-sdk:0.15.0') {
         transitive = true

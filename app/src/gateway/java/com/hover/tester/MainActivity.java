@@ -4,9 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -15,7 +13,6 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +20,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.hover.sdk.operators.OperatorUpdateService;
 import com.hover.sdk.utils.HoverHelper;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.OperatorAction;
@@ -31,6 +29,7 @@ import com.hover.tester.network.NetworkOps;
 import com.hover.tester.services.OperatorService;
 import com.hover.tester.services.SaveServiceTask;
 import com.hover.tester.utils.NetworkReceiver;
+import com.hover.tester.utils.UpdateReceiver;
 
 import org.json.JSONException;
 
@@ -56,14 +55,29 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 		setContentView(R.layout.activity_main);
 		mFrag = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+
+		findViewById(R.id.update_config).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Toast.makeText(MainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
+				startService(new Intent(getApplicationContext(), OperatorUpdateService.class));
+			}
+		});
+
+		showConfigUpdated(getIntent());
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		if (NetworkOps.isConnected(this)) {
+		if (intent.getAction().equals(NetworkReceiver.ACTION) && NetworkOps.isConnected(this)) {
 			unregisterNetReceiver();
 			getServices();
-		}
+		} else showConfigUpdated(intent);
+	}
+
+	private void showConfigUpdated(Intent intent) {
+		if (intent != null && intent.getAction() != null && intent.getAction().equals(UpdateReceiver.ACTION))
+			Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
 	public void getServices() {
@@ -179,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements MainFragment.OnLi
 	}
 
 	public static boolean meetsAppRequirements(Context c) {
-		return hasPhonePerm(c); // && hasWakeLockPerm(c) && usableAndroidVersion();
+		return true; //hasPhonePerm(c); // && hasWakeLockPerm(c) && usableAndroidVersion();
 	}
 	public static boolean hasPhonePerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
