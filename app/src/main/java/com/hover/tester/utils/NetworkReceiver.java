@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import com.hover.tester.MainActivity;
+import com.hover.tester.main.MainActivity;
 
 import static android.net.ConnectivityManager.EXTRA_NO_CONNECTIVITY;
 

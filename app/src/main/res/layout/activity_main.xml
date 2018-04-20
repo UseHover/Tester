@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.hover.tester.MainActivity">
+    tools:context="com.hover.tester.main.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -31,9 +31,9 @@
         tools:showIn="@layout/activity_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.hover.tester.MainActivity">
+        tools:context="com.hover.tester.main.MainActivity">
 
-        <fragment android:name="com.hover.tester.MainFragment"
+        <fragment android:name="com.hover.tester.main.MainFragment"
             tools:layout="@layout/frag_main"
             android:id="@+id/main_fragment"
             android:layout_width="match_parent"

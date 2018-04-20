@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.report;
 
 import android.content.ContentUris;
 import android.content.ContentValues;

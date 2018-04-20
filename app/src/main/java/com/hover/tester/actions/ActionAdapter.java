@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.hover.tester.R;
 import com.hover.tester.utils.Utils;
 import com.hover.tester.database.RecyclerViewCursorAdapter;
-import com.hover.tester.MainFragment.OnListFragmentInteractionListener;
+import com.hover.tester.main.MainFragment.OnListFragmentInteractionListener;
 
 public class ActionAdapter extends RecyclerViewCursorAdapter<ActionAdapter.ViewHolder> {
 	private final OnListFragmentInteractionListener mListener;

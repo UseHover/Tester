@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TransactionReceiver extends BroadcastReceiver {
-	public final static String TAG = "TransactionReceiver";
+	public final static String TAG = "TransactionReceiver", TRANSACTION_UPDATED = "TRANSACTION_UPDATED";
 	public TransactionReceiver() { }
 
 	@Override
@@ -32,34 +32,29 @@ public class TransactionReceiver extends BroadcastReceiver {
 			ar.mText = i.getStringExtra("response_message");
 			ar.save(context);
 		}
-		notifyGatewayManager(context, i);
+		sendGatewayBroadcast(context, i);
 		openActivity(context, i);
 	}
 
-	private void printExtras(Intent intent) {
-		Bundle bundle = intent.getExtras();
-		if (bundle != null) {
-			for (String key : bundle.keySet()) {
-				Object value = bundle.get(key);
-				if (value != null)
-					Log.i(TAG, "key: " + key + ", value: " + value.toString());
-			}
-		}
-		Log.e(TAG, bundle.toString());
+	private void openActivity(Context c, Intent i) {
+		i = new Intent(i);
+		i.setClass(c, ActionDetailActivity.class);
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		i.putExtra(OperatorAction.ID, i.getIntExtra("action_id", -1));
+		c.startActivity(i);
 	}
 
-	private void notifyGatewayManager(Context c, Intent intent) {
-//		printExtras(intent);
-		Intent i = new Intent(c, GatewayManagerService.class);
-		i.putExtra(GatewayManagerService.CMD, GatewayManagerService.DONE);
+	private void sendGatewayBroadcast(Context c, Intent intent) {
+		Intent i = new Intent(c.getPackageName() + TRANSACTION_UPDATED);
+		i.putExtra("cmd", "done");
 		i.putExtra(OperatorAction.ID, intent.getIntExtra(OperatorAction.ID, -1));
-		i.putExtra(StatusReport.STATUS, StatusReport.SUCCESS);
+		i.putExtra("status", "success");
 		i.putExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, intent.getStringExtra("response_message"));
-		i.putExtra(StatusReport.TRANSACTION, convertTinfoToJsonString(intent.getExtras(), new JSONObject()));
-		c.startService(i);
+		i.putExtra("transaction", convertTinfoToJsonString(intent.getExtras(), new JSONObject()));
+		c.sendBroadcast(i);
 	}
 
-	private String convertTinfoToJsonString(Bundle extras, JSONObject json) {
+	public static String convertTinfoToJsonString(Bundle extras, JSONObject json) {
 		for (String key : extras.keySet()) {
 			if (extras.get(key) != null) {
 				try {
@@ -75,11 +70,15 @@ public class TransactionReceiver extends BroadcastReceiver {
 		return json.toString();
 	}
 
-	private void openActivity(Context c, Intent i) {
-		i = new Intent(i);
-		i.setClass(c, ActionDetailActivity.class);
-		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		i.putExtra(OperatorAction.ID, i.getIntExtra("action_id", -1));
-		c.startActivity(i);
+	private void printExtras(Intent intent) {
+		Bundle bundle = intent.getExtras();
+		if (bundle != null) {
+			for (String key : bundle.keySet()) {
+				Object value = bundle.get(key);
+				if (value != null)
+					Log.i(TAG, "key: " + key + ", value: " + value.toString());
+			}
+		}
+		Log.e(TAG, bundle.toString());
 	}
 }

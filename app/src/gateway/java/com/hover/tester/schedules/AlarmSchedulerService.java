@@ -10,14 +10,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.hover.tester.WakeUpHelper;
-import com.hover.tester.WakeUpReceiver;
+import com.hover.tester.wake.WakeUpHelper;
+import com.hover.tester.wake.WakeUpReceiver;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class AlarmSchedulerService extends IntentService {
 	public final static String TAG = "AlarmSchedulerService", INTERVAL = "interval";

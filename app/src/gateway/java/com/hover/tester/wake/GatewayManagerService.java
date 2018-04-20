@@ -1,19 +1,15 @@
-package com.hover.tester;
+package com.hover.tester.wake;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.CountDownTimer;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.util.Log;
 
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.database.Contract;
-
-import java.util.Map;
+import com.hover.tester.report.StatusReport;
 
 public class GatewayManagerService extends Service {
 	public final static String TAG = "GatewayManagerService", CMD = "cmd", START = "start", UPDATE = "update", DONE = "done";

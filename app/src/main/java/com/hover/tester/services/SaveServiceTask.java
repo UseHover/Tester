@@ -3,7 +3,7 @@ package com.hover.tester.services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.hover.tester.KeyStoreHelper;
+import com.hover.tester.gateway.KeyStoreHelper;
 
 public class SaveServiceTask extends AsyncTask<OperatorService, Void, Void> {
 	public final static String TAG = "SaveServiceTask";

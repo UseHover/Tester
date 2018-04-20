@@ -105,4 +105,7 @@ public class HoverIntegratonListService extends NetworkService {
 	public static JSONObject getAction(int serviceId, int index, Context c) throws JSONException {
 		return getServiceJson(serviceId, c).getJSONArray(ACTIONS).getJSONObject(index);
 	}
+	public static int getActionListSize(int serviceId, Context c) throws JSONException {
+		return getServiceJson(serviceId, c).getJSONArray(ACTIONS).length();
+	}
 }

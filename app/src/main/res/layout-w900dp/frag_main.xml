@@ -7,7 +7,7 @@
     android:divider="?android:attr/dividerHorizontal"
     android:orientation="horizontal"
     android:showDividers="middle"
-    tools:context="com.hover.tester.MainActivity">
+    tools:context="com.hover.tester.main.MainActivity">
 
     <LinearLayout
         android:id="@+id/list"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layoutManager="LinearLayoutManager"
-            tools:context="com.hover.tester.MainActivity"
+            tools:context="com.hover.tester.main.MainActivity"
             tools:listitem="@layout/service_li"
             tools:layout_height="300dp"/>
 

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.hover.tester.MainActivity"
+        tools:context="com.hover.tester.main.MainActivity"
         tools:listitem="@layout/service_li"
         tools:layout_height="380dp"/>
 

@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.hover.tester.MainActivity;
+import com.hover.tester.main.MainActivity;
 
 public class UpdateReceiver extends BroadcastReceiver {
 	public final static String TAG = "UpdateReceiver", ACTION = "CONFIG_UPDATED";

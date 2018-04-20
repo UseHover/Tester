@@ -1,15 +1,17 @@
-package com.hover.tester;
+package com.hover.tester.report;
 
 import android.content.Intent;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.crashlytics.android.Crashlytics;
+import com.hover.tester.R;
 import com.hover.tester.database.Contract;
 import com.hover.tester.network.NetworkOps;
 import com.hover.tester.network.NetworkService;
 import com.hover.tester.network.VolleySingleton;
 import com.hover.tester.notifications.NotificationReceiverService;
+import com.hover.tester.report.StatusReport;
 import com.hover.tester.utils.Utils;
 
 import org.json.JSONArray;

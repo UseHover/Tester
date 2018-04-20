@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.main;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.widget.EditText;
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.sdk.operators.Permission;
+import com.hover.tester.R;
 import com.hover.tester.network.HoverIntegratonListService;
 
 
@@ -87,7 +88,7 @@ public class AddIntegrationDialogFragment extends DialogFragment {
 	public void addIntegration(int id) {
 		Intent integrationIntent = new Intent(getActivity(), HoverIntegrationActivity.class);
 		integrationIntent.putExtra(HoverIntegrationActivity.SERVICE_IDS, new int[] { id });
-//		integrationIntent.putExtra(HoverIntegrationActivity.PERM_LEVEL, Permission.TEST);
+		integrationIntent.putExtra(HoverIntegrationActivity.PERM_LEVEL, Permission.TEST);
 //		integrationIntent.putExtra("single_choice", false);
 		getActivity().startActivityForResult(integrationIntent, MainActivity.INTEGRATE_REQUEST);
 	}

@@ -15,25 +15,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".actions.ActionDetailActivity"
             android:label=""
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".main.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.hover.tester.MainActivity"/>
+                android:value="com.hover.tester.main.MainActivity"/>
         </activity>
 
         <service
@@ -47,16 +47,6 @@
             android:enabled="true"
             android:exported="false">
         </provider>
-
-        <receiver
-            android:name=".TransactionReceiver"
-            android:enabled="true"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.hover.tester.gateway.CONFIRMED_TRANSACTION"/>
-                <action android:name="com.hover.tester.CONFIRMED_TRANSACTION"/>
-            </intent-filter>
-        </receiver>
 
         <receiver
             android:name=".utils.UpdateReceiver"
