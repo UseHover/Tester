@@ -82,6 +82,10 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
     releaseImplementation 'com.android.volley:volley:1.0.0'
+    gatewayImplementation('com.hover:android-sdk:0.14.7-nopin') {
+        transitive = true
+        exclude group: 'com.android.support'
+    }
     releaseImplementation('com.hover:android-sdk:0.15.3') {
         transitive = true
         exclude group: 'com.android.support'
