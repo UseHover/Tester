@@ -15,41 +15,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.hover.sdk.main.HoverParameters;
-import com.hover.tester.MainActivity;
-import com.hover.tester.schedules.Scheduler;
-import com.hover.tester.WakeUpHelper;
-import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
+import com.hover.tester.services.OperatorService;
 
-public class ActionDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-	public static final String TAG = "ActionDetailFragment";
+
+public class AbstractActionDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+	public static final String TAG = "AActionDetailFragment";
 	private static final int VARIABLE_LOADER = 0, RESULT_LOADER = 1;
 	OperatorService mService;
 	OperatorAction mAction;
-	Scheduler mSchedule;
 	RecyclerView variableRecycler;
 	private VariableAdapter mVariableAdapter;
 	private ResultAdapter mResultAdapter;
 
-	public ActionDetailFragment() { }
+	public AbstractActionDetailFragment() { }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-
 		if (getArguments().containsKey(OperatorAction.ID)) {
 			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
-			if (mAction == null) {
-				((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Action not found. Has it been added in the user interface?"));
-				return;
-			}
-			mService = OperatorService.load(mAction.mOpId, getContext());
-			mSchedule = Scheduler.load(mAction.mId, getActivity());
+			if (mAction != null) mService = OperatorService.load(mAction.mOpId, getContext());
 		}
 	}
 
@@ -61,17 +51,7 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (mAction != null) {
-			fillView(getView());
-			if (getActivity() != null && getArguments().containsKey(WakeUpHelper.SOURCE)) {
-				if (!MainActivity.meetsAllRequirements(getActivity())) {
-					String msg = "Permissions required. App needs manual intervention";
-					Snackbar.make(getView(), msg, Snackbar.LENGTH_LONG).show();
-					((ActionDetailActivity) getActivity()).updateGatewayManager(Activity.RESULT_CANCELED, new Intent().putExtra("error", msg));
-				} else
-					((ActionDetailActivity) getActivity()).makeRequest(getArguments());
-			}
-		}
+		if (mAction != null) fillView(getView());
 	}
 
 	private void fillView(View root) {
@@ -80,16 +60,8 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 		addResultView(root);
 	}
 
-	private void fillInfo(View view) {
+	protected void fillInfo(View view) {
 		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mOpSlug + " " + mService.mName);
-		if (mSchedule != null) {
-			view.findViewById(R.id.add_schedule).setVisibility(View.GONE);
-			((TextView) view.findViewById(R.id.schedule_text)).setText(getString(R.string.schedule, mSchedule.getString(getActivity())));
-			view.findViewById(R.id.schedule_info).setVisibility(View.VISIBLE);
-		} else {
-			view.findViewById(R.id.add_schedule).setVisibility(View.VISIBLE);
-			view.findViewById(R.id.schedule_info).setVisibility(View.GONE);
-		}
 	}
 
 	private void addVariableView(View root) {
@@ -112,7 +84,7 @@ public class ActionDetailFragment extends Fragment implements LoaderManager.Load
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		if (id == VARIABLE_LOADER)
 			return new CursorLoader(getActivity(), Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
-				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, null);
+					Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, null);
 		else
 			return new CursorLoader(getActivity(), Contract.ActionResultEntry.CONTENT_URI, Contract.RESULT_PROJECTION,
 					Contract.ActionResultEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, ActionResult.SORT_ORDER);

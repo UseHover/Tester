@@ -28,15 +28,15 @@ android {
             storePassword 'hoverup'
         }
     }
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.hover.tester"
         minSdkVersion 18
         maxSdkVersion 25
         targetSdkVersion 25
-        versionCode 10
-        versionName "0.8.5"
+        versionCode 11
+        versionName "0.8.6"
         vectorDrawables.useSupportLibrary true
     }
     buildTypes {
@@ -71,25 +71,31 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') { transitive = true }
-    implementation 'com.google.firebase:firebase-core:11.6.0'
-    implementation 'com.google.firebase:firebase-messaging:11.6.0'
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support:support-v4:25.4.0'
-    implementation 'com.android.support:design:25.4.0'
-    implementation 'com.android.support:recyclerview-v7:25.4.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    gatewayImplementation 'com.google.firebase:firebase-core:11.6.0'
+    gatewayImplementation 'com.google.firebase:firebase-messaging:11.6.0'
 
-    releaseImplementation('com.hover:android-sdk:0.14.7-nopin') {
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.android.support:gridlayout-v7:26.1.0'
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+
+    releaseImplementation 'com.android.volley:volley:1.0.0'
+    gatewayImplementation('com.hover:android-sdk:0.14.7-nopin') {
         transitive = true
         exclude group: 'com.android.support'
     }
-    debugApi project(':hover.sdk')
-
-    releaseImplementation 'com.android.volley:volley:1.0.0'
-    implementation 'com.android.support:gridlayout-v7:25.4.0'
-    debugImplementation 'io.sentry:sentry-android:1.6.3'
+    releaseImplementation('com.hover:android-sdk:0.15.3') {
+        transitive = true
+        exclude group: 'com.android.support'
+    }
+    debugImplementation project(':hover.sdk')
+    debugApi 'io.sentry:sentry-android:1.6.3'
 
     testImplementation 'junit:junit:4.12'
 }
 
-apply plugin: 'com.google.gms.google-services'
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Gateway")){
+    apply plugin: 'com.google.gms.google-services'
+}

@@ -12,16 +12,16 @@ import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
 public class ActionResult {
-	public static final String TAG = "ActionResult",
+	public static final String TAG = "ActionResult", UUID = "uuid",
 			RESULT = "response_message", NEG_RESULT = "error", RESULT_TIMESTAMP = "response_timestamp",
 			SORT_ORDER = Contract.ActionResultEntry.COLUMN_TIMESTAMP + " DESC";
 	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1, STATUS_UNKNOWN = 2;
-	public int mSdkId, mActionId, mStatus;
+	public int mId, mActionId, mStatus;
 	public long mTimeStamp;
-	public String mText, mDetails;
+	public String mSdkUuid, mText, mDetails;
 
 	public ActionResult(int actionId, int resultCode, Intent data) {
-		mSdkId = (int) data.getLongExtra("transaction_id", -1);
+		mSdkUuid = data.hasExtra(UUID) ? data.getStringExtra(UUID) : "none";
 		mActionId = actionId;
 		if (resultCode == Activity.RESULT_OK) {
 			mStatus = STATUS_UNKNOWN;
@@ -38,7 +38,8 @@ public class ActionResult {
 	}
 
 	public ActionResult(Cursor c) {
-		mSdkId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_SDK_ID));
+		mId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_ENTRY_ID));
+		mSdkUuid = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_SDK_UUID));
 		mActionId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_ACTION_ID));
 		mText = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_TEXT));
 		mDetails = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_RETURN_VALUES));
@@ -56,11 +57,11 @@ public class ActionResult {
 		return deets;
 	}
 
-	public static ActionResult getBySdkId(int sdkId, Context context) {
+	public static ActionResult getByUuid(String uuid, Context context) {
 		ActionResult ar = null;
 		Cursor cursor = new DbHelper(context).getReadableDatabase()
 				.query(Contract.ActionResultEntry.TABLE_NAME, Contract.RESULT_PROJECTION,
-						Contract.ActionResultEntry.COLUMN_SDK_ID + " = " + sdkId,
+						Contract.ActionResultEntry.COLUMN_SDK_UUID + " = '" + uuid + "'",
 						null, null, null, null);
 		if (cursor.moveToFirst())
 			ar = new ActionResult(cursor);
@@ -91,7 +92,7 @@ public class ActionResult {
 
 	private ContentValues getContentValues() {
 		ContentValues cv = new ContentValues();
-		cv.put(Contract.ActionResultEntry.COLUMN_SDK_ID, mSdkId);
+		cv.put(Contract.ActionResultEntry.COLUMN_SDK_UUID, mSdkUuid);
 		cv.put(Contract.ActionResultEntry.COLUMN_ACTION_ID, mActionId);
 		cv.put(Contract.ActionResultEntry.COLUMN_STATUS, mStatus);
 		cv.put(Contract.ActionResultEntry.COLUMN_TIMESTAMP, mTimeStamp);

@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.main;
 
 public interface GatewayIntegrationInterface {
 	void savePin(final String pin);

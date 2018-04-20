@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.gateway;
 
 import android.annotation.TargetApi;
 import android.content.Context;

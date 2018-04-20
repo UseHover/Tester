@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.main;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -10,22 +10,19 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
+import com.hover.tester.R;
 import com.hover.tester.actions.ActionAdapter;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.database.Contract;
+import com.hover.tester.main.MainActivity;
 import com.hover.tester.network.NetworkOps;
-import com.hover.tester.services.OperatorService;
 import com.hover.tester.services.SaveFinishedListener;
 import com.hover.tester.services.ServiceAdapter;
-
-import java.util.HashMap;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SaveFinishedListener {
 	public static final String TAG = "MainFragment";

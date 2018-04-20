@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 5;
+	public static final int DATABASE_VERSION = 6;
 	public static final String DATABASE_NAME = "services.db";
 
 	public DbHelper(Context context) {
@@ -72,13 +72,13 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String RESULT_TABLE_CREATE = "create table "
 			+ Contract.ActionResultEntry.TABLE_NAME + "("
 			+ Contract.ActionResultEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
-			+ Contract.ActionResultEntry.COLUMN_SDK_ID + " integer not null, "
+			+ Contract.ActionResultEntry.COLUMN_SDK_UUID + " string not null, "
 			+ Contract.ActionResultEntry.COLUMN_ACTION_ID + " integer not null, "
 			+ Contract.ActionResultEntry.COLUMN_TEXT + " text not null, "
 			+ Contract.ActionResultEntry.COLUMN_STATUS + " integer not null, "
 			+ Contract.ActionResultEntry.COLUMN_TIMESTAMP + " text not null, "
 			+ Contract.ActionResultEntry.COLUMN_RETURN_VALUES + " text, "
-			+ "UNIQUE (" + Contract.ActionResultEntry.COLUMN_SDK_ID + ") ON CONFLICT REPLACE"
+			+ "UNIQUE (" + Contract.ActionResultEntry.COLUMN_SDK_UUID + ") ON CONFLICT REPLACE"
 			+ ");";
 
 	private static final String SQL_DELETE_REPORTS = "DROP TABLE IF EXISTS " + Contract.StatusReportEntry.TABLE_NAME;

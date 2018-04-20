@@ -7,8 +7,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.hover.tester.WakeUpHelper;
-import com.hover.tester.WakeUpReceiver;
+import com.hover.tester.wake.WakeUpHelper;
+import com.hover.tester.wake.WakeUpReceiver;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.utils.Utils;
 

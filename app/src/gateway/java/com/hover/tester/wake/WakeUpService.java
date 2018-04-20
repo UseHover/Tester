@@ -1,4 +1,4 @@
-package com.hover.tester;
+package com.hover.tester.wake;
 
 import android.app.KeyguardManager;
 import android.app.Service;

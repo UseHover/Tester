@@ -8,6 +8,8 @@
     <string name="url_builder">%1$s%2$s</string>
 
     <string name="update_config">Update Config</string>
+    <string name="updating">Updating...</string>
+    <string name="updated">Updated all configs.</string>
     <string name="grant_permissions">Grant Permissions</string>
     <string name="add_integration">Add Integration</string>
     <string name="change_integration">Change Integration</string>
