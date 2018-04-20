@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,8 +18,6 @@ import com.hover.tester.wake.WakeUpHelper;
 
 public class ActionDetailFragment extends AbstractActionDetailFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	public static final String TAG = "ActionDetailFragment";
-	OperatorService mService;
-	OperatorAction mAction;
 	Scheduler mSchedule;
 
 	public ActionDetailFragment() { }
@@ -26,16 +25,11 @@ public class ActionDetailFragment extends AbstractActionDetailFragment implement
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if (getArguments().containsKey(OperatorAction.ID)) {
-			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
-			if (mAction == null) {
-				((ActionDetailActivity) getActivity()).sendGatewayBroadcast(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Action not found. Has it been added in the user interface?"));
-				return;
-			}
-			mService = OperatorService.load(mAction.mOpId, getContext());
-			mSchedule = Scheduler.load(mAction.mId, getActivity());
+		if (mAction == null) {
+			((ActionDetailActivity) getActivity()).sendGatewayBroadcast(Activity.RESULT_CANCELED, new Intent().putExtra("error", "Action not found. Has it been added in the user interface?"));
+			return;
 		}
+		mSchedule = Scheduler.load(mAction.mId, getActivity());
 	}
 
 	@Override
@@ -55,6 +49,7 @@ public class ActionDetailFragment extends AbstractActionDetailFragment implement
 
 	protected void fillInfo(View view) {
 		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mOpSlug + " " + mService.mName);
+		view.findViewById(R.id.scheduler).setVisibility(View.VISIBLE);
 		if (mSchedule != null) {
 			view.findViewById(R.id.add_schedule).setVisibility(View.GONE);
 			((TextView) view.findViewById(R.id.schedule_text)).setText(getString(R.string.schedule, mSchedule.getString(getActivity())));

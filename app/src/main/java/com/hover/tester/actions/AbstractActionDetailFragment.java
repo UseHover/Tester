@@ -37,6 +37,10 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
+		if (getArguments().containsKey(OperatorAction.ID)) {
+			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
+			if (mAction != null) mService = OperatorService.load(mAction.mOpId, getContext());
+		}
 	}
 
 	@Override

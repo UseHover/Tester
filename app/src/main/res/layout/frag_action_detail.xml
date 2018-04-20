@@ -7,13 +7,17 @@
     android:orientation="vertical"
     android:padding="@dimen/standard_padding">
 
-    <FrameLayout android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_marginTop="@dimen/standard_padding">
+    <FrameLayout android:id="@+id/scheduler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_padding"
+        android:layout_marginBottom="@dimen/standard_padding"
+        android:visibility="gone">
 
         <Button android:id="@+id/add_schedule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_padding"
             android:text="@string/add_schedule"
             android:onClick="addSchedule"/>
 
@@ -38,13 +42,14 @@
                 android:onClick="addSchedule"/>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom"
+            android:background="@color/lightGray" />
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/standard_padding"
-        android:background="@color/lightGray" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/variable_list"
