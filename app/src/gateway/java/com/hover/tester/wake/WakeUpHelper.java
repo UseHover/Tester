@@ -57,6 +57,12 @@ public class WakeUpHelper {
 		cal.add(Calendar.HOUR, 1);
 		return cal.getTimeInMillis();
 	}
+	public static long getPlusTen() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(System.currentTimeMillis());
+		cal.add(Calendar.MINUTE, 10);
+		return cal.getTimeInMillis();
+	}
 
 	public static void lockAlarms(Context c) {
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();

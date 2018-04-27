@@ -16,6 +16,9 @@ import com.hover.tester.schedules.AddScheduleDialogFragment;
 import com.hover.tester.schedules.Scheduler;
 import com.hover.tester.schedules.SchedulerInterface;
 
+import static com.hover.tester.schedules.Scheduler.HOURLY;
+import static com.hover.tester.schedules.Scheduler.TEN_MIN;
+
 
 public class ActionDetailActivity extends AbstractActionDetailActivity implements SchedulerInterface {
 	public static final String TAG = "ActionDetailActivity";
@@ -33,7 +36,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	public void setType(int type) {
 		if (mScheduler == null) mScheduler = Scheduler.getInstance();
 		mScheduler.setType(type);
-		if (type == 0)
+		if (type == TEN_MIN || type == HOURLY)
 			saveSchedule();
 	}
 

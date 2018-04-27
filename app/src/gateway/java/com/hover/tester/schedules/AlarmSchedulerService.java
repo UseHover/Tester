@@ -18,9 +18,13 @@ import com.hover.tester.database.DbHelper;
 
 import java.util.ArrayList;
 
+import static com.hover.tester.schedules.Scheduler.DAILY;
+import static com.hover.tester.schedules.Scheduler.TEN_MIN;
+import static com.hover.tester.schedules.Scheduler.WEEKLY;
+
 public class AlarmSchedulerService extends IntentService {
 	public final static String TAG = "AlarmSchedulerService", INTERVAL = "interval";
-	private ArrayList<Scheduler> mHourly, mDaily, mWeekly;
+	private ArrayList<Scheduler> mTenMin, mHourly, mDaily, mWeekly;
 	private Scheduler mActionSchedule;
 
 	public AlarmSchedulerService() {
@@ -35,11 +39,14 @@ public class AlarmSchedulerService extends IntentService {
 			mActionSchedule = Scheduler.load(intent.getIntExtra(OperatorAction.ID, -1), this);
 			if (mActionSchedule != null) {
 				switch (mActionSchedule.getType()) {
-					case 2:
+					case WEEKLY:
 						setAlarm(mActionSchedule.getId(), WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY * 7);
 						break;
-					case 1:
+					case DAILY:
 						setAlarm(mActionSchedule.getId(), WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY);
+						break;
+					case TEN_MIN:
+						setAlarm(mActionSchedule.getId(), WakeUpHelper.getPlusTen(), AlarmManager.INTERVAL_HOUR);
 						break;
 					default:
 						setAlarm(mActionSchedule.getId(), WakeUpHelper.getPlusHour(), AlarmManager.INTERVAL_HOUR);
@@ -61,6 +68,10 @@ public class AlarmSchedulerService extends IntentService {
 		int i = 0;
 		for (Scheduler h : mHourly) {
 			setAlarm(h.getId(), WakeUpHelper.getScheduleTime(i, mHourly.size()), AlarmManager.INTERVAL_HOUR);
+			i++;
+		}
+		for (Scheduler m : mTenMin) {
+			setAlarm(m.getId(), WakeUpHelper.getScheduleTime(i, mTenMin.size()), 600000L);
 			i++;
 		}
 	}
@@ -98,9 +109,10 @@ public class AlarmSchedulerService extends IntentService {
 	}
 
 	private void getScheduled() {
-		mWeekly = getAllOfType(Scheduler.WEEKLY);
+		mWeekly = getAllOfType(WEEKLY);
 		mDaily = getAllOfType(Scheduler.DAILY);
 		mHourly = getAllOfType(Scheduler.HOURLY);
+		mTenMin = getAllOfType(Scheduler.TEN_MIN);
 	}
 
 	private ArrayList<Scheduler> getAllOfType(int type) {

@@ -99,10 +99,10 @@ public class AddScheduleDialogFragment extends DialogFragment implements Adapter
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 		mSchedule = pos;
-		if (pos == Scheduler.HOURLY || pos == Scheduler.DAILY || pos == Scheduler.WEEKLY)
+		if (pos == Scheduler.TEN_MIN || pos == Scheduler.HOURLY || pos == Scheduler.DAILY || pos == Scheduler.WEEKLY)
 			((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
 
-		if (pos == Scheduler.HOURLY)
+		if (pos == Scheduler.HOURLY || pos == Scheduler.TEN_MIN)
 			((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.done);
 		else if (pos == Scheduler.DAILY)
 			((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setText(R.string.next);

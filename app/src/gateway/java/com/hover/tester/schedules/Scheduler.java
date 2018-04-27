@@ -8,13 +8,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.hover.sdk.main.HoverActivity;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
 public class Scheduler {
 	public static String TAG = "Scheduler";
-	public static int HOURLY = 0, DAILY = 1, WEEKLY = 2;
+	public static final int  TEN_MIN = 0, HOURLY = 1, DAILY = 2, WEEKLY = 3;
 	private static Scheduler instance;
 
 	private int mActionId, mType, mDay, mHour, mMin;
@@ -25,7 +26,7 @@ public class Scheduler {
 		Log.i(TAG, "Creating schedule from cursor");
 		mActionId = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_ACTION_ID));
 		mType = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_TYPE));
-		if (mType != HOURLY) {
+		if (mType != HOURLY && mType != TEN_MIN) {
 			if (mType != DAILY)
 				mDay = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_DAY));
 			mHour = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_HOUR));
@@ -92,7 +93,7 @@ public class Scheduler {
 		ContentValues cv = new ContentValues();
 		cv.put(Contract.ActionScheduleEntry.COLUMN_ACTION_ID, mActionId);
 		cv.put(Contract.ActionScheduleEntry.COLUMN_TYPE, mType);
-		if (mType != HOURLY) {
+		if (mType != HOURLY && mType != TEN_MIN) {
 			if (mType != DAILY)
 				cv.put(Contract.ActionScheduleEntry.COLUMN_DAY, mDay);
 			cv.put(Contract.ActionScheduleEntry.COLUMN_HOUR, mHour);
@@ -106,8 +107,10 @@ public class Scheduler {
 			return c.getString(R.string.daily, getTimeText());
 		else if (mType == WEEKLY)
 			return c.getString(R.string.weekly, c.getResources().getStringArray(R.array.day_choices)[mDay], getTimeText());
-		else
+		else if (mType == HOURLY)
 			return c.getString(R.string.hourly);
+		else
+			return c.getString(R.string.ten_min);
 	}
 	private String getTimeText() {
 		return mHour + ":" + (mMin < 10 ? "0" + mMin : mMin);

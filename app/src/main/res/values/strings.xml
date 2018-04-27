@@ -22,6 +22,7 @@
     <string name="add_schedule">Add Schedule</string>
     <string name="change_schedule">Change</string>
     <string name="schedule">Schedule: %1$s</string>
+    <string name="ten_min">Every 10 Min</string>
     <string name="hourly">Hourly</string>
     <string name="daily">Daily at %1$s</string>
     <string name="weekly">Weekly on %1$s at %2$s</string>
@@ -41,6 +42,7 @@
     <string name="add_action">Add Action</string>
     <string name="add_schedule_q">Add a Schedule?</string>
     <string-array name="schedule_choices">
+        <item>Ten Minutes</item>
         <item>Hourly</item>
         <item>Daily</item>
         <item>Weekly</item>
