@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.hover.tester.main.MainActivity;
 import com.hover.tester.schedules.Scheduler;
-import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.wake.WakeUpHelper;
 

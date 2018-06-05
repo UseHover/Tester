@@ -8,6 +8,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.hover.ApiKey"
+            android:value="b97c1dd86d4d49caaf70c2303f7ede05"/>
+
     </application>
 
 </manifest>

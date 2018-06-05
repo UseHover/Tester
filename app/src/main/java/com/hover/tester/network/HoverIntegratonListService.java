@@ -6,21 +6,16 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.hover.sdk.onboarding.HoverIntegrationActivity;
 import com.hover.tester.R;
-import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class HoverIntegratonListService extends NetworkService {
-	public final static String TAG = "HoverIntegratonListService", SERVICES = "saved_services",
-			SIM_IDS = "sim_ids", ID = "id", NAME = "name", ACTIONS = "actions";
+	public final static String TAG = "HoverIntListService",
+			SIM_IDS = "sim_ids", ID = "id", NAME = "name", ACTIONS = "saved_actions";
 
 	public HoverIntegratonListService() {
 		super(TAG);
@@ -30,36 +25,23 @@ public class HoverIntegratonListService extends NetworkService {
 	@Override
 	protected void onHandleIntent(Intent i) {
 		try {
-			String services = netOps.download(getString(R.string.service_list_endpoint) + (i.hasExtra(SIM_IDS) ? "?sims[]" + i.getStringExtra(SIM_IDS) : ""));
-			saveServices(services);
+			String actions = netOps.download(getString(R.string.action_list_endpoint));
+			saveActions(actions);
 		} catch (Exception e) {
 			Crashlytics.logException(e);
 			Log.d("HoverListService", "download failed", e);
 		}
 	}
 
-	public void saveServices(String servicesResponse) {
+	public void saveActions(String actionsResponse) {
 		SharedPreferences.Editor editor = Utils.getSharedPrefs(this).edit();
-		editor.putString(SERVICES, servicesResponse);
+		editor.putString(ACTIONS, actionsResponse);
 		editor.apply();
 	}
 
-	public static CharSequence[] getServicesList(Context c) {
+	public static CharSequence[] getActionsList(Context c) {
 		try {
-			JSONArray json = new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null));
-			CharSequence[] list = new CharSequence[json.length()];
-			for (int j = 0; j < json.length(); j++)
-				list[j] = json.getJSONObject(j).getInt(ID) + ": " + json.getJSONObject(j).getString(NAME);
-			return list;
-		} catch (Exception e) {
-			Crashlytics.logException(e);
-			return new CharSequence[0];
-		}
-	}
-
-	public static CharSequence[] getActionsList(int serviceId, Context c) {
-		try {
-			JSONArray json = getServiceJson(serviceId, c).getJSONArray(ACTIONS);
+			JSONArray json = new JSONArray(Utils.getSharedPrefs(c).getString(ACTIONS, null));
 			CharSequence[] list = new CharSequence[json.length()];
 			for (int j = 0; j < json.length(); j++)
 				list[j] = json.getJSONObject(j).getString(ID) + ". " + json.getJSONObject(j).getString(NAME);
@@ -70,14 +52,14 @@ public class HoverIntegratonListService extends NetworkService {
 		}
 	}
 
-	private static JSONObject getServiceJson(int id, Context c) throws JSONException {
-		JSONArray json = new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null));
+	private static JSONObject getActionJson(int id, Context c) throws JSONException {
+		JSONArray json = new JSONArray(Utils.getSharedPrefs(c).getString(ACTIONS, null));
 		CharSequence[] list = new CharSequence[json.length()];
 		for (int j = 0; j < json.length(); j++) {
 			if (json.getJSONObject(j).getInt(ID) == id)
 				return json.getJSONObject(j);
 		}
-		throw new JSONException("Could not find service in json");
+		throw new JSONException("Could not find action in json");
 	}
 
 //	private List<OperatorAction> getActionsFromSdk(int serviceId, Context c) {
@@ -93,19 +75,27 @@ public class HoverIntegratonListService extends NetworkService {
 //		return actions;
 //	}
 
-	public static int getServiceId(int index, Context c) {
+	public static int getActionId(int index, Context c) {
 		try {
-			return new JSONArray(Utils.getSharedPrefs(c).getString(SERVICES, null)).getJSONObject(index).getInt(ID);
+			return new JSONArray(Utils.getSharedPrefs(c).getString(ACTIONS, null)).getJSONObject(index).getInt(ID);
 		} catch (JSONException e) {
 			Crashlytics.logException(e);
 			return -1;
 		}
 	}
 
-	public static JSONObject getAction(int serviceId, int index, Context c) throws JSONException {
-		return getServiceJson(serviceId, c).getJSONArray(ACTIONS).getJSONObject(index);
+	public static JSONObject getAction(int index, Context c) {
+		try {
+			return new JSONArray(Utils.getSharedPrefs(c).getString(ACTIONS, null)).getJSONObject(index);
+		} catch (JSONException e) { Crashlytics.logException(e); }
+		return new JSONObject();
 	}
-	public static int getActionListSize(int serviceId, Context c) throws JSONException {
-		return getServiceJson(serviceId, c).getJSONArray(ACTIONS).length();
+	public static int getActionListSize(Context c) {
+		try {
+			return new JSONArray(Utils.getSharedPrefs(c).getString(ACTIONS, null)).length();
+		} catch (JSONException e) {
+			Log.e(TAG, "Could not get actions list size");
+			return 0;
+		}
 	}
 }

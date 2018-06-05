@@ -1,4 +1,4 @@
-package com.hover.tester.services;
+package com.hover.tester.actions;
 
 public interface SaveFinishedListener {
 	void onSaveCompleted();

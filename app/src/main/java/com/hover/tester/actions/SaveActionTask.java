@@ -1,27 +1,27 @@
-package com.hover.tester.services;
+package com.hover.tester.actions;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
 import com.hover.tester.gateway.KeyStoreHelper;
 
-public class SaveServiceTask extends AsyncTask<OperatorService, Void, Void> {
+public class SaveActionTask extends AsyncTask<HoverAction, Void, Void> {
 	public final static String TAG = "SaveServiceTask";
 	private Context mContext;
 	private SaveFinishedListener mListener;
 	private String mPin;
 
-	public SaveServiceTask(String pin, SaveFinishedListener listner, Context c) {
+	public SaveActionTask(String pin, SaveFinishedListener listener, Context c) {
 		mContext = c.getApplicationContext();
-		mListener = listner;
+		mListener = listener;
 		mPin = pin;
 	}
 
-	protected Void doInBackground(OperatorService... services) {
-		int count = services.length;
+	protected Void doInBackground(HoverAction... actions) {
+		int count = actions.length;
 		for (int i = 0; i < count; i++) {
-			services[i].setPin(KeyStoreHelper.encrypt(services[i].mId, mPin, mContext));
-			services[i].save(mContext);
+//			actions[i].setPin(KeyStoreHelper.encrypt(actions[i].mId, mPin, mContext));
+			actions[i].save(mContext);
 		}
 		return null;
 	}

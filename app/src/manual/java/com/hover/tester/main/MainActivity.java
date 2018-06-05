@@ -6,18 +6,12 @@ import android.support.design.widget.Snackbar;
 
 import com.hover.tester.R;
 import com.hover.tester.network.HoverIntegratonListService;
-import com.hover.tester.services.OperatorService;
 
 public class MainActivity extends AbstractMainActivity {
 	public final static String TAG = "MainActivity";
 
-	public void onIntegrateSuccess(Intent data) {
-		OperatorService opService = new OperatorService(data, this);
-		HoverIntegratonListService.getActionsList(opService.mId, this);
-		Snackbar.make(findViewById(R.id.nest_container), "Saving Service: " + opService.mName + ", one moment", Snackbar.LENGTH_LONG).show();
-		opService.save(this);
-		opService.saveAllActions(this);
-	}
+	@Override
+	public void savePin(final String pin) { }
 
 	@TargetApi(27)
 	private void callUSSDAPI() {

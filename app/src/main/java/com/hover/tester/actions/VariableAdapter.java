@@ -6,7 +6,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +17,9 @@ import com.hover.tester.database.RecyclerViewCursorAdapter;
 
 public class VariableAdapter extends RecyclerViewCursorAdapter<VariableAdapter.ViewHolder> {
 	public static final String TAG = "VariableAdapter";
-	private OperatorAction mAction;
+	private HoverAction mAction;
 
-	public VariableAdapter(Context context, Cursor cursor, OperatorAction act) { super(context, cursor); mAction = act; }
+	public VariableAdapter(Context context, Cursor cursor, HoverAction act) { super(context, cursor); mAction = act; }
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

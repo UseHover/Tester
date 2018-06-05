@@ -16,9 +16,9 @@ import com.hover.tester.database.RecyclerViewCursorAdapter;
 
 public class ResultAdapter extends RecyclerViewCursorAdapter<ResultAdapter.ViewHolder> {
 	public static final String TAG = "ResultAdapter";
-	private OperatorAction mAction;
+	private HoverAction mAction;
 
-	public ResultAdapter(Context context, Cursor cursor, OperatorAction act) { super(context, cursor); mAction = act; }
+	public ResultAdapter(Context context, Cursor cursor, HoverAction act) { super(context, cursor); mAction = act; }
 
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

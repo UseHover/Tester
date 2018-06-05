@@ -8,12 +8,12 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/service_list"
+        android:id="@+id/action_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.hover.tester.main.MainActivity"
-        tools:listitem="@layout/service_li"
+        tools:listitem="@layout/action_li"
         tools:layout_height="380dp"/>
 
     <android.support.v4.widget.ContentLoadingProgressBar

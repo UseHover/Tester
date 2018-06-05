@@ -23,7 +23,6 @@ import com.hover.tester.notifications.DeviceInfoService;
 import com.hover.tester.wake.WakeUpHelper;
 import com.hover.tester.actions.OperatorAction;
 import com.hover.tester.network.HoverIntegratonListService;
-import com.hover.tester.services.OperatorService;
 import com.hover.tester.services.SaveServiceTask;
 
 import org.json.JSONException;
