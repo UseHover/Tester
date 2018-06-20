@@ -73,8 +73,8 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 	public void getActions() {
 		try {
 			HoverAccount.getInstance(this).registerDevice(this);
-			if (!HoverHelper.isAccessibilityEnabled(this))
-				startActivity(new Intent(this, PermissionActivity.class));
+//			if (!HoverHelper.isAccessibilityEnabled(this))
+//				startActivity(new Intent(this, PermissionActivity.class));
 		} catch (HoverConfigException e) { Log.e(TAG, e.getMessage(), e); }
 		startService(new Intent(this, HoverIntegratonListService.class));
 	}
