@@ -67,13 +67,13 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 			Intent i = getIntent();
 			Bundle args = new Bundle();
 
-			if (i.getIntExtra(OperatorAction.ID, -1) == -1) {
+			if (i.getIntExtra(HoverAction.ID, -1) == -1) {
 				sendGatewayBroadcast(RESULT_CANCELED, new Intent(i).putExtra("error", "No Action ID specified"));
 				return;
 			}
 
 			args.putAll(i.getExtras());
-			args.putInt(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
+			args.putInt(HoverAction.ID, i.getIntExtra(HoverAction.ID, -1));
 
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);
@@ -85,7 +85,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 
 	void sendGatewayBroadcast(int resultCode, Intent data) {
 		Intent i = new Intent(getPackageName() + TransactionReceiver.TRANSACTION_UPDATED);
-		i.putExtra(OperatorAction.ID, data.getIntExtra(OperatorAction.ID, -1));
+		i.putExtra(HoverAction.ID, data.getIntExtra(HoverAction.ID, -1));
 		if (resultCode == RESULT_CANCELED) {
 			i.putExtra("cmd", "done");
 			i.putExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE, data.getStringExtra("error"));

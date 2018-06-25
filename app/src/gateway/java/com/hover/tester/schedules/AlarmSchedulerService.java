@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.hover.tester.wake.WakeUpHelper;
 import com.hover.tester.wake.WakeUpReceiver;
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
@@ -35,8 +35,8 @@ public class AlarmSchedulerService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "Performing scheduling");
 
-		if (intent.hasExtra(OperatorAction.ID)) {
-			mActionSchedule = Scheduler.load(intent.getIntExtra(OperatorAction.ID, -1), this);
+		if (intent.hasExtra(HoverAction.ID)) {
+			mActionSchedule = Scheduler.load(intent.getIntExtra(HoverAction.ID, -1), this);
 			if (mActionSchedule != null) {
 				switch (mActionSchedule.getType()) {
 					case WEEKLY:
@@ -89,7 +89,7 @@ public class AlarmSchedulerService extends IntentService {
 	private Intent createScheduledIntent(Context c, int actionId) {
 		Intent wake = new Intent(c, WakeUpReceiver.class);
 		addActionVariableValues(actionId, wake);
-		wake.putExtra(OperatorAction.ID, actionId);
+		wake.putExtra(HoverAction.ID, actionId);
 		wake.putExtra(WakeUpHelper.SOURCE, WakeUpHelper.TIMER);
 		return wake;
 	}

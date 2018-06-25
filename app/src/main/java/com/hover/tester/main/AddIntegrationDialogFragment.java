@@ -80,9 +80,9 @@ public class AddIntegrationDialogFragment extends DialogFragment {
 		return builder.create();
 	}
 
-	private AlertDialog.Builder pinEntryDialog(String serviceName) {
+	private AlertDialog.Builder pinEntryDialog(String actionName) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(serviceName)
+		builder.setTitle(actionName)
 			.setView(R.layout.pin_entry)
 			.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {

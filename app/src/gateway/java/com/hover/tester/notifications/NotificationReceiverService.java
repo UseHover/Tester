@@ -9,7 +9,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.hover.tester.wake.WakeUpHelper;
 import com.hover.tester.wake.WakeUpReceiver;
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.utils.Utils;
 
 import java.util.Map;
@@ -25,7 +25,7 @@ public class NotificationReceiverService extends FirebaseMessagingService {
 			Log.i(TAG, "Received notification. Message data payload: " + remoteMessage.getData());
 			if (remoteMessage.getData().containsKey(WEBHOOK))
 				setWebhook(remoteMessage.getData().get(WEBHOOK), remoteMessage.getData().containsKey(IS_SLACK_WEBHOOK));
-			if (remoteMessage.getData().containsKey(OperatorAction.ID))
+			if (remoteMessage.getData().containsKey(HoverAction.ID))
 				sendFcmTriggeredWake(this, remoteMessage.getData());
 		} else {
 			startService(new Intent(this, DeviceInfoService.class));
@@ -35,7 +35,7 @@ public class NotificationReceiverService extends FirebaseMessagingService {
 	public static void sendFcmTriggeredWake(Context c, Map<String, String> data) {
 		Intent wake = new Intent(c, WakeUpReceiver.class);
 		for (Map.Entry<String, String> entry : data.entrySet()) {
-			if (entry.getKey().equals(OperatorAction.ID))
+			if (entry.getKey().equals(HoverAction.ID))
 				wake.putExtra(entry.getKey(), (int) Integer.valueOf(entry.getValue()));
 			else
 				wake.putExtra(entry.getKey(), entry.getValue());
