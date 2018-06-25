@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.hover.tester.GatewayReceiver;
 import com.hover.tester.TransactionReceiver;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
@@ -84,7 +85,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	}
 
 	void sendGatewayBroadcast(int resultCode, Intent data) {
-		Intent i = new Intent(getPackageName() + TransactionReceiver.TRANSACTION_UPDATED);
+		Intent i = new Intent(getPackageName() + GatewayReceiver.ACTION);
 		i.putExtra(OperatorAction.ID, data.getIntExtra(OperatorAction.ID, -1));
 		if (resultCode == RESULT_CANCELED) {
 			i.putExtra("cmd", "done");

@@ -46,12 +46,14 @@ public class OperatorAction {
 	}
 
 	public void save(final Context c) {
+		Log.e(TAG, "Saving action: " + mId + " for service " + mOpId);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
 				mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.OperatorActionEntry.CONTENT_URI, getBasicContentValues()));
 				for (ActionVariable variable: mVariables)
 					variable.save(c);
+				Log.e(TAG, "Action: " + mId + " saved");
 			}
 		}).start();
 	}

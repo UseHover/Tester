@@ -36,6 +36,16 @@
                 android:value="com.hover.tester.main.MainActivity"/>
         </activity>
 
+        <receiver
+            android:name=".TransactionReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.hover.tester.manual.CONFIRMED_TRANSACTION"/>
+                <action android:name="com.hover.tester.gateway.CONFIRMED_TRANSACTION"/>
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".network.HoverIntegratonListService"
             android:exported="false">

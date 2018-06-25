@@ -7,16 +7,22 @@ import android.support.design.widget.Snackbar;
 import com.hover.tester.R;
 import com.hover.tester.network.HoverIntegratonListService;
 import com.hover.tester.services.OperatorService;
+import com.hover.tester.services.SaveFinishedListener;
+import com.hover.tester.services.SaveServiceTask;
 
-public class MainActivity extends AbstractMainActivity {
+public class MainActivity extends AbstractMainActivity implements SaveFinishedListener {
 	public final static String TAG = "MainActivity";
 
 	public void onIntegrateSuccess(Intent data) {
 		OperatorService opService = new OperatorService(data, this);
 		HoverIntegratonListService.getActionsList(opService.mId, this);
 		Snackbar.make(findViewById(R.id.nest_container), "Saving Service: " + opService.mName + ", one moment", Snackbar.LENGTH_LONG).show();
-		opService.save(this);
-		opService.saveAllActions(this);
+		new SaveServiceTask(mFrag, this).execute(opService);
+	}
+
+	@Override
+	public void onSaveCompleted() {
+		mFrag.update();
 	}
 
 	@TargetApi(27)

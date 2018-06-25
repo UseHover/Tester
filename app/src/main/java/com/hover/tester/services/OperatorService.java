@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.hover.tester.gateway.KeyStoreHelper;
 import com.hover.tester.actions.OperatorAction;
@@ -27,8 +28,8 @@ public class OperatorService {
 		if (data.hasExtra("serviceId")) {
 			mId = data.getIntExtra("serviceId", -1);
 			mName = data.getStringExtra("serviceName");
-			mOpSlug = data.getStringExtra("operator");
-			mCountryIso = data.getStringExtra("country");
+			mOpSlug = data.getStringExtra("opSlug");
+			mCountryIso = data.getStringExtra("countryName");
 			mCurrencyIso = data.getStringExtra("currency");
 		}
 	}

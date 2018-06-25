@@ -19,14 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TransactionReceiver extends BroadcastReceiver {
-	public final static String TAG = "TransactionReceiver", TRANSACTION_UPDATED = "TRANSACTION_UPDATED";
+	public final static String TAG = "TransactionReceiver", GATEWAY_UPDATE = "TRANSACTION_UPDATED";
 	public TransactionReceiver() { }
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.e(TAG, "Transaction received. Trans id: " + i.getLongExtra("_id", -1) + ", Action: " + i.getStringExtra(Utils.ACTION));
+		Log.e(TAG, "Transaction received. Trans id: " + i.getStringExtra("uuid") + ", Action: " + i.getStringExtra(Utils.ACTION));
 		ActionResult ar = ActionResult.getByUuid(i.getStringExtra("uuid"), context);
 		if (ar != null) {
+			Log.e(TAG, "Updating result");
 			ar.mStatus = ActionResult.STATUS_SUCCEEDED;
 			ar.mTimeStamp = i.getLongExtra("response_timestamp", 0L);
 			ar.mText = i.getStringExtra("response_message");
@@ -45,7 +46,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 	}
 
 	private void sendGatewayBroadcast(Context c, Intent intent) {
-		Intent i = new Intent(c.getPackageName() + TRANSACTION_UPDATED);
+		Intent i = new Intent(c.getPackageName() + GATEWAY_UPDATE);
 		i.putExtra("cmd", "done");
 		i.putExtra(OperatorAction.ID, intent.getIntExtra(OperatorAction.ID, -1));
 		i.putExtra("status", "success");

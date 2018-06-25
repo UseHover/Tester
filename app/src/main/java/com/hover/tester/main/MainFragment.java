@@ -10,6 +10,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +27,7 @@ import com.hover.tester.services.ServiceAdapter;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SaveFinishedListener {
 	public static final String TAG = "MainFragment";
-	public static final int SERVICE_LOADER = 0;
+	public static final int SERVICE_LOADER = 99999;
 	public OnListFragmentInteractionListener mListener;
 	private ServiceAdapter mServiceAdapter;
 	private SparseArray<ActionAdapter> mActionAdapters;
@@ -105,8 +106,10 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		if (getView() != null) ((ContentLoadingProgressBar) getView().findViewById(R.id.loading_progress)).hide();
 		if (loader.getId() == SERVICE_LOADER)
 			mServiceAdapter.swapCursor(cursor);
-		else if (mActionAdapters != null && mActionAdapters.get(loader.getId()) != null)
+		else if (mActionAdapters != null && mActionAdapters.get(loader.getId()) != null) {
 			mActionAdapters.get(loader.getId()).swapCursor(cursor);
+			Log.e(TAG, "Action Load finished, length: " + cursor.getCount());
+		}
 	}
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
@@ -116,15 +119,15 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 			mActionAdapters.get(loader.getId()).swapCursor(null);
 	}
 
-	public void createActionAdapter(int id) {
-		if (getView() != null && getView().findViewWithTag(id) != null) {
-			RecyclerView list = (RecyclerView) getView().findViewWithTag(id);
+	public void createActionAdapter(int serviceId) {
+		if (getView() != null && getView().findViewWithTag(serviceId) != null) {
+			RecyclerView list = (RecyclerView) getView().findViewWithTag(serviceId);
 			ActionAdapter adapter = new ActionAdapter(getContext(), null, mListener);
 			list.setAdapter(adapter);
 			if (mActionAdapters == null)
 				mActionAdapters = new SparseArray<>();
-			mActionAdapters.put(id, adapter);
-			getLoaderManager().initLoader(id, null, this);
+			mActionAdapters.put(serviceId, adapter);
+			getLoaderManager().initLoader(serviceId, null, this);
 		}
 	}
 

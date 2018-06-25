@@ -61,7 +61,7 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	}
 
 	protected void fillInfo(View view) {
-		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mOpSlug + " " + mService.mName);
+		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mName);
 	}
 
 	private void addVariableView(View root) {

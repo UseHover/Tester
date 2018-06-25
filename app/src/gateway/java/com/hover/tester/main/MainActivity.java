@@ -88,17 +88,17 @@ public class MainActivity extends AbstractMainActivity implements GatewayIntegra
 	public static boolean meetsAllRequirements(Context c) {
 		return meetsAppRequirements(c) && hasSmsPerm(c) && HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
 	}
-	public static boolean hasSmsPerm(Context c) {
+	private static boolean hasSmsPerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	public static boolean meetsAppRequirements(Context c) {
 		return hasWakeLockPerm(c) && usableAndroidVersion();
 	}
-	public static boolean hasWakeLockPerm(Context c) {
+	private static boolean hasWakeLockPerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED;
 	}
-	public static boolean usableAndroidVersion() {
+	private static boolean usableAndroidVersion() {
 		return Build.VERSION.SDK_INT >= 18 && Build.VERSION.SDK_INT < 26;
 	}
 }
