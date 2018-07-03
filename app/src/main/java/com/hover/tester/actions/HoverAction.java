@@ -69,7 +69,6 @@ public class HoverAction {
 		cv.put(Contract.HoverActionEntry.COLUMN_NAME, mName);
 		cv.put(Contract.HoverActionEntry.COLUMN_SIM_ID, mSimId);
 		cv.put(Contract.HoverActionEntry.COLUMN_NETWORK_NAME, mNetworkName);
-//		cv.put(Contract.HoverActionEntry.COLUMN_PIN, mEncryptedPin);
 		return cv;
 	}
 

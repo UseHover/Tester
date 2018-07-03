@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hover.sdk.main.HoverParameters;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
 

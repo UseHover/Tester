@@ -83,6 +83,12 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 		}
 	}
 
+	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
+		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+		hpb.extra("pin", frag.mAction.getPin(this));
+		startActivityForResult(hpb.buildIntent(), 0);
+	}
+
 	void sendGatewayBroadcast(int resultCode, Intent data) {
 		Intent i = new Intent(getPackageName() + TransactionReceiver.TRANSACTION_UPDATED);
 		i.putExtra(HoverAction.ID, data.getIntExtra(HoverAction.ID, -1));

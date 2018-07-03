@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hover.sdk.main.HoverParameters;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.BuildConfig;
 import com.hover.tester.R;
 import com.hover.tester.main.MainActivity;
@@ -79,13 +79,12 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		if (frag != null) {
 			HoverAction action = frag.mAction;
 			Log.i(TAG, "Starting request: " + action.mName + " " + action.mId);
-			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(action.mId);
+			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(new int[] { action.mId });
 		}
 		return null;
 	}
-	private void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
+	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
-		if (BuildConfig.FLAVOR.equals("gateway")) hpb.extra("pin", frag.mAction.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 

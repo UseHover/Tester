@@ -1,20 +1,28 @@
 package com.hover.tester.main;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.hover.sdk.main.HoverAccount;
-import com.hover.sdk.main.HoverConfigException;
+import com.hover.sdk.actions.ActionsDownloadTask;
+import com.hover.sdk.api.Hover;
+import com.hover.sdk.api.HoverConfigException;
 import com.hover.sdk.onboarding.PermissionActivity;
-import com.hover.sdk.utils.HoverHelper;
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.HoverAction;
@@ -47,14 +55,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 		mFrag = (MainFragment) getSupportFragmentManager().findFragmentById(R.id.main_fragment);
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
-//		findViewById(R.id.update_config).setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View view) {
-//				Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
-//				startService(new Intent(getApplicationContext(), ActionsDownloadTask.class));
-//			}
-//		});
-//		showConfigUpdated(getIntent());
+		showConfigUpdated(getIntent());
 	}
 
 	@Override
@@ -72,9 +73,8 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 
 	public void getActions() {
 		try {
-			HoverAccount.getInstance(this).registerDevice(this);
-			if (!HoverHelper.isAccessibilityEnabled(this))
-				startActivity(new Intent(this, PermissionActivity.class));
+//			if (!Hover.deviceRegistered(this))
+				Hover.initialize(this);
 		} catch (HoverConfigException e) { Log.e(TAG, e.getMessage(), e); }
 		startService(new Intent(this, HoverIntegratonListService.class));
 	}
@@ -91,7 +91,6 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 		Snackbar.make(findViewById(R.id.nest_container),
 				"Saving Action: " + action.mName + ", one moment",
 				Snackbar.LENGTH_LONG).show();
-//		action.save(this);
 		new SaveActionTask(null, mFrag, this).execute(action);
 	}
 
@@ -102,20 +101,48 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 		startActivity(intent);
 	}
 
+	public void updateConfig(View view) {
+		Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
+		startService(new Intent(getApplicationContext(), ActionsDownloadTask.class));
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();
 		unregisterNetReceiver();
 	}
 
+	public void requestPhonePerm(Fragment frag, int requestCode) {
+//		if (Build.VERSION.SDK_INT >= 23)
+//			frag.requestPermissions(new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE }, requestCode);
+//		else
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, requestCode);
+	}
+
 	@Override
 	public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		if (mFrag != null) mFrag.controlFlow();
+		if (!hasAdvancedPerms(this)) requestAdvancedPerms();
 	}
 
-	public static boolean meetsAllRequirements(Context c) { return true; }
-	public static boolean meetsAppRequirements(Context c) { return true; }
+	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c) && hasAdvancedPerms(c); }
+	public static boolean meetsAppRequirements(Context c) { return hasPhonePerm(c); }
+
+	public static boolean hasPhonePerm(Context c) {
+		return Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(c, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED &&
+				ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED);
+	}
+	public static boolean hasSmsPerm(Context c) {
+		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+	}
+	public static boolean hasAdvancedPerms(Context c) {
+		return Hover.isAccessibilityEnabled(c) && Hover.isOverlayEnabled(c);
+	}
+	protected void requestAdvancedPerms() {
+		startActivity(new Intent(this, PermissionActivity.class));
+	}
+
 
 	public void registerNetReceiver() {
 		if (mNetworkReceiver == null) {

@@ -1,17 +1,21 @@
 package com.hover.tester.main;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.support.design.widget.Snackbar;
-
-import com.hover.tester.R;
-import com.hover.tester.network.HoverIntegratonListService;
+import android.view.View;
 
 public class MainActivity extends AbstractMainActivity {
 	public final static String TAG = "MainActivity";
 
 	@Override
 	public void savePin(final String pin) { }
+
+	public void grantSystemPermissions(View view) {
+		if (!hasPhonePerm(this) && mFrag != null)
+			requestPhonePerm(mFrag, 0);
+		if (!hasAdvancedPerms(this))
+			requestAdvancedPerms();
+
+	}
 
 	@TargetApi(27)
 	private void callUSSDAPI() {

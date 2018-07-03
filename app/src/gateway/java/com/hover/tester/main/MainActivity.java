@@ -64,9 +64,6 @@ public class MainActivity extends AbstractMainActivity {
 	public static boolean meetsAllRequirements(Context c) {
 		return meetsAppRequirements(c) && hasSmsPerm(c) && HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
 	}
-	public static boolean hasSmsPerm(Context c) {
-		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
-	}
 
 	public static boolean meetsAppRequirements(Context c) {
 		return hasWakeLockPerm(c) && usableAndroidVersion();
