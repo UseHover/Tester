@@ -1,16 +1,13 @@
 package com.hover.tester.main;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +16,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.hover.sdk.actions.ActionsDownloadTask;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverConfigException;
-import com.hover.sdk.onboarding.PermissionActivity;
+import com.hover.sdk.api.HoverHelper;
+import com.hover.sdk.permissions.PermissionActivity;
+import com.hover.sdk.sims.SimInfo;
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.HoverAction;
@@ -34,7 +32,7 @@ import com.hover.tester.utils.UpdateReceiver;
 
 import io.fabric.sdk.android.Fabric;
 
-public abstract class AbstractMainActivity extends AppCompatActivity implements MainFragment.OnListFragmentInteractionListener, AddIntegrationInterface {
+public abstract class AbstractMainActivity extends AppCompatActivity implements MainFragment.OnListFragmentInteractionListener, AddIntegrationInterface, Hover.ActionChoiceListener {
 	public final static String TAG = "AMainActivity";
 	private NetworkReceiver mNetworkReceiver = null;
 	protected MainFragment mFrag;
@@ -73,8 +71,10 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 
 	public void getActions() {
 		try {
-//			if (!Hover.deviceRegistered(this))
+			if (hasPhonePerm(this))
 				Hover.initialize(this);
+			else
+				requestPhonePerm();
 		} catch (HoverConfigException e) { Log.e(TAG, e.getMessage(), e); }
 		startService(new Intent(this, HoverIntegratonListService.class));
 	}
@@ -103,7 +103,17 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 
 	public void updateConfig(View view) {
 		Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
-		startService(new Intent(getApplicationContext(), ActionsDownloadTask.class));
+		Hover.updateActionConfigs(this);
+//		try {
+//			Hover.getActionChoice(new int[]{16, 17}, this, this);
+//		} catch (HoverConfigException e) {
+//			Toast.makeText(AbstractMainActivity.this, "Danger!", Toast.LENGTH_SHORT).show();
+//		}
+	}
+
+	@Override
+	public void onActionChosen(int actionId) {
+		Toast.makeText(AbstractMainActivity.this, "Chose Action with ID: " + actionId, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
@@ -112,21 +122,15 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 		unregisterNetReceiver();
 	}
 
-	public void requestPhonePerm(Fragment frag, int requestCode) {
-//		if (Build.VERSION.SDK_INT >= 23)
-//			frag.requestPermissions(new String[]{ Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE }, requestCode);
-//		else
-			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE}, requestCode);
-	}
-
 	@Override
-	public void onRequestPermissionsResult(int requestCode,	String permissions[], int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
 		if (mFrag != null) mFrag.controlFlow();
-		if (!hasAdvancedPerms(this)) requestAdvancedPerms();
+//		if (requestCode != 0 && !hasAdvancedPerms(this))
+//			requestAdvancedPerms();
 	}
 
-	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c) && hasAdvancedPerms(c); }
+	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c); }// && hasAdvancedPerms(c); }
 	public static boolean meetsAppRequirements(Context c) { return hasPhonePerm(c); }
 
 	public static boolean hasPhonePerm(Context c) {
@@ -136,11 +140,17 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 	public static boolean hasSmsPerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
 	}
+	public void requestPhonePerm() { // Fragment frag, int requestCode) {
+		Intent i = new Intent(this, PermissionActivity.class);
+		i.putExtra(PermissionActivity.CMD, PermissionActivity.PHONE);
+		startActivityForResult(i, 0);
+	}
+
 	public static boolean hasAdvancedPerms(Context c) {
-		return Hover.isAccessibilityEnabled(c) && Hover.isOverlayEnabled(c);
+		return HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
 	}
 	protected void requestAdvancedPerms() {
-		startActivity(new Intent(this, PermissionActivity.class));
+		startActivityForResult(new Intent(this, PermissionActivity.class), 1);
 	}
 
 

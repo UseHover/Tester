@@ -11,9 +11,9 @@ public class MainActivity extends AbstractMainActivity {
 
 	public void grantSystemPermissions(View view) {
 		if (!hasPhonePerm(this) && mFrag != null)
-			requestPhonePerm(mFrag, 0);
-		if (!hasAdvancedPerms(this))
-			requestAdvancedPerms();
+			requestPhonePerm();
+//		if (!hasAdvancedPerms(this))
+//			requestAdvancedPerms();
 
 	}
 

@@ -79,12 +79,12 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		if (frag != null) {
 			HoverAction action = frag.mAction;
 			Log.i(TAG, "Starting request: " + action.mName + " " + action.mId);
-			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(new int[] { action.mId });
+			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(action.mId);
 		}
 		return null;
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+//		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.setEnvironment(HoverParameters.TEST_MODE);
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
