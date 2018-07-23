@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DbHelper extends SQLiteOpenHelper {
-	public static final int DATABASE_VERSION = 8;
+	public static final int DATABASE_VERSION = 9;
 	public static final String DATABASE_NAME = "services.db";
 
 	public DbHelper(Context context) {
@@ -16,7 +16,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ Contract.StatusReportEntry.TABLE_NAME + "("
 			+ Contract.StatusReportEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
 			+ Contract.StatusReportEntry.COLUMN_STATUS + " integer not null, "
-			+ Contract.StatusReportEntry.COLUMN_ACTION_ID + " integer not null, "
+			+ Contract.StatusReportEntry.COLUMN_ACTION_ID + " string not null, "
 			+ Contract.StatusReportEntry.COLUMN_TRANSACTION + " text, "
 			+ Contract.StatusReportEntry.COLUMN_START_TIMESTAMP + " long not null, "
 			+ Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP + " long, "
@@ -28,7 +28,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final String ACTION_TABLE_CREATE = "create table "
 			+ Contract.HoverActionEntry.TABLE_NAME + "("
-			+ Contract.HoverActionEntry.COLUMN_ENTRY_ID + " integer primary key, "
+			+ Contract.HoverActionEntry.COLUMN_ENTRY_ID + " string primary key, "
 			+ Contract.HoverActionEntry.COLUMN_NAME + " text not null, "
 			+ Contract.HoverActionEntry.COLUMN_SIM_ID + " text not null, "
 			+ Contract.HoverActionEntry.COLUMN_NETWORK_NAME + " text not null, "
@@ -39,7 +39,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String SCHEDULE_TABLE_CREATE = "create table "
 			+ Contract.ActionScheduleEntry.TABLE_NAME + "("
 			+ Contract.ActionScheduleEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
-			+ Contract.ActionScheduleEntry.COLUMN_ACTION_ID + " integer not null, "
+			+ Contract.ActionScheduleEntry.COLUMN_ACTION_ID + " string not null, "
 			+ Contract.ActionScheduleEntry.COLUMN_TYPE + " integer not null, "
 			+ Contract.ActionScheduleEntry.COLUMN_DAY + " integer, "
 			+ Contract.ActionScheduleEntry.COLUMN_HOUR + " integer, "
@@ -50,7 +50,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	private static final String VARIABLE_TABLE_CREATE = "create table "
 			+ Contract.ActionVariableEntry.TABLE_NAME + "("
 			+ Contract.ActionVariableEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
-			+ Contract.ActionVariableEntry.COLUMN_ACTION_ID + " integer not null, "
+			+ Contract.ActionVariableEntry.COLUMN_ACTION_ID + " string not null, "
 			+ Contract.ActionVariableEntry.COLUMN_NAME + " text not null, "
 			+ Contract.ActionVariableEntry.COLUMN_VALUE + " text, "
 			+ "UNIQUE (" + Contract.ActionVariableEntry.COLUMN_ACTION_ID + ", " + Contract.ActionVariableEntry.COLUMN_NAME + ") ON CONFLICT REPLACE"
@@ -60,7 +60,7 @@ public class DbHelper extends SQLiteOpenHelper {
 			+ Contract.ActionResultEntry.TABLE_NAME + "("
 			+ Contract.ActionResultEntry.COLUMN_ENTRY_ID + " integer primary key autoincrement, "
 			+ Contract.ActionResultEntry.COLUMN_SDK_UUID + " string not null, "
-			+ Contract.ActionResultEntry.COLUMN_ACTION_ID + " integer not null, "
+			+ Contract.ActionResultEntry.COLUMN_ACTION_ID + " string not null, "
 			+ Contract.ActionResultEntry.COLUMN_TEXT + " text not null, "
 			+ Contract.ActionResultEntry.COLUMN_STATUS + " integer not null, "
 			+ Contract.ActionResultEntry.COLUMN_TIMESTAMP + " text not null, "

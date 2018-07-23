@@ -36,7 +36,7 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
 		if (getArguments().containsKey(HoverAction.ID)) {
-			mAction = HoverAction.load(getArguments().getInt(HoverAction.ID), getContext());
+			mAction = HoverAction.load(getArguments().getString(HoverAction.ID), getContext());
 		}
 	}
 
@@ -81,10 +81,10 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		if (id == VARIABLE_LOADER)
 			return new CursorLoader(getActivity(), Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
-					Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, null);
+					Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = '" + mAction.mId + "'", null, null);
 		else
 			return new CursorLoader(getActivity(), Contract.ActionResultEntry.CONTENT_URI, Contract.RESULT_PROJECTION,
-					Contract.ActionResultEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, ActionResult.SORT_ORDER);
+					Contract.ActionResultEntry.COLUMN_ACTION_ID + " = '" + mAction.mId + "'", null, ActionResult.SORT_ORDER);
 	}
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {

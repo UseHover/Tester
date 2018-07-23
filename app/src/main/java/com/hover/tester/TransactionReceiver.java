@@ -40,14 +40,14 @@ public class TransactionReceiver extends BroadcastReceiver {
 		i = new Intent(i);
 		i.setClass(c, ActionDetailActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		i.putExtra(HoverAction.ID, i.getIntExtra("action_id", -1));
+		i.putExtra(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 		c.startActivity(i);
 	}
 
 	private void sendGatewayBroadcast(Context c, Intent intent) {
 		Intent i = new Intent(c.getPackageName() + TRANSACTION_UPDATED);
 		i.putExtra("cmd", "done");
-		i.putExtra(HoverAction.ID, intent.getIntExtra(HoverAction.ID, -1));
+		i.putExtra(HoverAction.ID, intent.getStringExtra(HoverAction.ID));
 		i.putExtra("status", "success");
 		i.putExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, intent.getStringExtra("response_message"));
 		i.putExtra("transaction", convertTinfoToJsonString(intent.getExtras(), new JSONObject()));

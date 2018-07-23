@@ -55,11 +55,11 @@ public class KeyStoreHelper {
 		return null;
 	}
 
-	public static String decrypt(String encryptedPin, int serviceId, Context c) {
+	public static String decrypt(String encryptedPin, String actionId, Context c) {
 		try {
 			KeyStore keystore = KeyStore.getInstance("AndroidKeyStore");
 			keystore.load(null);
-			KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keystore.getEntry(getPrefix(c) + serviceId, null);
+			KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) keystore.getEntry(getPrefix(c) + actionId, null);
 
 			Cipher output = Cipher.getInstance("RSA/ECB/PKCS1Padding");
 			output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());

@@ -11,16 +11,18 @@ import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
+import java.util.Arrays;
+
 public class ActionResult {
 	public static final String TAG = "ActionResult", UUID = "uuid",
 			RESULT = "response_message", NEG_RESULT = "error", RESULT_TIMESTAMP = "response_timestamp",
 			SORT_ORDER = Contract.ActionResultEntry.COLUMN_TIMESTAMP + " DESC";
 	public static final int STATUS_UNTESTED = -1, STATUS_FAILED = 0, STATUS_SUCCEEDED = 1, STATUS_UNKNOWN = 2;
-	public int mId, mActionId, mStatus;
+	public int mId, mStatus;
 	public long mTimeStamp;
-	public String mSdkUuid, mText, mDetails;
+	public String mActionId, mSdkUuid, mText, mDetails;
 
-	public ActionResult(int actionId, int resultCode, Intent data) {
+	public ActionResult(String actionId, int resultCode, Intent data) {
 		mSdkUuid = data.hasExtra(UUID) ? data.getStringExtra(UUID) : "none";
 		mActionId = actionId;
 		if (resultCode == Activity.RESULT_OK) {
@@ -40,7 +42,7 @@ public class ActionResult {
 	public ActionResult(Cursor c) {
 		mId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_ENTRY_ID));
 		mSdkUuid = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_SDK_UUID));
-		mActionId = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_ACTION_ID));
+		mActionId = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_ACTION_ID));
 		mText = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_TEXT));
 		mDetails = c.getString(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_RETURN_VALUES));
 		mStatus = c.getInt(c.getColumnIndex(Contract.ActionResultEntry.COLUMN_STATUS));
@@ -52,7 +54,13 @@ public class ActionResult {
 		String deets = "";
 		if (bundle != null) {
 			for (String key : bundle.keySet())
-				if (bundle.get(key) != null) deets += key + ": " + bundle.get(key).toString() + ", ";
+				if (key.equals("ussd_messages")) {
+					String[] msgs = bundle.getStringArray(key);
+					String ussd = "";
+					for (String msg: msgs)
+						ussd += msg;
+					deets += key + ": " + ussd;
+				} else if (bundle.get(key) != null) deets += key + ": " + bundle.get(key).toString() + ", ";
 		}
 		return deets;
 	}
@@ -69,11 +77,11 @@ public class ActionResult {
 		return ar;
 	}
 
-	public static ActionResult getLatest(int actionId, Context context) {
+	public static ActionResult getLatest(String actionId, Context context) {
 		ActionResult ar = null;
 		Cursor cursor = new DbHelper(context).getReadableDatabase()
 				.query(Contract.ActionResultEntry.TABLE_NAME, Contract.RESULT_PROJECTION,
-						Contract.ActionResultEntry.COLUMN_ACTION_ID + " = " + actionId,
+						Contract.ActionResultEntry.COLUMN_ACTION_ID + " = '" + actionId +"'",
 						null, null, null, SORT_ORDER);
 		if (cursor.moveToFirst())
 			 ar = new ActionResult(cursor);

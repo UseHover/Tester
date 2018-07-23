@@ -1,6 +1,5 @@
 package com.hover.tester.actions;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,7 +8,6 @@ import android.util.Log;
 
 import com.hover.tester.database.DbHelper;
 import com.hover.tester.gateway.KeyStoreHelper;
-import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
 
 import org.json.JSONArray;
@@ -21,14 +19,13 @@ import java.util.ArrayList;
 public class HoverAction {
 	public static final String TAG = "HoverAction", ID = "action_id";
 
-	public int mId;
-	public String mName, mNetworkName, mSimId, mEncryptedPin;
+	public String mId, mName, mNetworkName, mSimId, mEncryptedPin;
 	public ArrayList<ActionVariable> mVariables = new ArrayList<>(0);
 	public ActionResult mLastResult;
 
 	public HoverAction(JSONObject jsonAct) {
 		try {
-			mId = jsonAct.getInt("id");
+			mId = jsonAct.getString("id");
 			mName = jsonAct.getString("name");
 			mNetworkName = jsonAct.getString("network_name");
 			mSimId = jsonAct.getString("hni");
@@ -42,7 +39,7 @@ public class HoverAction {
 	}
 
 	public HoverAction(Cursor c, Context context) {
-		mId = c.getInt(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_ENTRY_ID));
+		mId = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_ENTRY_ID));
 		mName = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_NAME));
 		mSimId = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_SIM_ID));
 		mNetworkName = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_NETWORK_NAME));
@@ -55,7 +52,7 @@ public class HoverAction {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.HoverActionEntry.CONTENT_URI, getBasicContentValues()));
+				c.getContentResolver().insert(Contract.HoverActionEntry.CONTENT_URI, getBasicContentValues());
 				for (int v = 0; v < mVariables.size(); v++)
 					mVariables.get(v).save(c);
 				Log.d(TAG, "Saved action " + mName);
@@ -72,11 +69,11 @@ public class HoverAction {
 		return cv;
 	}
 
-	public static HoverAction load(int id, Context c) {
+	public static HoverAction load(String id, Context c) {
 		HoverAction action = null;
 		SQLiteDatabase database = new DbHelper(c).getReadableDatabase();
 		Cursor cursor = database.query(Contract.HoverActionEntry.TABLE_NAME, Contract.ACTION_PROJECTION,
-				Contract.HoverActionEntry.COLUMN_ENTRY_ID + " = " + id,
+				Contract.HoverActionEntry.COLUMN_ENTRY_ID + " = '" + id + "'",
 				null, null, null, null);
 		if (cursor.moveToFirst())
 			action = new HoverAction(cursor, c);
@@ -89,7 +86,7 @@ public class HoverAction {
 		String encryptedpin = null;
 		SQLiteDatabase database = new DbHelper(c).getReadableDatabase();
 		Cursor cursor = database.query(Contract.HoverActionEntry.TABLE_NAME, Contract.ACTION_PIN_PROJECTION,
-				Contract.HoverActionEntry.COLUMN_ENTRY_ID + " = " + mId,
+				Contract.HoverActionEntry.COLUMN_ENTRY_ID + " = '" + mId + "'",
 				null, null, null, null);
 		if (cursor.moveToFirst())
 			encryptedpin = cursor.getString(cursor.getColumnIndex(Contract.HoverActionEntry.COLUMN_PIN));

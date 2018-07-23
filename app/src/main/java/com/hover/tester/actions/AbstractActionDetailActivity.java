@@ -103,11 +103,11 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 			Intent i = getIntent();
 			Bundle args = new Bundle();
 
-			if (i.getIntExtra(HoverAction.ID, -1) == -1)
+			if (i.getStringExtra(HoverAction.ID) == null)
 				return;
 
 			args.putAll(i.getExtras());
-			args.putInt(HoverAction.ID, i.getIntExtra(HoverAction.ID, -1));
+			args.putString(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);

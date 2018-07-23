@@ -20,7 +20,6 @@ import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverConfigException;
 import com.hover.sdk.api.HoverHelper;
 import com.hover.sdk.permissions.PermissionActivity;
-import com.hover.sdk.sims.SimInfo;
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.HoverAction;
@@ -103,7 +102,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 
 	public void updateConfig(View view) {
 		Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
-		Hover.updateActionConfigs(this);
+//		Hover.updateActionConfigs(this, this);
 //		try {
 //			Hover.getActionChoice(new int[]{16, 17}, this, this);
 //		} catch (HoverConfigException e) {
@@ -112,7 +111,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 	}
 
 	@Override
-	public void onActionChosen(int actionId) {
+	public void onActionChosen(String actionId) {
 		Toast.makeText(AbstractMainActivity.this, "Chose Action with ID: " + actionId, Toast.LENGTH_SHORT).show();
 	}
 

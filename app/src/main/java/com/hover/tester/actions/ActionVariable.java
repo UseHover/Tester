@@ -8,15 +8,14 @@ import com.hover.tester.database.Contract;
 public class ActionVariable {
 	public static final String TAG = "ActionVariable";
 
-	public String mName, mValue;
-	public int mActionId;
+	public String mName, mValue, mActionId;
 
-	public ActionVariable(int actionId, String name) {
+	public ActionVariable(String actionId, String name) {
 		mActionId = actionId;
 		mName = name;
 	}
 
-	public ActionVariable(String name, String value, int actionId) {
+	public ActionVariable(String name, String value, String actionId) {
 		mName = name;
 		mValue = value;
 		mActionId = actionId;
