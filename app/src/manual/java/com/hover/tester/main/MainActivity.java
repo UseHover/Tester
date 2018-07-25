@@ -1,7 +1,21 @@
 package com.hover.tester.main;
 
 import android.annotation.TargetApi;
+import android.content.Context;
+import android.support.design.widget.Snackbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.Toast;
+import android.widget.Toolbar;
+
+import com.hover.tester.R;
+import com.hover.tester.actions.HoverAction;
+import com.hover.tester.utils.Utils;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AbstractMainActivity {
 	public final static String TAG = "MainActivity";
@@ -15,6 +29,36 @@ public class MainActivity extends AbstractMainActivity {
 //		if (!hasAdvancedPerms(this))
 //			requestAdvancedPerms();
 
+	}
+
+	protected void setUpView() {
+		super.setUpView();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_menu, menu);
+		final MenuItem menuItem = menu.findItem(R.id.debug_mode);
+		CheckBox checkBox = (CheckBox) menuItem.getActionView();
+		checkBox.setText(getString(R.string.debug_mode));
+		checkBox.setChecked(Utils.isInDebugMode(this));
+		checkBox.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onOptionsItemSelected(menuItem);
+			}
+		});
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.debug_mode) {
+			Utils.setDebugMode(!Utils.isInDebugMode(this), this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@TargetApi(27)

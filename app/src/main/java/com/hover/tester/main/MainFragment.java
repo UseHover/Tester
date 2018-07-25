@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionAdapter;
@@ -21,6 +22,7 @@ import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.network.NetworkOps;
 import com.hover.tester.actions.SaveFinishedListener;
+import com.hover.tester.utils.Utils;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SaveFinishedListener {
 	public static final String TAG = "MainFragment";

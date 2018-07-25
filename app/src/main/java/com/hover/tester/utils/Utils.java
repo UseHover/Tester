@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class Utils {
-	public static final String TAG = "Utils", ACTION = "action";
+	public static final String TAG = "Utils", ACTION = "action", DEBUG = "debug";
 
 	public static final String[] parsableValues = new String[]{ "code", "currency", "balance", "amount", "who" };
 
@@ -58,6 +58,15 @@ public class Utils {
 	public static String[] getListFromString(String fromDb) {
 		if (fromDb == null) return null;
 		return fromDb.split(",");
+	}
+
+	public static void setDebugMode(boolean value, Context c) {
+		SharedPreferences.Editor editor = Utils.getSharedPrefs(c).edit();
+		editor.putBoolean(DEBUG, value);
+		editor.commit();
+	}
+	public static boolean isInDebugMode(Context c) {
+		return getSharedPrefs(c).getBoolean(DEBUG, false);
 	}
 
 	public static void storeParsedValues(Bundle extras, Context c) {

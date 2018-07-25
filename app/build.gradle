@@ -44,7 +44,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-//            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -85,10 +85,10 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-//    releaseImplementation('com.hover:android-sdk:0.16.0-beta2') {
-//        transitive = true
-//        exclude group: 'com.android.support'
-//    }
+    releaseImplementation('com.hover:android-sdk:0.17.0-alpha1') {
+        transitive = true
+        exclude group: 'com.android.support'
+    }
     debugImplementation project(':hover.sdk')
     debugApi 'io.sentry:sentry-android:1.6.3'
 

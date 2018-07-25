@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.webkit.DownloadListener;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -29,9 +30,12 @@ import com.hover.tester.network.NetworkOps;
 import com.hover.tester.utils.NetworkReceiver;
 import com.hover.tester.utils.UpdateReceiver;
 
+import java.util.ArrayList;
+
 import io.fabric.sdk.android.Fabric;
 
-public abstract class AbstractMainActivity extends AppCompatActivity implements MainFragment.OnListFragmentInteractionListener, AddIntegrationInterface, Hover.ActionChoiceListener {
+public abstract class AbstractMainActivity extends AppCompatActivity
+		implements MainFragment.OnListFragmentInteractionListener, AddIntegrationInterface, Hover.ActionChoiceListener, Hover.DownloadListener {
 	public final static String TAG = "AMainActivity";
 	private NetworkReceiver mNetworkReceiver = null;
 	protected MainFragment mFrag;
@@ -102,12 +106,14 @@ public abstract class AbstractMainActivity extends AppCompatActivity implements 
 
 	public void updateConfig(View view) {
 		Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
-//		Hover.updateActionConfigs(this, this);
-//		try {
-//			Hover.getActionChoice(new int[]{16, 17}, this, this);
-//		} catch (HoverConfigException e) {
-//			Toast.makeText(AbstractMainActivity.this, "Danger!", Toast.LENGTH_SHORT).show();
-//		}
+		Hover.updateActionConfigs(this, this);
+	}
+
+	@Override public void onDownloadError(String message) {
+		Snackbar.make(findViewById(R.id.nest_container), message, Snackbar.LENGTH_LONG).show();
+	}
+	@Override public void onDownloadSuccess(ArrayList<com.hover.sdk.actions.HoverAction> actions, Context c) {
+		Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
 	@Override

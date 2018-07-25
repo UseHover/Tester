@@ -13,9 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hover.sdk.api.HoverParameters;
-import com.hover.tester.BuildConfig;
 import com.hover.tester.R;
 import com.hover.tester.main.MainActivity;
+import com.hover.tester.utils.Utils;
 
 
 public abstract class AbstractActionDetailActivity extends AppCompatActivity {
@@ -84,7 +84,7 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		return null;
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-//		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.setEnvironment(HoverParameters.TEST_MODE);
+		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_MODE);
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
