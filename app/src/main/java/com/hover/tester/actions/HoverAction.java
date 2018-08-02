@@ -19,7 +19,8 @@ import java.util.ArrayList;
 public class HoverAction {
 	public static final String TAG = "HoverAction", ID = "action_id";
 
-	public String mId, mName, mNetworkName, mSimId, mEncryptedPin;
+	public String mId, mName, mNetworkName, mEncryptedPin;
+	public JSONArray mSimHniList;
 	public ArrayList<ActionVariable> mVariables = new ArrayList<>(0);
 	public ActionResult mLastResult;
 
@@ -28,7 +29,7 @@ public class HoverAction {
 			mId = jsonAct.getString("id");
 			mName = jsonAct.getString("name");
 			mNetworkName = jsonAct.getString("network_name");
-			mSimId = jsonAct.getString("hni");
+			mSimHniList = jsonAct.getJSONArray("hni_list");
 			JSONArray variables = jsonAct.getJSONArray("custom_steps");
 			mVariables = new ArrayList<>(0);
 			for (int v = 0; v < variables.length(); v++) {
@@ -41,7 +42,9 @@ public class HoverAction {
 	public HoverAction(Cursor c, Context context) {
 		mId = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_ENTRY_ID));
 		mName = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_NAME));
-		mSimId = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_SIM_ID));
+		try {
+			mSimHniList = new JSONArray(c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_SIM_ID)));
+		} catch (JSONException | NullPointerException ignored) { }
 		mNetworkName = c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_NETWORK_NAME));
 //		mVariableIds = Utils.getIdListFromString(c.getString(c.getColumnIndex(Contract.HoverActionEntry.COLUMN_VARIABLES)));
 
@@ -64,7 +67,7 @@ public class HoverAction {
 		ContentValues cv = new ContentValues();
 		cv.put(Contract.HoverActionEntry.COLUMN_ENTRY_ID, mId);
 		cv.put(Contract.HoverActionEntry.COLUMN_NAME, mName);
-		cv.put(Contract.HoverActionEntry.COLUMN_SIM_ID, mSimId);
+		cv.put(Contract.HoverActionEntry.COLUMN_SIM_ID, mSimHniList.toString());
 		cv.put(Contract.HoverActionEntry.COLUMN_NETWORK_NAME, mNetworkName);
 		return cv;
 	}
