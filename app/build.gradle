@@ -77,7 +77,6 @@ dependencies {
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:gridlayout-v7:26.1.0'
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
     releaseImplementation 'com.android.volley:volley:1.0.0'
@@ -85,7 +84,7 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-    releaseImplementation('com.hover:android-sdk:0.17.0-alpha1') {
+    releaseImplementation('com.hover:android-sdk:0.17.0-alpha4') {
         transitive = true
         exclude group: 'com.android.support'
     }

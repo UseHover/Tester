@@ -73,12 +73,10 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	public void getActions() {
-		try {
 			if (hasPhonePerm(this))
 				Hover.initialize(this);
 			else
 				requestPhonePerm();
-		} catch (HoverConfigException e) { Log.e(TAG, e.getMessage(), e); }
 		startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
@@ -109,16 +107,20 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 		Hover.updateActionConfigs(this, this);
 	}
 
-	@Override public void onDownloadError(String message) {
+	@Override public void onError(String message) {
 		Snackbar.make(findViewById(R.id.nest_container), message, Snackbar.LENGTH_LONG).show();
 	}
-	@Override public void onDownloadSuccess(ArrayList<com.hover.sdk.actions.HoverAction> actions, Context c) {
+	@Override public void onSuccess(ArrayList<com.hover.sdk.actions.HoverAction> actions) {
 		Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
 	@Override
 	public void onActionChosen(String actionId) {
 		Toast.makeText(AbstractMainActivity.this, "Chose Action with ID: " + actionId, Toast.LENGTH_SHORT).show();
+	}
+	@Override
+	public void onCanceled() {
+		Toast.makeText(AbstractMainActivity.this, "Action Choice Cancelled.", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

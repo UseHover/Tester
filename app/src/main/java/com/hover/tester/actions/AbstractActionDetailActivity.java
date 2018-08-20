@@ -84,7 +84,8 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		return null;
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_MODE);
+//		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
+//		hpb.setEnvironment(HoverParameters.TEST_ENV);
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
