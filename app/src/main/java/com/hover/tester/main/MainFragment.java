@@ -11,26 +11,22 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionAdapter;
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
-import com.hover.tester.main.MainActivity;
 import com.hover.tester.network.NetworkOps;
-import com.hover.tester.services.SaveFinishedListener;
-import com.hover.tester.services.ServiceAdapter;
+import com.hover.tester.actions.SaveFinishedListener;
 
 public class MainFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SaveFinishedListener {
 	public static final String TAG = "MainFragment";
-	public static final int SERVICE_LOADER = 99999;
 	public OnListFragmentInteractionListener mListener;
-	private ServiceAdapter mServiceAdapter;
-	private SparseArray<ActionAdapter> mActionAdapters;
+	private ActionAdapter mActionAdapter;
 
 	public MainFragment() { }
 
@@ -44,16 +40,16 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setRetainInstance(true);
 		View view = inflater.inflate(R.layout.frag_main, container, false);
-		createServiceList(view);
+		createActionList(view);
 		return view;
 	}
 
-	private void createServiceList(View view) {
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.service_list);
+	private void createActionList(View view) {
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.action_list);
 		recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-		mServiceAdapter = new ServiceAdapter(getActivity(), null, this);
-		recyclerView.setAdapter(mServiceAdapter);
-		getLoaderManager().initLoader(SERVICE_LOADER, null, this);
+		mActionAdapter = new ActionAdapter(getActivity(), null, (MainActivity) getActivity());
+		recyclerView.setAdapter(mActionAdapter);
+		getLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
@@ -64,9 +60,9 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	void controlFlow() {
 		View view = getView();
 		if (NetworkOps.isConnected(getContext()) && getActivity() != null) //&& MainActivity.hasPhonePerm(getContext()) && OperatorService.count(getContext()) == 0)
-			((MainActivity) getActivity()).getServices();
+			((MainActivity) getActivity()).getActions();
 
-		if (!MainActivity.meetsAppRequirements(getContext()))
+		if (!MainActivity.meetsAllRequirements(getContext()))
 			askForPerms(view);
 		else if (!NetworkOps.isConnected(getContext()))
 			askForNet(view);
@@ -92,43 +88,19 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		view.findViewById(R.id.internet_message).setVisibility(View.GONE);
 	}
 
-
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		if (id == SERVICE_LOADER)
-			return new CursorLoader(getActivity(), Contract.OperatorServiceEntry.CONTENT_URI, Contract.SERVICE_PROJECTION, null, null, null);
-		else
-			return new CursorLoader(getContext(), Contract.OperatorActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
-					Contract.OperatorActionEntry.COLUMN_SERVICE_ID + " = " + id, null, null);
+		return new CursorLoader(getContext(), Contract.HoverActionEntry.CONTENT_URI, Contract.ACTION_PROJECTION,
+				null, null, null);
 	}
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (getView() != null) ((ContentLoadingProgressBar) getView().findViewById(R.id.loading_progress)).hide();
-		if (loader.getId() == SERVICE_LOADER)
-			mServiceAdapter.swapCursor(cursor);
-		else if (mActionAdapters != null && mActionAdapters.get(loader.getId()) != null) {
-			mActionAdapters.get(loader.getId()).swapCursor(cursor);
-			Log.e(TAG, "Action Load finished, length: " + cursor.getCount());
-		}
+		mActionAdapter.swapCursor(cursor);
 	}
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		if (loader.getId() == SERVICE_LOADER)
-			mServiceAdapter.swapCursor(null);
-		else if (mActionAdapters != null && mActionAdapters.get(loader.getId()) != null)
-			mActionAdapters.get(loader.getId()).swapCursor(null);
-	}
-
-	public void createActionAdapter(int serviceId) {
-		if (getView() != null && getView().findViewWithTag(serviceId) != null) {
-			RecyclerView list = (RecyclerView) getView().findViewWithTag(serviceId);
-			ActionAdapter adapter = new ActionAdapter(getContext(), null, mListener);
-			list.setAdapter(adapter);
-			if (mActionAdapters == null)
-				mActionAdapters = new SparseArray<>();
-			mActionAdapters.put(serviceId, adapter);
-			getLoaderManager().initLoader(serviceId, null, this);
-		}
+		mActionAdapter.swapCursor(null);
 	}
 
 	@Override
@@ -136,7 +108,8 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 		update();
 	}
 	public void update() {
-		getLoaderManager().restartLoader(SERVICE_LOADER, null, this);
+		Log.e(TAG, "Updating");
+		getLoaderManager().restartLoader(0, null, this);
 	}
 
 	@Override
@@ -146,6 +119,6 @@ public class MainFragment extends Fragment implements LoaderManager.LoaderCallba
 	}
 
 	public interface OnListFragmentInteractionListener {
-		void onListFragmentInteraction(OperatorAction act);
+		void onListFragmentInteraction(HoverAction act);
 	}
 }

@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.ActionResult;
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.utils.Utils;
 
@@ -41,14 +41,14 @@ public class TransactionReceiver extends BroadcastReceiver {
 		i = new Intent(i);
 		i.setClass(c, ActionDetailActivity.class);
 		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		i.putExtra(OperatorAction.ID, i.getIntExtra("action_id", -1));
+		i.putExtra(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 		c.startActivity(i);
 	}
 
 	private void sendGatewayBroadcast(Context c, Intent intent) {
 		Intent i = new Intent(c.getPackageName() + GATEWAY_UPDATE);
 		i.putExtra("cmd", "done");
-		i.putExtra(OperatorAction.ID, intent.getIntExtra(OperatorAction.ID, -1));
+		i.putExtra(HoverAction.ID, intent.getStringExtra(HoverAction.ID));
 		i.putExtra("status", "success");
 		i.putExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, intent.getStringExtra("response_message"));
 		i.putExtra("transaction", convertTinfoToJsonString(intent.getExtras(), new JSONObject()));

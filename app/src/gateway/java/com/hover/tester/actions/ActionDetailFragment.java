@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.hover.tester.main.MainActivity;
 import com.hover.tester.schedules.Scheduler;
-import com.hover.tester.services.OperatorService;
 import com.hover.tester.R;
 import com.hover.tester.wake.WakeUpHelper;
 
@@ -48,7 +47,7 @@ public class ActionDetailFragment extends AbstractActionDetailFragment implement
 	}
 
 	protected void fillInfo(View view) {
-		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mName);
+		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mAction.mNetworkName);
 		view.findViewById(R.id.scheduler).setVisibility(View.VISIBLE);
 		if (mSchedule != null) {
 			view.findViewById(R.id.add_schedule).setVisibility(View.GONE);

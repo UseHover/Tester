@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.utils.Utils;
 
@@ -24,13 +24,13 @@ public class StatusReport {
 	public final static String TAG = "StatusReport", STATUS = "status", TRANSACTION = "transaction";
 	public final static int PENDING = 0, FAILURE = 1, SUCCESS = 2;
 
-	private int mId, mActionId, mStatus;
-	private String mSrc, mSessionMsg, mConfirmMsg, mFailureMsg, mTransaction;
+	private int mId, mStatus;
+	private String mActionId, mSrc, mSessionMsg, mConfirmMsg, mFailureMsg, mTransaction;
 	private Map<String, String> mExtras;
 	private long mStartTime, mEndTime;
 
 	public StatusReport(Intent i) {
-		mActionId = i.getIntExtra(OperatorAction.ID, -1);
+		mActionId = i.getStringExtra(HoverAction.ID);
 		mStartTime = System.currentTimeMillis();
 		mStatus = PENDING;
 		mExtras = getExtras(i);
@@ -41,7 +41,7 @@ public class StatusReport {
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			mId = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_ENTRY_ID));
-			mActionId = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_ACTION_ID));
+			mActionId = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_ACTION_ID));
 			mStatus = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_STATUS));
 			mStartTime = cursor.getLong(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_START_TIMESTAMP));
 			mEndTime = cursor.getLong(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP));
@@ -94,7 +94,6 @@ public class StatusReport {
 	public JSONObject getJson(Context c) throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put("action_id", mActionId);
-		json.put("operator_id", getServiceId(c));
 		json.put("status", mStatus == SUCCESS ? "success" : "failure");
 		json.put("started_timestamp", mStartTime);
 		json.put("finished_timestamp", mEndTime);
@@ -107,11 +106,6 @@ public class StatusReport {
 		if (mExtras != null && mExtras.size() > 0)
 			json.put("input_extras", new JSONObject(mExtras));
 		return json;
-	}
-
-	private int getServiceId(Context c) {
-		OperatorAction a = OperatorAction.load(mActionId, c);
-		return a != null ? a.mOpId : -1;
 	}
 
 	private ContentValues getStartContentValues() {

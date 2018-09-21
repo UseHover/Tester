@@ -1,28 +1,56 @@
 package com.hover.tester.main;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
-import android.support.design.widget.Snackbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 
 import com.hover.tester.R;
-import com.hover.tester.network.HoverIntegratonListService;
-import com.hover.tester.services.OperatorService;
-import com.hover.tester.services.SaveFinishedListener;
-import com.hover.tester.services.SaveServiceTask;
+import com.hover.tester.utils.Utils;
 
-public class MainActivity extends AbstractMainActivity implements SaveFinishedListener {
+
+public class MainActivity extends AbstractMainActivity {
 	public final static String TAG = "MainActivity";
 
-	public void onIntegrateSuccess(Intent data) {
-		OperatorService opService = new OperatorService(data, this);
-		HoverIntegratonListService.getActionsList(opService.mId, this);
-		Snackbar.make(findViewById(R.id.nest_container), "Saving Service: " + opService.mName + ", one moment", Snackbar.LENGTH_LONG).show();
-		new SaveServiceTask(mFrag, this).execute(opService);
+	@Override
+	public void savePin(final String pin) { }
+
+	public void grantSystemPermissions(View view) {
+//		if (!hasPhonePerm(this) && mFrag != null)
+//			requestPhonePerm();
+//		if (!hasAdvancedPerms(this))
+			requestAdvancedPerms();
+	}
+
+	protected void setUpView() {
+		super.setUpView();
 	}
 
 	@Override
-	public void onSaveCompleted() {
-		mFrag.update();
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_menu, menu);
+		final MenuItem menuItem = menu.findItem(R.id.debug_mode);
+		CheckBox checkBox = (CheckBox) menuItem.getActionView();
+		checkBox.setText(getString(R.string.debug_mode));
+		checkBox.setChecked(Utils.isInDebugMode(this));
+		checkBox.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onOptionsItemSelected(menuItem);
+			}
+		});
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.debug_mode) {
+			Utils.setDebugMode(!Utils.isInDebugMode(this), this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@TargetApi(27)

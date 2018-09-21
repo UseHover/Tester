@@ -50,14 +50,10 @@ public class TesterContentProvider extends ContentProvider {
 				cursor = db.query(Contract.StatusReportEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_REPORTS_ID:
 				cursor = db.query(Contract.StatusReportEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
-			case ROUTE_SERVICES:
-				cursor = db.query(Contract.OperatorServiceEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
-			case ROUTE_SERVICES_ID:
-				cursor = db.query(Contract.OperatorServiceEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_ACTIONS:
-				cursor = db.query(Contract.OperatorActionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
+				cursor = db.query(Contract.HoverActionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_ACTIONS_ID:
-				cursor = db.query(Contract.OperatorActionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
+				cursor = db.query(Contract.HoverActionEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_SCHEDULES:
 				cursor = db.query(Contract.ActionScheduleEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder); break;
 			case ROUTE_SCHEDULES_ID:
@@ -90,17 +86,11 @@ public class TesterContentProvider extends ContentProvider {
 			case ROUTE_REPORTS_ID:
 				count = db.update(Contract.StatusReportEntry.TABLE_NAME, values, selection, selectionArgs);
 				break;
-			case ROUTE_SERVICES:
-				count = db.update(Contract.OperatorServiceEntry.TABLE_NAME, values, selection, selectionArgs);
-				break;
-			case ROUTE_SERVICES_ID:
-				count = db.update(Contract.OperatorServiceEntry.TABLE_NAME, values, selection, selectionArgs);
-				break;
 			case ROUTE_ACTIONS:
-				count = db.update(Contract.OperatorActionEntry.TABLE_NAME, values, selection, selectionArgs);
+				count = db.update(Contract.HoverActionEntry.TABLE_NAME, values, selection, selectionArgs);
 				break;
 			case ROUTE_ACTIONS_ID:
-				count = db.update(Contract.OperatorActionEntry.TABLE_NAME, values, selection, selectionArgs);
+				count = db.update(Contract.HoverActionEntry.TABLE_NAME, values, selection, selectionArgs);
 				break;
 			case ROUTE_SCHEDULES:
 				count = db.update(Contract.ActionScheduleEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -142,13 +132,9 @@ public class TesterContentProvider extends ContentProvider {
 				id = db.insertOrThrow(Contract.StatusReportEntry.TABLE_NAME, null, values);
 				result = Uri.parse(Contract.StatusReportEntry.CONTENT_URI + "/" + id);
 				break;
-			case ROUTE_SERVICES:
-				id = db.insertOrThrow(Contract.OperatorServiceEntry.TABLE_NAME, null, values);
-				result = Uri.parse(Contract.OperatorServiceEntry.CONTENT_URI + "/" + id);
-				break;
 			case ROUTE_ACTIONS:
-				id = db.replace(Contract.OperatorActionEntry.TABLE_NAME, null, values);
-				result = Uri.parse(Contract.OperatorActionEntry.CONTENT_URI + "/" + id);
+				id = db.replace(Contract.HoverActionEntry.TABLE_NAME, null, values);
+				result = Uri.parse(Contract.HoverActionEntry.CONTENT_URI + "/" + id);
 				break;
 			case ROUTE_SCHEDULES:
 				id = db.insertOrThrow(Contract.ActionScheduleEntry.TABLE_NAME, null, values);
@@ -193,14 +179,10 @@ public class TesterContentProvider extends ContentProvider {
 				return Contract.StatusReportEntry.CONTENT_TYPE;
 			case ROUTE_REPORTS_ID:
 				return Contract.StatusReportEntry.CONTENT_ITEM_TYPE;
-			case ROUTE_SERVICES:
-				return Contract.OperatorServiceEntry.CONTENT_TYPE;
-			case ROUTE_SERVICES_ID:
-				return Contract.OperatorServiceEntry.CONTENT_ITEM_TYPE;
 			case ROUTE_ACTIONS:
-				return Contract.OperatorActionEntry.CONTENT_TYPE;
+				return Contract.HoverActionEntry.CONTENT_TYPE;
 			case ROUTE_ACTIONS_ID:
-				return Contract.OperatorActionEntry.CONTENT_ITEM_TYPE;
+				return Contract.HoverActionEntry.CONTENT_ITEM_TYPE;
 			case ROUTE_SCHEDULES:
 				return Contract.ActionScheduleEntry.CONTENT_TYPE;
 			case ROUTE_SCHEDULES_ID:

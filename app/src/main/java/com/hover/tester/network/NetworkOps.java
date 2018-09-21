@@ -1,6 +1,8 @@
 package com.hover.tester.network;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -26,6 +28,7 @@ public class NetworkOps {
 	public final static String TAG = "NetworkOps";
 	private Context mContext;
 	public int responseCode;
+	public String responseMessage;
 
 	public NetworkOps(Context c) {
 		mContext = c;
@@ -44,6 +47,7 @@ public class NetworkOps {
 		conn.setConnectTimeout(15000);
 		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("Authorization", "Token token=" + getApiKey(mContext));
 		conn.setRequestMethod(type);
 		if (type.equals("POST") || type.equals("PUT"))
 			addData(conn, data);
@@ -79,6 +83,7 @@ public class NetworkOps {
 		Log.i(TAG, "making request: " + urlEnd);
 		HttpsURLConnection conn = makeRequest(urlEnd, "GET", null);
 		responseCode = conn.getResponseCode();
+		responseMessage = conn.getResponseMessage();
 		Log.i(TAG, "response code: " + responseCode);
 		if (responseCode == 200) {
 			is = conn.getInputStream();
@@ -96,6 +101,16 @@ public class NetworkOps {
 		String response = convertStreamToString(is);
 		if (is != null) { is.close(); }
 		return response;
+	}
+
+	private String getApiKey(Context c) {
+		try {
+			ApplicationInfo ai = c.getPackageManager().getApplicationInfo(c.getPackageName(), PackageManager.GET_META_DATA);
+			Log.i(TAG, "apikey found: " + ai.metaData.getString("com.hover.ApiKey"));
+			return ai.metaData.getString("com.hover.ApiKey");
+		} catch (PackageManager.NameNotFoundException e) {
+		}
+		return null;
 	}
 
 	private String convertStreamToString(InputStream is) {

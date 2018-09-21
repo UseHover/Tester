@@ -3,19 +3,21 @@
     <string name="country">%1$s (%2$s)</string>
 
     <string name="base_url">https://www.usehover.com/sdk/</string>
-    <string name="service_list_endpoint">list-services</string>
+    <string name="action_list_endpoint">custom_actions</string>
     <string name="hover_status_endpoint">https://www.usehover.com/status_reports</string>
     <string name="url_builder">%1$s%2$s</string>
 
     <string name="update_config">Update Config</string>
     <string name="updating">Updating...</string>
     <string name="updated">Updated all configs.</string>
+    <string name="update_failed">Update failed, please try again.</string>
     <string name="grant_permissions">Grant Permissions</string>
     <string name="add_integration">Add Integration</string>
     <string name="change_integration">Change Integration</string>
     <string name="turn_on_internet">Please connect to the internet</string>
 
     <string name="choose_action">Choose Action</string>
+    <string name="debug_mode">Debug Mode</string>
 
     <string name="detected_actions">Detected Actions</string>
 
@@ -37,7 +39,7 @@
 
     <!--Dialogs-->
     <string name="choose_service">Choose Service</string>
-    <string name="services_downloading">Still downloading services, try again in a minute</string>
+    <string name="still_downloading">Still downloading, try again in a minute</string>
     <string name="enter_pin">Enter PIN</string>
     <string name="add_action">Add Action</string>
     <string name="add_schedule_q">Add a Schedule?</string>

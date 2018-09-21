@@ -21,16 +21,17 @@ import com.hover.tester.R;
 public class AddScheduleDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener, TimePickerDialog.OnTimeSetListener {
 	public final static String TAG = "AddScheduleDialogFragment", STEP = "step", ID = "id";
 	public static int ADD_SCHEDULE_STEP = 0, TIME_PICKER_STEP = 1;
-	private int mStep, mId, mDay = -1, mSchedule;
+	private String mId;
+	private int mStep, mDay = -1, mSchedule;
 	private SchedulerInterface mListener;
 
 	public AddScheduleDialogFragment() { }
 
-	public static AddScheduleDialogFragment newInstance(int step, int id) {
+	public static AddScheduleDialogFragment newInstance(int step, String id) {
 		AddScheduleDialogFragment frag = new AddScheduleDialogFragment();
 		Bundle args = new Bundle();
 		args.putInt(STEP, step);
-		args.putInt(ID, id);
+		args.putString(ID, id);
 		frag.setArguments(args);
 		return frag;
 	}
@@ -46,7 +47,7 @@ public class AddScheduleDialogFragment extends DialogFragment implements Adapter
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mStep = getArguments().getInt(STEP);
-		mId = getArguments().getInt(ID);
+		mId = getArguments().getString(ID);
 		if (mStep == TIME_PICKER_STEP)
 			return timeDialog();
 		else // if (mStep == ADD_SCHEDULE_STEP)

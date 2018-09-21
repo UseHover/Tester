@@ -16,17 +16,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hover.sdk.main.HoverParameters;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
-import com.hover.tester.services.OperatorService;
 
 
 public class AbstractActionDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 	public static final String TAG = "AActionDetailFragment";
 	private static final int VARIABLE_LOADER = 0, RESULT_LOADER = 1;
-	OperatorService mService;
-	OperatorAction mAction;
+	HoverAction mAction;
 	RecyclerView variableRecycler;
 	private VariableAdapter mVariableAdapter;
 	private ResultAdapter mResultAdapter;
@@ -37,9 +35,8 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setRetainInstance(true);
-		if (getArguments().containsKey(OperatorAction.ID)) {
-			mAction = OperatorAction.load(getArguments().getInt(OperatorAction.ID), getContext());
-			if (mAction != null) mService = OperatorService.load(mAction.mOpId, getContext());
+		if (getArguments().containsKey(HoverAction.ID)) {
+			mAction = HoverAction.load(getArguments().getString(HoverAction.ID), getContext());
 		}
 	}
 
@@ -61,7 +58,7 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	}
 
 	protected void fillInfo(View view) {
-		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mService.mName);
+		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mAction.mNetworkName);
 	}
 
 	private void addVariableView(View root) {
@@ -84,10 +81,10 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		if (id == VARIABLE_LOADER)
 			return new CursorLoader(getActivity(), Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
-					Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, null);
+					Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = '" + mAction.mId + "'", null, null);
 		else
 			return new CursorLoader(getActivity(), Contract.ActionResultEntry.CONTENT_URI, Contract.RESULT_PROJECTION,
-					Contract.ActionResultEntry.COLUMN_ACTION_ID + " = " + mAction.mId, null, ActionResult.SORT_ORDER);
+					Contract.ActionResultEntry.COLUMN_ACTION_ID + " = '" + mAction.mId + "'", null, ActionResult.SORT_ORDER);
 	}
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
@@ -121,8 +118,8 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 			if (va.mValue == null || va.mValue.isEmpty())
 				throw new NullPointerException("You must provide a value for " + va.mName);
 			hpb.extra(va.mName, va.mValue);
-			if (va.mName.equals("amount"))
-				hpb.extra("currency", mService.mCurrencyIso);
+//			if (va.mName.equals("amount"))
+//				hpb.extra("currency", mService.mCurrencyIso);
 		}
 	}
 

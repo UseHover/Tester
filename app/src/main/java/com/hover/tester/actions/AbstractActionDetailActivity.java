@@ -12,10 +12,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hover.sdk.main.HoverParameters;
-import com.hover.tester.BuildConfig;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.R;
 import com.hover.tester.main.MainActivity;
+import com.hover.tester.utils.Utils;
 
 
 public abstract class AbstractActionDetailActivity extends AppCompatActivity {
@@ -77,15 +77,15 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 
 	private HoverParameters.Builder startRequest(ActionDetailFragment frag) {
 		if (frag != null) {
-			OperatorAction action = frag.mAction;
-			Log.i(TAG, "Starting request: " + action.mSlug + " " + action.mOpId);
-			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(action.mSlug).from(action.mOpId);
+			HoverAction action = frag.mAction;
+			Log.i(TAG, "Starting request: " + action.mName + " " + action.mId);
+			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(action.mId);
 		}
 		return null;
 	}
-	private void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-//		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
-		if (BuildConfig.FLAVOR.equals("gateway")) hpb.extra("pin", frag.mService.getPin(this));
+	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
+		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
+//		hpb.setEnvironment(HoverParameters.TEST_ENV);
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
@@ -104,11 +104,11 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 			Intent i = getIntent();
 			Bundle args = new Bundle();
 
-			if (i.getIntExtra(OperatorAction.ID, -1) == -1)
+			if (i.getStringExtra(HoverAction.ID) == null)
 				return;
 
 			args.putAll(i.getExtras());
-			args.putInt(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
+			args.putString(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);

@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.schedules.AlarmSchedulerService;
 
 import java.util.Calendar;
@@ -36,7 +36,7 @@ public class WakeUpReceiver extends WakefulBroadcastReceiver {
 
 	private void scheduleNextAlarm(Intent i, Context c) {
 		Intent intent = new Intent(c, AlarmSchedulerService.class);
-		intent.putExtra(OperatorAction.ID, i.getIntExtra(OperatorAction.ID, -1));
+		intent.putExtra(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 		c.startService(intent);
 	}
 

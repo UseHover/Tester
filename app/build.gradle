@@ -13,7 +13,6 @@ apply plugin: 'io.fabric'
 
 repositories {
     mavenCentral()
-    maven { url "https://maven.google.com" }
     maven { url 'https://maven.fabric.io/public' }
     maven { url 'http://maven.usehover.com/snapshots' }
     maven { url 'http://maven.usehover.com/releases' }
@@ -45,7 +44,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-//            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.debug
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -71,14 +70,13 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     api('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') { transitive = true }
-    gatewayImplementation 'com.google.firebase:firebase-core:11.6.0'
-    gatewayImplementation 'com.google.firebase:firebase-messaging:11.6.0'
+    gatewayImplementation 'com.google.firebase:firebase-core:16.0.0'
+    gatewayImplementation 'com.google.firebase:firebase-messaging:17.0.0'
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:gridlayout-v7:26.1.0'
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
     releaseImplementation 'com.android.volley:volley:1.0.0'
@@ -86,12 +84,12 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-    releaseImplementation('com.hover:android-sdk:0.15.3') {
+    releaseImplementation('com.hover:android-sdk:0.17.0-rc1') {
         transitive = true
         exclude group: 'com.android.support'
     }
     debugImplementation project(':hover.sdk')
-    debugApi 'io.sentry:sentry-android:1.6.3'
+    debugApi 'io.sentry:sentry-android:1.7.5'
 
     testImplementation 'junit:junit:4.12'
 }

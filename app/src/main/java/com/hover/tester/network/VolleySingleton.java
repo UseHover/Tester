@@ -2,8 +2,11 @@ package com.hover.tester.network;
 
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,6 +23,9 @@ import com.hover.sdk.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -44,7 +50,7 @@ public class VolleySingleton {
 
 	public RequestQueue getRequestQueue() {
 		if (mRequestQueue == null)
-			mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), new HurlStack());
+			mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext(), new CustomHurlStack());
 		return mRequestQueue;
 	}
 
@@ -109,6 +115,25 @@ public class VolleySingleton {
 		ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+	}
+
+	public class CustomHurlStack extends HurlStack {
+		@Override
+		protected HttpURLConnection createConnection(URL url) throws IOException {
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestProperty("Authorization", "Token token=" + getApiKey());
+			return connection;
+		}
+	}
+
+	private String getApiKey() {
+		try {
+			ApplicationInfo ai = mCtx.getPackageManager().getApplicationInfo(mCtx.getPackageName(), PackageManager.GET_META_DATA);
+			Log.i(TAG, "apikey found: " + ai.metaData.getString("com.hover.ApiKey"));
+			return ai.metaData.getString("com.hover.ApiKey");
+		} catch (PackageManager.NameNotFoundException e) {
+		}
+		return null;
 	}
 }
 

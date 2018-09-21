@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.hover.tester.wake.WakeUpHelper;
 import com.hover.tester.wake.WakeUpReceiver;
-import com.hover.tester.actions.OperatorAction;
+import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
 
@@ -35,8 +35,8 @@ public class AlarmSchedulerService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "Performing scheduling");
 
-		if (intent.hasExtra(OperatorAction.ID)) {
-			mActionSchedule = Scheduler.load(intent.getIntExtra(OperatorAction.ID, -1), this);
+		if (intent.hasExtra(HoverAction.ID)) {
+			mActionSchedule = Scheduler.load(intent.getStringExtra(HoverAction.ID), this);
 			if (mActionSchedule != null) {
 				switch (mActionSchedule.getType()) {
 					case WEEKLY:
@@ -76,7 +76,7 @@ public class AlarmSchedulerService extends IntentService {
 		}
 	}
 
-	public void setAlarm(int actionId, long when, long interval) {
+	public void setAlarm(String actionId, long when, long interval) {
 		Intent wake = createScheduledIntent(this, actionId);
 		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		if (android.os.Build.VERSION.SDK_INT >= 19) {
@@ -86,17 +86,17 @@ public class AlarmSchedulerService extends IntentService {
 			alarm.setRepeating(AlarmManager.RTC_WAKEUP, when, interval, PendingIntent.getBroadcast(this, actionId, wake, PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
-	private Intent createScheduledIntent(Context c, int actionId) {
+	private Intent createScheduledIntent(Context c, String actionId) {
 		Intent wake = new Intent(c, WakeUpReceiver.class);
 		addActionVariableValues(actionId, wake);
-		wake.putExtra(OperatorAction.ID, actionId);
+		wake.putExtra(HoverAction.ID, actionId);
 		wake.putExtra(WakeUpHelper.SOURCE, WakeUpHelper.TIMER);
 		return wake;
 	}
 
-	private void addActionVariableValues(int actionId, Intent wake) {
+	private void addActionVariableValues(String actionId, Intent wake) {
 		Cursor cursor = getContentResolver().query(Contract.ActionVariableEntry.CONTENT_URI, Contract.VARIABLE_PROJECTION,
-				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = " + actionId, null, null);
+				Contract.ActionVariableEntry.COLUMN_ACTION_ID + " = '" + actionId + "'", null, null);
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
 			wake.putExtra(cursor.getString(cursor.getColumnIndex(Contract.ActionVariableEntry.COLUMN_NAME)),

@@ -30,7 +30,7 @@ public class ActionAdapter extends RecyclerViewCursorAdapter<ActionAdapter.ViewH
 
 	@Override
 	public void onBindViewHolder(final ViewHolder holder, Cursor cursor) {
-		holder.mAction = new OperatorAction(cursor, getContext());
+		holder.mAction = new HoverAction(cursor, getContext());
 		holder.mNameView.setText(holder.mAction.mId + ". " + holder.mAction.mName);
 
 		if (holder.mAction.mLastResult != null) {
@@ -59,7 +59,7 @@ public class ActionAdapter extends RecyclerViewCursorAdapter<ActionAdapter.ViewH
 		final ImageView mStatusView;
 		final TextView mNameView;
 		final TextView mTimeStampView;
-		public OperatorAction mAction;
+		public HoverAction mAction;
 
 		public ViewHolder(View view) {
 			super(view);

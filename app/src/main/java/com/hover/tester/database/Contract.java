@@ -29,31 +29,17 @@ public final class Contract {
 		public static final String COLUMN_EXTRAS = "extras";
 	}
 
-	public static abstract class OperatorServiceEntry implements BaseColumns {
-		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.tester.services";
-		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.tester.service";
-		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_SERVICES).build();
-		public static final String TABLE_NAME = "services";
-		public static final String COLUMN_ENTRY_ID = "_id";
-		public static final String COLUMN_SERVICE_ID = "service_id";
-		public static final String COLUMN_NAME = "service_name";
-		public static final String COLUMN_OP_SLUG = "service_slug";
-		public static final String COLUMN_CURRENCY = "service_currency";
-		public static final String COLUMN_COUNTRY = "service_country";
-		public static final String COLUMN_ACTIONS = "service_actions";
-		public static final String COLUMN_PIN = "service_pin";
-	}
-
-	public static abstract class OperatorActionEntry implements BaseColumns {
+	public static abstract class HoverActionEntry implements BaseColumns {
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/vnd.tester.actions";
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/vnd.tester.action";
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_ACTIONS).build();
 		public static final String TABLE_NAME = "actions";
 		public static final String COLUMN_ENTRY_ID = "_id";
 		public static final String COLUMN_NAME = "action_name";
-		public static final String COLUMN_SLUG = "action_slug";
-		public static final String COLUMN_SERVICE_ID = "action_service_id";
+		public static final String COLUMN_NETWORK_NAME = "action_network";
+		public static final String COLUMN_SIM_ID = "action_sim";
 		public static final String COLUMN_VARIABLES = "action_variables";
+		public static final String COLUMN_PIN = "action_pin";
 	}
 
 	public static abstract class ActionScheduleEntry implements BaseColumns {
@@ -107,27 +93,17 @@ public final class Contract {
 		StatusReportEntry.COLUMN_EXTRAS
 	};
 
-	public static String[] SERVICE_PROJECTION = {
-		OperatorServiceEntry.COLUMN_ENTRY_ID,
-		OperatorServiceEntry.COLUMN_SERVICE_ID,
-		OperatorServiceEntry.COLUMN_NAME,
-		OperatorServiceEntry.COLUMN_OP_SLUG,
-		OperatorServiceEntry.COLUMN_CURRENCY,
-		OperatorServiceEntry.COLUMN_COUNTRY,
-		OperatorServiceEntry.COLUMN_ACTIONS
-	};
-
-	public static String[] SERVICE_PIN_PROJECTION = {
-		OperatorServiceEntry.COLUMN_SERVICE_ID,
-		OperatorServiceEntry.COLUMN_PIN
-	};
-
 	public static String[] ACTION_PROJECTION = {
-		OperatorActionEntry.COLUMN_ENTRY_ID,
-		OperatorActionEntry.COLUMN_NAME,
-		OperatorActionEntry.COLUMN_SLUG,
-		OperatorActionEntry.COLUMN_SERVICE_ID,
-		OperatorActionEntry.COLUMN_VARIABLES
+		HoverActionEntry.COLUMN_ENTRY_ID,
+		HoverActionEntry.COLUMN_NAME,
+		HoverActionEntry.COLUMN_NETWORK_NAME,
+		HoverActionEntry.COLUMN_SIM_ID,
+		HoverActionEntry.COLUMN_VARIABLES
+	};
+
+	public static String[] ACTION_PIN_PROJECTION = {
+			HoverActionEntry.COLUMN_ENTRY_ID,
+			HoverActionEntry.COLUMN_PIN
 	};
 
 	public static String[] SCHEDULE_PROJECTION = {

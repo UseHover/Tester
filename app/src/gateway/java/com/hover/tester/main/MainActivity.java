@@ -11,29 +11,23 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.hover.sdk.utils.HoverHelper;
+import com.hover.sdk.api.HoverHelper;
 import com.hover.tester.R;
+import com.hover.tester.actions.HoverAction;
+import com.hover.tester.actions.SaveActionTask;
 import com.hover.tester.notifications.DeviceInfoService;
 import com.hover.tester.wake.WakeUpHelper;
-import com.hover.tester.actions.OperatorAction;
-import com.hover.tester.network.HoverIntegratonListService;
-import com.hover.tester.services.OperatorService;
-import com.hover.tester.services.SaveServiceTask;
 
-import org.json.JSONException;
 
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AbstractMainActivity implements GatewayIntegrationInterface {
+public class MainActivity extends AbstractMainActivity {
 	public final static String TAG = "MainActivity";
-	private OperatorService pendingOpService;
 	public static final int INTEGRATE_REQUEST = 111;
+	private HoverAction pendingAction;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,46 +44,25 @@ public class MainActivity extends AbstractMainActivity implements GatewayIntegra
 			Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
 	}
 
-	public void onIntegrateSuccess(Intent data) {
-		pendingOpService = new OperatorService(data, this);
-		DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.ENTER_PIN_STEP, -1, pendingOpService.mName);
+	@Override
+	public void addAction(HoverAction action) {
+		pendingAction = action;
+		DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.ENTER_PIN_STEP, pendingAction.mName);
 		newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
 	}
 
 	@Override
 	public void savePin(final String pin) {
-		Snackbar.make(findViewById(R.id.nest_container), "Saving Service " + pendingOpService.mName, Snackbar.LENGTH_LONG).show();
+		Snackbar.make(findViewById(R.id.nest_container),
+				"Saving Action: " + pendingAction.mName + ", one moment",
+				Snackbar.LENGTH_LONG).show();
 		((ContentLoadingProgressBar) findViewById(R.id.loading_progress)).show();
-		new SaveServiceTask(pin, mFrag, this).execute(pendingOpService);
-		pickAction(pendingOpService.mId);
+		new SaveActionTask(pin, mFrag, this).execute(pendingAction);
 //		Decrypt: KeyStoreHelper.decrypt(operatorService.getPin(), OpService.mId, c);
-	}
-
-	public void pickAction(View v) {
-		pickAction((int) ((ViewGroup) v.getParent().getParent()).findViewById(R.id.action_list).getTag());
-	}
-	@Override
-	public void pickAction(int serviceId) {
-		DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.CHOOSE_ACTION_STEP, serviceId, null);
-		newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
-	}
-	@Override
-	public void addAction(int serviceId, int actionIdx) {
-		try {
-			OperatorAction newAction = new OperatorAction(HoverIntegratonListService.getAction(serviceId, actionIdx, this), serviceId);
-			newAction.save(this);
-			Snackbar.make(findViewById(R.id.nest_container), "Saving Action: " + newAction.mName + ", one moment", Snackbar.LENGTH_LONG).show();
-		} catch (JSONException e) {
-			Crashlytics.logException(e);
-			Toast.makeText(this, "Could not save action, please try again", Toast.LENGTH_SHORT).show();
-		}
 	}
 
 	public static boolean meetsAllRequirements(Context c) {
 		return meetsAppRequirements(c) && hasSmsPerm(c) && HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
-	}
-	private static boolean hasSmsPerm(Context c) {
-		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	public static boolean meetsAppRequirements(Context c) {
