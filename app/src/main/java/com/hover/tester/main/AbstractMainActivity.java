@@ -73,10 +73,10 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	public void getActions() {
-			if (hasPhonePerm(this))
+//			if (hasPhonePerm(this))
 				Hover.initialize(this);
-			else
-				requestPhonePerm();
+//			else
+//				requestPhonePerm();
 		startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
@@ -137,7 +137,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 //			requestAdvancedPerms();
 	}
 
-	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c); }// && hasAdvancedPerms(c); }
+	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c) && hasAdvancedPerms(c); }
 	public static boolean meetsAppRequirements(Context c) { return hasPhonePerm(c); }
 
 	public static boolean hasPhonePerm(Context c) {

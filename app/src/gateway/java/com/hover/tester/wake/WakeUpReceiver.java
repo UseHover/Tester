@@ -36,7 +36,7 @@ public class WakeUpReceiver extends WakefulBroadcastReceiver {
 
 	private void scheduleNextAlarm(Intent i, Context c) {
 		Intent intent = new Intent(c, AlarmSchedulerService.class);
-		intent.putExtra(HoverAction.ID, i.getIntExtra(HoverAction.ID, -1));
+		intent.putExtra(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 		c.startService(intent);
 	}
 

@@ -14,7 +14,7 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.hover.sdk.utils.HoverHelper;
+import com.hover.sdk.api.HoverHelper;
 import com.hover.tester.R;
 import com.hover.tester.actions.HoverAction;
 import com.hover.tester.actions.SaveActionTask;

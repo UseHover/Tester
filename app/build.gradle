@@ -84,12 +84,12 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-    releaseImplementation('com.hover:android-sdk:0.17.0-alpha4') {
+    releaseImplementation('com.hover:android-sdk:0.17.0-rc1') {
         transitive = true
         exclude group: 'com.android.support'
     }
     debugImplementation project(':hover.sdk')
-    debugApi 'io.sentry:sentry-android:1.6.3'
+    debugApi 'io.sentry:sentry-android:1.7.5'
 
     testImplementation 'junit:junit:4.12'
 }

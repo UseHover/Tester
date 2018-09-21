@@ -24,13 +24,13 @@ public class StatusReport {
 	public final static String TAG = "StatusReport", STATUS = "status", TRANSACTION = "transaction";
 	public final static int PENDING = 0, FAILURE = 1, SUCCESS = 2;
 
-	private int mId, mActionId, mStatus;
-	private String mSrc, mSessionMsg, mConfirmMsg, mFailureMsg, mTransaction;
+	private int mId, mStatus;
+	private String mActionId, mSrc, mSessionMsg, mConfirmMsg, mFailureMsg, mTransaction;
 	private Map<String, String> mExtras;
 	private long mStartTime, mEndTime;
 
 	public StatusReport(Intent i) {
-		mActionId = i.getIntExtra(HoverAction.ID, -1);
+		mActionId = i.getStringExtra(HoverAction.ID);
 		mStartTime = System.currentTimeMillis();
 		mStatus = PENDING;
 		mExtras = getExtras(i);
@@ -41,7 +41,7 @@ public class StatusReport {
 		cursor.moveToFirst();
 		if (!cursor.isAfterLast()) {
 			mId = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_ENTRY_ID));
-			mActionId = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_ACTION_ID));
+			mActionId = cursor.getString(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_ACTION_ID));
 			mStatus = cursor.getInt(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_STATUS));
 			mStartTime = cursor.getLong(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_START_TIMESTAMP));
 			mEndTime = cursor.getLong(cursor.getColumnIndex(Contract.StatusReportEntry.COLUMN_FINISH_TIMESTAMP));

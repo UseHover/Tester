@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.hover.sdk.main.HoverActivity;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
 import com.hover.tester.database.DbHelper;
@@ -18,13 +17,14 @@ public class Scheduler {
 	public static final int  TEN_MIN = 0, HOURLY = 1, DAILY = 2, WEEKLY = 3;
 	private static Scheduler instance;
 
-	private int mActionId, mType, mDay, mHour, mMin;
+	private String mActionId;
+	private int mType, mDay, mHour, mMin;
 
 	public Scheduler() {}
 
 	public Scheduler(Cursor cursor) {
 		Log.i(TAG, "Creating schedule from cursor");
-		mActionId = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_ACTION_ID));
+		mActionId = cursor.getString(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_ACTION_ID));
 		mType = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_TYPE));
 		if (mType != HOURLY && mType != TEN_MIN) {
 			if (mType != DAILY)
@@ -39,8 +39,8 @@ public class Scheduler {
 		return instance;
 	}
 
-	public void setId(int actionId) { mActionId = actionId; }
-	public int getId() {
+	public void setId(String actionId) { mActionId = actionId; }
+	public String getId() {
 		return mActionId;
 	}
 
@@ -75,10 +75,10 @@ public class Scheduler {
 		}).start();
 	}
 
-	public static Scheduler load(int actionId, Context c) {
+	public static Scheduler load(String actionId, Context c) {
 		Scheduler schedule = null;
 		SQLiteDatabase database = new DbHelper(c).getReadableDatabase();
-		Cursor cursor = database.query(Contract.ActionScheduleEntry.TABLE_NAME, Contract.SCHEDULE_PROJECTION, Contract.ActionScheduleEntry.COLUMN_ACTION_ID + " = " + actionId,
+		Cursor cursor = database.query(Contract.ActionScheduleEntry.TABLE_NAME, Contract.SCHEDULE_PROJECTION, Contract.ActionScheduleEntry.COLUMN_ACTION_ID + " = '" + actionId + "'",
 				null, null, null, null);
 		if (cursor.moveToFirst())
 			schedule = new Scheduler(cursor);

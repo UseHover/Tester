@@ -3,12 +3,14 @@ package com.hover.tester.actions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.BuildConfig;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.TransactionReceiver;
 import com.hover.tester.R;
 import com.hover.tester.database.Contract;
@@ -25,7 +27,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	private Scheduler mScheduler;
 
 	@Override
-	public void addSchedule(int actionId) {
+	public void addSchedule(String actionId) {
 		mScheduler = Scheduler.getInstance();
 		mScheduler.setId(actionId);
 		DialogFragment newFragment = AddScheduleDialogFragment.newInstance(AddScheduleDialogFragment.ADD_SCHEDULE_STEP, actionId);
@@ -67,13 +69,13 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 			Intent i = getIntent();
 			Bundle args = new Bundle();
 
-			if (i.getIntExtra(HoverAction.ID, -1) == -1) {
+			if (i.getStringExtra(HoverAction.ID) == null) {
 				sendGatewayBroadcast(RESULT_CANCELED, new Intent(i).putExtra("error", "No Action ID specified"));
 				return;
 			}
 
 			args.putAll(i.getExtras());
-			args.putInt(HoverAction.ID, i.getIntExtra(HoverAction.ID, -1));
+			args.putString(HoverAction.ID, i.getStringExtra(HoverAction.ID));
 
 			ActionDetailFragment fragment = new ActionDetailFragment();
 			fragment.setArguments(args);
@@ -84,14 +86,14 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	}
 
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.debugMode();
+		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
 		hpb.extra("pin", frag.mAction.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}
 
 	void sendGatewayBroadcast(int resultCode, Intent data) {
 		Intent i = new Intent(getPackageName() + TransactionReceiver.TRANSACTION_UPDATED);
-		i.putExtra(HoverAction.ID, data.getIntExtra(HoverAction.ID, -1));
+		i.putExtra(HoverAction.ID, data.getStringExtra(HoverAction.ID));
 		if (resultCode == RESULT_CANCELED) {
 			i.putExtra("cmd", "done");
 			i.putExtra(Contract.StatusReportEntry.COLUMN_FAILURE_MESSAGE, data.getStringExtra("error"));

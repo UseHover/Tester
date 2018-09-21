@@ -24,11 +24,10 @@ public class MainActivity extends AbstractMainActivity {
 	public void savePin(final String pin) { }
 
 	public void grantSystemPermissions(View view) {
-		if (!hasPhonePerm(this) && mFrag != null)
-			requestPhonePerm();
+//		if (!hasPhonePerm(this) && mFrag != null)
+//			requestPhonePerm();
 //		if (!hasAdvancedPerms(this))
-//			requestAdvancedPerms();
-
+			requestAdvancedPerms();
 	}
 
 	protected void setUpView() {

@@ -20,7 +20,7 @@ public class GatewayReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Intent i = new Intent(context, GatewayManagerService.class);
 		i.putExtra(GatewayManagerService.CMD, intent.getStringExtra(GatewayManagerService.CMD));
-		i.putExtra(HoverAction.ID, intent.getIntExtra(HoverAction.ID, -1));
+		i.putExtra(HoverAction.ID, intent.getStringExtra(HoverAction.ID));
 		i.putExtra(StatusReport.STATUS, intent.getStringExtra(StatusReport.STATUS));
 		i.putExtra(Contract.StatusReportEntry.COLUMN_CONFIRMATION_MESSAGE, intent.getStringExtra("response_message"));
 		i.putExtra(StatusReport.TRANSACTION, TransactionReceiver.convertTinfoToJsonString(intent.getExtras(), new JSONObject()));
