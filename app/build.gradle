@@ -61,6 +61,11 @@ android {
             applicationIdSuffix ".manual"
             versionNameSuffix "-manual"
         }
+        demo {
+            dimension "one"
+            applicationIdSuffix ".demo"
+            versionNameSuffix "-demo"
+        }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
