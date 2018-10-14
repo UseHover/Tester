@@ -5,12 +5,10 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.BuildConfig;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.hover.tester.GatewayReceiver;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.TransactionReceiver;
 import com.hover.tester.R;
@@ -30,7 +28,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	@Override
 	public void addSchedule(String actionId) {
 		mScheduler = Scheduler.getInstance();
-		mScheduler.setId(actionId);
+		mScheduler.setActionId(actionId);
 		DialogFragment newFragment = AddScheduleDialogFragment.newInstance(AddScheduleDialogFragment.ADD_SCHEDULE_STEP, actionId);
 		newFragment.show(getSupportFragmentManager(), AddScheduleDialogFragment.TAG);
 	}
@@ -48,7 +46,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 		if (mScheduler == null) mScheduler = Scheduler.getInstance();
 		if (day != -1)
 			mScheduler.setDay(day);
-		DialogFragment newFragment = AddScheduleDialogFragment.newInstance(AddScheduleDialogFragment.TIME_PICKER_STEP, mScheduler.getId());
+		DialogFragment newFragment = AddScheduleDialogFragment.newInstance(AddScheduleDialogFragment.TIME_PICKER_STEP, mScheduler.getActionId());
 		newFragment.show(getSupportFragmentManager(), AddScheduleDialogFragment.TAG);
 	}
 
@@ -93,7 +91,7 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	}
 
 	void sendGatewayBroadcast(int resultCode, Intent data) {
-		Intent i = new Intent(getPackageName() + TransactionReceiver.TRANSACTION_UPDATED);
+		Intent i = new Intent(getPackageName() + TransactionReceiver.GATEWAY_UPDATE);
 		i.putExtra(HoverAction.ID, data.getStringExtra(HoverAction.ID));
 		if (resultCode == RESULT_CANCELED) {
 			i.putExtra("cmd", "done");

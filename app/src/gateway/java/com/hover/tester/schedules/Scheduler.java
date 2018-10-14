@@ -17,6 +17,7 @@ public class Scheduler {
 	public static final int  TEN_MIN = 0, HOURLY = 1, DAILY = 2, WEEKLY = 3;
 	private static Scheduler instance;
 
+	int mId;
 	private String mActionId;
 	private int mType, mDay, mHour, mMin;
 
@@ -24,6 +25,7 @@ public class Scheduler {
 
 	public Scheduler(Cursor cursor) {
 		Log.i(TAG, "Creating schedule from cursor");
+		mId = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_ENTRY_ID));
 		mActionId = cursor.getString(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_ACTION_ID));
 		mType = cursor.getInt(cursor.getColumnIndex(Contract.ActionScheduleEntry.COLUMN_TYPE));
 		if (mType != HOURLY && mType != TEN_MIN) {
@@ -39,8 +41,8 @@ public class Scheduler {
 		return instance;
 	}
 
-	public void setId(String actionId) { mActionId = actionId; }
-	public String getId() {
+	public void setActionId(String actionId) { mActionId = actionId; }
+	public String getActionId() {
 		return mActionId;
 	}
 
@@ -69,7 +71,7 @@ public class Scheduler {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				int id = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.ActionScheduleEntry.CONTENT_URI, getContentValues()));
+				mId = (int) ContentUris.parseId(c.getContentResolver().insert(Contract.ActionScheduleEntry.CONTENT_URI, getContentValues()));
 				c.startService(new Intent(c, AlarmSchedulerService.class));
 			}
 		}).start();

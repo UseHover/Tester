@@ -19,14 +19,6 @@ repositories {
 }
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'gateway'
-            keyPassword 'hoverup'
-            storeFile file('/home/david/Active/Hover/Android/gateway.jks')
-            storePassword 'hoverup'
-        }
-    }
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {

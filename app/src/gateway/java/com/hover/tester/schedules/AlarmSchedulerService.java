@@ -40,16 +40,16 @@ public class AlarmSchedulerService extends IntentService {
 			if (mActionSchedule != null) {
 				switch (mActionSchedule.getType()) {
 					case WEEKLY:
-						setAlarm(mActionSchedule.getId(), WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY * 7);
+						setAlarm(mActionSchedule, WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY * 7);
 						break;
 					case DAILY:
-						setAlarm(mActionSchedule.getId(), WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY);
+						setAlarm(mActionSchedule, WakeUpHelper.getScheduleTime(mActionSchedule), AlarmManager.INTERVAL_DAY);
 						break;
 					case TEN_MIN:
-						setAlarm(mActionSchedule.getId(), WakeUpHelper.getPlusTen(), AlarmManager.INTERVAL_HOUR);
+						setAlarm(mActionSchedule, WakeUpHelper.getPlusTen(), AlarmManager.INTERVAL_HOUR);
 						break;
 					default:
-						setAlarm(mActionSchedule.getId(), WakeUpHelper.getPlusHour(), AlarmManager.INTERVAL_HOUR);
+						setAlarm(mActionSchedule, WakeUpHelper.getPlusHour(), AlarmManager.INTERVAL_HOUR);
 				}
 			}
 		} else {
@@ -62,28 +62,28 @@ public class AlarmSchedulerService extends IntentService {
 
 	private void setAlarms() {
 		for (Scheduler s : mWeekly)
-			setAlarm(s.getId(), WakeUpHelper.getScheduleTime(s), AlarmManager.INTERVAL_DAY * 7);
+			setAlarm(s, WakeUpHelper.getScheduleTime(s), AlarmManager.INTERVAL_DAY * 7);
 		for (Scheduler c : mDaily)
-			setAlarm(c.getId(), WakeUpHelper.getScheduleTime(c), AlarmManager.INTERVAL_DAY);
+			setAlarm(c, WakeUpHelper.getScheduleTime(c), AlarmManager.INTERVAL_DAY);
 		int i = 0;
 		for (Scheduler h : mHourly) {
-			setAlarm(h.getId(), WakeUpHelper.getScheduleTime(i, mHourly.size()), AlarmManager.INTERVAL_HOUR);
+			setAlarm(h, WakeUpHelper.getScheduleTime(i, mHourly.size()), AlarmManager.INTERVAL_HOUR);
 			i++;
 		}
 		for (Scheduler m : mTenMin) {
-			setAlarm(m.getId(), WakeUpHelper.getScheduleTime(i, mTenMin.size()), 600000L);
+			setAlarm(m, WakeUpHelper.getScheduleTime(i, mTenMin.size()), 600000L);
 			i++;
 		}
 	}
 
-	public void setAlarm(String actionId, long when, long interval) {
-		Intent wake = createScheduledIntent(this, actionId);
+	public void setAlarm(Scheduler scheduler, long when, long interval) {
+		Intent wake = createScheduledIntent(this, scheduler.getActionId());
 		AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		if (android.os.Build.VERSION.SDK_INT >= 19) {
 			wake.putExtra(INTERVAL, interval);
-			alarm.setExact(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(this, actionId, wake, PendingIntent.FLAG_UPDATE_CURRENT));
+			alarm.setExact(AlarmManager.RTC_WAKEUP, when, PendingIntent.getBroadcast(this, scheduler.mId, wake, PendingIntent.FLAG_UPDATE_CURRENT));
 		} else
-			alarm.setRepeating(AlarmManager.RTC_WAKEUP, when, interval, PendingIntent.getBroadcast(this, actionId, wake, PendingIntent.FLAG_UPDATE_CURRENT));
+			alarm.setRepeating(AlarmManager.RTC_WAKEUP, when, interval, PendingIntent.getBroadcast(this, scheduler.mId, wake, PendingIntent.FLAG_UPDATE_CURRENT));
 	}
 
 	private Intent createScheduledIntent(Context c, String actionId) {
