@@ -49,6 +49,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 
 	protected void initialize() {
 		Fabric.with(this, new Crashlytics());
+		Hover.initialize(this);
 	}
 
 	protected void setUpView() {

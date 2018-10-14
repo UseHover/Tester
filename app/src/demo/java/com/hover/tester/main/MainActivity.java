@@ -23,36 +23,6 @@ public class MainActivity extends AbstractMainActivity {
 			requestAdvancedPerms();
 	}
 
-	protected void setUpView() {
-		super.setUpView();
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main_menu, menu);
-		final MenuItem menuItem = menu.findItem(R.id.debug_mode);
-		CheckBox checkBox = (CheckBox) menuItem.getActionView();
-		checkBox.setText(getString(R.string.debug_mode));
-		checkBox.setChecked(Utils.isInDebugMode(this));
-		checkBox.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				onOptionsItemSelected(menuItem);
-			}
-		});
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.debug_mode) {
-			Utils.setDebugMode(!Utils.isInDebugMode(this), this);
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	@TargetApi(27)
 	private void callUSSDAPI() {
 //		TelephonyManager tm = ((TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
