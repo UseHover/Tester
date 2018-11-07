@@ -16,13 +16,6 @@ public class MainActivity extends AbstractMainActivity {
 	@Override
 	public void savePin(final String pin) { }
 
-	public void grantSystemPermissions(View view) {
-//		if (!hasPhonePerm(this) && mFrag != null)
-//			requestPhonePerm();
-//		if (!hasAdvancedPerms(this))
-			requestAdvancedPerms();
-	}
-
 	protected void setUpView() {
 		super.setUpView();
 	}

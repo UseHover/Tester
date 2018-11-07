@@ -11,6 +11,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.ContentLoadingProgressBar;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -44,6 +46,13 @@ public class MainActivity extends AbstractMainActivity {
 			Log.i(TAG, FirebaseInstanceId.getInstance().getToken());
 	}
 
+	public void grantSystemPermissions(View view) {
+		if (!hasAdvancedPerms(this))
+			requestAdvancedPerms();
+		else if (!usableAndroidVersion())
+			Toast.makeText(this, getString(R.string.error_android_version), Toast.LENGTH_LONG).show();
+	}
+
 	@Override
 	public void addAction(HoverAction action) {
 		pendingAction = action;
@@ -66,7 +75,7 @@ public class MainActivity extends AbstractMainActivity {
 	}
 
 	public static boolean meetsAppRequirements(Context c) {
-		return hasWakeLockPerm(c) && usableAndroidVersion();
+		return hasWakeLockPerm(c) || !usableAndroidVersion();
 	}
 	private static boolean hasWakeLockPerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED;

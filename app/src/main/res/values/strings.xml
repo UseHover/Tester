@@ -70,4 +70,6 @@
     <string name="error_integration">Failed to add an integration</string>
     <string name="error_variables">You must enter values for all variables</string>
     <string name="error_network">Failed. Please make sure you are connected to the internet</string>
+
+    <string name="error_android_version">You will not be able to use schedules or trigger from notifications because this version of Android does not allow the wake lock permission</string>
 </resources>

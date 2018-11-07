@@ -134,8 +134,10 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (mFrag != null) mFrag.controlFlow();
-//		if (requestCode != 0 && !hasAdvancedPerms(this))
-//			requestAdvancedPerms();
+	}
+
+	public void grantSystemPermissions(View view) {
+		requestAdvancedPerms();
 	}
 
 	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c) && hasAdvancedPerms(c); }

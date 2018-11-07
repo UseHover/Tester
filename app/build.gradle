@@ -81,7 +81,7 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-    releaseImplementation('com.hover:android-sdk:0.17.0-rc1') {
+    releaseImplementation('com.hover:android-sdk:0.17.0-rc2') {
         transitive = true
         exclude group: 'com.android.support'
     }

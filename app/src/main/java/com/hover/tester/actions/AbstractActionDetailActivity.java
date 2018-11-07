@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.hover.sdk.api.Customization;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.R;
 import com.hover.tester.main.MainActivity;
@@ -86,7 +87,8 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
 //		hpb.setEnvironment(HoverParameters.TEST_ENV);
-		startActivityForResult(hpb.buildIntent(), 0);
+		Intent i = hpb.buildIntent();
+		startActivityForResult(i, 0);
 	}
 
 	@Override
