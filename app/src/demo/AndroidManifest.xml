@@ -11,7 +11,7 @@
         <meta-data
             tools:replace="android:value"
             android:name="com.hover.ApiKey"
-            android:value="47836f3d1d43d4412cf53381c0c4e036"/>
+            android:value="BUILD_PLACEHOLDER_API_KEY"/>
 
     </application>
 

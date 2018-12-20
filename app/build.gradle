@@ -55,7 +55,7 @@ android {
         }
         demo {
             dimension "one"
-            applicationIdSuffix ".demo"
+            applicationIdSuffix ".BUILD_PLACEHOLDER_SUFFIX"
             versionNameSuffix "-demo"
         }
     }
@@ -85,7 +85,6 @@ dependencies {
         transitive = true
         exclude group: 'com.android.support'
     }
-    debugImplementation project(':hover.sdk')
     debugApi 'io.sentry:sentry-android:1.7.5'
 
     testImplementation 'junit:junit:4.12'
