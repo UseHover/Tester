@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.hover.sdk.api.HoverHelper;
+import com.hover.sdk.api.Hover;
 import com.hover.tester.R;
 import com.hover.tester.actions.HoverAction;
 import com.hover.tester.actions.SaveActionTask;
@@ -71,7 +71,7 @@ public class MainActivity extends AbstractMainActivity {
 	}
 
 	public static boolean meetsAllRequirements(Context c) {
-		return meetsAppRequirements(c) && hasSmsPerm(c) && HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
+		return meetsAppRequirements(c) && hasSmsPerm(c) && Hover.isAccessibilityEnabled(c) && Hover.isOverlayEnabled(c);
 	}
 
 	public static boolean meetsAppRequirements(Context c) {

@@ -13,14 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.webkit.DownloadListener;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.api.HoverConfigException;
-import com.hover.sdk.api.HoverHelper;
 import com.hover.sdk.permissions.PermissionActivity;
+import com.hover.sdk.sims.SimInfo;
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.HoverAction;
@@ -31,6 +29,7 @@ import com.hover.tester.utils.NetworkReceiver;
 import com.hover.tester.utils.UpdateReceiver;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -50,6 +49,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	protected void initialize() {
 		Fabric.with(this, new Crashlytics());
 		Hover.initialize(this);
+		getActions();
 	}
 
 	protected void setUpView() {
@@ -74,15 +74,20 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	public void getActions() {
-//			if (hasPhonePerm(this))
-				Hover.initialize(this);
-//			else
-//				requestPhonePerm();
-		startService(new Intent(this, HoverIntegratonListService.class));
+		if (NetworkOps.isConnected(this))
+			startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
 	public void pickIntegration(View view) {
 		if (NetworkOps.isConnected(this)) {
+//
+//			try {
+//				List<SimInfo> sims = Hover.getPresentSims(this);
+//				Hover.requestSimChoice(sims, this, this);
+//				for (SimInfo s: sims) {
+//					Log.e(TAG, "sim detected: " + s.toString());
+//				}
+//			} catch (Exception e) { Log.e(TAG, "SIM get failure"); }
 			DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.CHOOSE_ACTION_STEP, null);
 			newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
 		}
@@ -152,12 +157,11 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 	public void requestPhonePerm() { // Fragment frag, int requestCode) {
 		Intent i = new Intent(this, PermissionActivity.class);
-		i.putExtra(PermissionActivity.CMD, PermissionActivity.PHONE);
 		startActivityForResult(i, 0);
 	}
 
 	public static boolean hasAdvancedPerms(Context c) {
-		return HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
+		return Hover.isAccessibilityEnabled(c) && Hover.isOverlayEnabled(c);
 	}
 	protected void requestAdvancedPerms() {
 		startActivityForResult(new Intent(this, PermissionActivity.class), 1);

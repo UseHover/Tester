@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.hover.tester.actions.ActionDetailActivity;
@@ -55,17 +56,19 @@ public class TransactionReceiver extends BroadcastReceiver {
 		c.sendBroadcast(i);
 	}
 
-	public static String convertTinfoToJsonString(Bundle extras, JSONObject json) {
+	@SuppressWarnings("ConstantConditions")
+	public static String convertTinfoToJsonString(@Nullable Bundle extras, JSONObject json) {
 		for (String key : extras.keySet()) {
 			if (extras.get(key) != null) {
 				try {
 					if (key.equals("transaction_extras")) {
+						//noinspection unchecked
 						for (Map.Entry<String, String> entry : ((HashMap<String, String>) extras.get(key)).entrySet())
 							json.put(entry.getKey(), entry.getValue());
 					}
 					else if (extras.get(key) != null && !extras.get(key).toString().isEmpty())
 						json.put(key, extras.get(key).toString());
-				} catch (NullPointerException | JSONException e) { }
+				} catch (NullPointerException | JSONException ignore) { }
 			}
 		}
 		return json.toString();
