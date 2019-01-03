@@ -111,6 +111,8 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	public void updateConfig(View view) {
 		Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
 		Hover.updateActionConfigs(this, this);
+		if (NetworkOps.isConnected(this))
+			startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
 	@Override public void onError(String message) {
