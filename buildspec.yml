@@ -6,13 +6,8 @@ phases:
       - echo Nothing to do in the install phase...
   pre_build:
     commands:
-      - printenv
-      - pwd
       - sed -i "s/BUILD_PLACEHOLDER_SUFFIX/$SUFFIX/g" app/build.gradle
-      - echo "replaced suffix"
-      - ls -l app/src/main/AndroidManifest.xml
-      - sed -i "s/BUILD_PLACEHOLDER_API_KEY/$APIKEY/g" app/src/main/AndroidManifest.xml
-      - echo "replaced api key"
+      - sed -i "s/BUILD_PLACEHOLDER_API_KEY/$APIKEY/g" app/src/demo/AndroidManifest.xml
   build:
     commands:
       - echo Build started on `date`
@@ -23,4 +18,3 @@ phases:
 artifacts:
   files:
     - app/build/outputs/apk/demo/release/app-demo-release.apk
-  name: hover-tester.apk 
