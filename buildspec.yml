@@ -16,4 +16,4 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - target/tester-codebuild.apk
+    - target/app-demo-release.apk
