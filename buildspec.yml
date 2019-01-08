@@ -16,5 +16,5 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - **/*
+    - '**/*'
   name: hover-tester.apk 
