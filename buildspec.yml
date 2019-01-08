@@ -8,8 +8,8 @@ phases:
     commands:
       - printenv
       - pwd
-      - sed -i "s/BUILD_PLACEHOLDER_SUFFIX/$SUFFIX/g" "Tester/app/build.gradle
-      - sed -i "s/BUILD_PLACEHOLDER_API_KEY/$API_KEY/g" "Tester/app/src/main/AndroidManifest.xml
+      - sed -i "s/BUILD_PLACEHOLDER_SUFFIX/$SUFFIX/g" app/build.gradle
+      - sed -i "s/BUILD_PLACEHOLDER_API_KEY/$API_KEY/g" app/src/main/AndroidManifest.xml
   build:
     commands:
       - echo Build started on `date`
