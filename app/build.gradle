@@ -20,15 +20,15 @@ repositories {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.hover.tester"
         minSdkVersion 18
         maxSdkVersion 25
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 11
         versionName "0.8.6"
         vectorDrawables.useSupportLibrary true
+        setProperty("archivesBaseName", "hover-tester")
     }
     buildTypes {
         debug {
