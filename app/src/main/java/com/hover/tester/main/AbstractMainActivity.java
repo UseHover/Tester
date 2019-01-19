@@ -138,14 +138,10 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	public static boolean meetsAllRequirements(Context c) { return hasPhonePerm(c) && hasAdvancedPerms(c); }
-	public static boolean meetsAppRequirements(Context c) { return hasPhonePerm(c); }
 
 	public static boolean hasPhonePerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || (ContextCompat.checkSelfPermission(c, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED &&
 				ContextCompat.checkSelfPermission(c, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED);
-	}
-	public static boolean hasSmsPerm(Context c) {
-		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
 	}
 
 	public static boolean hasAdvancedPerms(Context c) {

@@ -71,7 +71,7 @@ public class MainActivity extends AbstractMainActivity {
 	}
 
 	public static boolean meetsAllRequirements(Context c) {
-		return meetsAppRequirements(c) && hasSmsPerm(c) && HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
+		return meetsAppRequirements(c) && hasSmsPerm(c) && Hover.isAccessibilityEnabled(c) && Hover.isOverlayEnabled(c);
 	}
 
 	public static boolean meetsAppRequirements(Context c) {
