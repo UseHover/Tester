@@ -74,10 +74,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	public void getActions() {
-//			if (hasPhonePerm(this))
-				Hover.initialize(this);
-//			else
-//				requestPhonePerm();
+		Hover.initialize(this);
 		startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
@@ -150,14 +147,9 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	public static boolean hasSmsPerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
 	}
-	public void requestPhonePerm() { // Fragment frag, int requestCode) {
-		Intent i = new Intent(this, PermissionActivity.class);
-		i.putExtra(PermissionActivity.CMD, PermissionActivity.PHONE);
-		startActivityForResult(i, 0);
-	}
 
 	public static boolean hasAdvancedPerms(Context c) {
-		return HoverHelper.isAccessibilityEnabled(c) && HoverHelper.isOverlayEnabled(c);
+		return Hover.isAccessibilityEnabled(c) && Hover.isOverlayEnabled(c);
 	}
 	protected void requestAdvancedPerms() {
 		startActivityForResult(new Intent(this, PermissionActivity.class), 1);

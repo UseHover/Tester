@@ -76,12 +76,8 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
-    releaseImplementation 'com.android.volley:volley:1.0.0'
-//    gatewayImplementation('com.hover:android-sdk:0.14.7-nopin') {
-//        transitive = true
-//        exclude group: 'com.android.support'
-//    }
-    releaseImplementation('com.hover:android-sdk:0.17.0-rc2') {
+    releaseImplementation 'com.android.volley:volley:1.1.1'
+    releaseImplementation('com.hover:android-sdk:0.17.0-rc11') {
         transitive = true
         exclude group: 'com.android.support'
     }
