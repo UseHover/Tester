@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.hover.sdk.api.Hover;
 import com.hover.sdk.api.HoverHelper;
 import com.hover.tester.R;
 import com.hover.tester.actions.HoverAction;
