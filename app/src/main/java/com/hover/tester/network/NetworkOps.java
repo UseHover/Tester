@@ -41,7 +41,7 @@ public class NetworkOps {
 	private HttpsURLConnection makeRequest(URL url, String type, JSONObject data) throws IOException {
 		if (!isConnected(mContext)) throw new IOException(mContext.getString(R.string.error_network));
 
-		Log.i(TAG, "hitting URl: " + url);
+		Log.v(TAG, "hitting URl: " + url);
 		HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 		conn.setReadTimeout(10000);
 		conn.setConnectTimeout(15000);
@@ -80,11 +80,11 @@ public class NetworkOps {
 
 	public String download(String urlEnd) throws IOException {
 		InputStream is = null;
-		Log.i(TAG, "making request: " + urlEnd);
+		Log.v(TAG, "making request: " + urlEnd);
 		HttpsURLConnection conn = makeRequest(urlEnd, "GET", null);
 		responseCode = conn.getResponseCode();
 		responseMessage = conn.getResponseMessage();
-		Log.i(TAG, "response code: " + responseCode);
+		Log.v(TAG, "response code: " + responseCode);
 		if (responseCode == 200) {
 			is = conn.getInputStream();
 			return convertStreamToString(is);
@@ -96,7 +96,7 @@ public class NetworkOps {
 	public String upload(String url, JSONObject object, String httpType) throws IOException {
 		HttpsURLConnection conn = makeRequest(new URL(url), httpType, object);
 		responseCode = conn.getResponseCode();
-		Log.i(TAG, "response code: " + responseCode);
+		Log.v(TAG, "response code: " + responseCode);
 		InputStream is = conn.getInputStream();
 		String response = convertStreamToString(is);
 		if (is != null) { is.close(); }
@@ -106,7 +106,7 @@ public class NetworkOps {
 	private String getApiKey(Context c) {
 		try {
 			ApplicationInfo ai = c.getPackageManager().getApplicationInfo(c.getPackageName(), PackageManager.GET_META_DATA);
-			Log.i(TAG, "apikey found: " + ai.metaData.getString("com.hover.ApiKey"));
+			Log.v(TAG, "apikey found: " + ai.metaData.getString("com.hover.ApiKey"));
 			return ai.metaData.getString("com.hover.ApiKey");
 		} catch (PackageManager.NameNotFoundException e) {
 		}

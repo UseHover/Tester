@@ -1,6 +1,7 @@
 package com.hover.tester.main;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -39,11 +40,13 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	private NetworkReceiver mNetworkReceiver = null;
 	protected MainFragment mFrag;
 
+	private BroadcastReceiver mReceiver = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initialize();
 		setUpView();
+		initialize();
 	}
 
 	protected void initialize() {
@@ -80,10 +83,9 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 
 	public void pickIntegration(View view) {
 		if (NetworkOps.isConnected(this)) {
-//
 //			try {
 //				List<SimInfo> sims = Hover.getPresentSims(this);
-//				Hover.requestSimChoice(sims, this, this);
+////				Hover.requestSimChoice(sims, this, this);
 //				for (SimInfo s: sims) {
 //					Log.e(TAG, "sim detected: " + s.toString());
 //				}
@@ -116,9 +118,11 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	@Override public void onError(String message) {
+		Log.e(TAG, "error: " + message);
 		Snackbar.make(findViewById(R.id.nest_container), message, Snackbar.LENGTH_LONG).show();
 	}
 	@Override public void onSuccess(ArrayList<com.hover.sdk.actions.HoverAction> actions) {
+		Log.e(TAG, "success, action count: " + actions.size());
 		Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
