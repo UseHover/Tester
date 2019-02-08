@@ -49,6 +49,18 @@
             android:exported="false">
         </service>
 
+        <service
+            android:name="com.hover.tester.schedules.AlarmSchedulerService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
+        <service
+            android:name="com.hover.tester.notifications.DeviceInfoService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+
         <meta-data
             android:name="com.hover.ApiKey"
             android:value="37742114c194367e94202cfd0c682aa0"

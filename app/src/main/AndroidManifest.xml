@@ -71,18 +71,6 @@
             </intent-filter>
         </receiver>
 
-        <service
-            android:name=".schedules.AlarmSchedulerService"
-            android:enabled="true"
-            android:exported="false">
-        </service>
-
-        <service
-            android:name=".notifications.DeviceInfoService"
-            android:enabled="true"
-            android:exported="false">
-        </service>
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c88bf770d6a6d0f067e94234619c1c6e273a54a2"/>

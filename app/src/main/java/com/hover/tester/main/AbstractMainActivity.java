@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.api.Hover;
 import com.hover.sdk.permissions.PermissionActivity;
-import com.hover.sdk.sims.SimInfo;
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.HoverAction;
@@ -30,7 +29,6 @@ import com.hover.tester.utils.NetworkReceiver;
 import com.hover.tester.utils.UpdateReceiver;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.fabric.sdk.android.Fabric;
 

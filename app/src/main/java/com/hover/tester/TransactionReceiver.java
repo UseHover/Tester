@@ -11,7 +11,6 @@ import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.ActionResult;
 import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
-import com.hover.tester.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +24,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.e(TAG, "Transaction received. Trans id: " + i.getStringExtra("uuid") + ", Action: " + i.getStringExtra(Utils.ACTION));
+		Log.e(TAG, "Transaction received. Trans id: " + i.getStringExtra("uuid") + ", Action: " + i.getStringExtra("action_id"));
 		ActionResult ar = ActionResult.getByUuid(i.getStringExtra("uuid"), context);
 		if (ar != null) {
 			Log.e(TAG, "Updating result");

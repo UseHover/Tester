@@ -14,8 +14,8 @@ apply plugin: 'io.fabric'
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-//    maven { url 'http://maven.usehover.com/snapshots' }
-    maven { url 'http://maven.usehover.com/releases' }
+    maven { url 'http://maven.usehover.com/snapshots' }
+//    maven { url 'http://maven.usehover.com/releases' }
 }
 
 android {
@@ -81,7 +81,7 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-    releaseImplementation('com.hover:android-sdk:0.17.0-rc11@aar') {
+    releaseImplementation('com.hover:android-sdk:0.17.0-SNAPSHOT01') {
         transitive = true
         exclude group: 'com.android.support'
     }
@@ -89,7 +89,7 @@ dependencies {
 
     debugImplementation project(':hover.sdk')
     debugApi 'io.sentry:sentry-android:1.7.5'
-	debugApi "android.arch.work:work-runtime:1.0.0-beta01"
+	debugApi "android.arch.work:work-runtime:1.0.0-beta04"
 
     testImplementation 'junit:junit:4.12'
 }
