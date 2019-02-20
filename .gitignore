@@ -7,8 +7,6 @@
 /captures
 .externalNativeBuild
 /gradle
-gradlew
-gradlew.bat
 /hover.sdk
 gradle.properties
 *.apk
