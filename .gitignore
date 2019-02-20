@@ -6,7 +6,6 @@
 /captures
 .externalNativeBuild
 /hover.sdk
-gradle.properties
 .gradle
 *.apk
 app/gateway/*
