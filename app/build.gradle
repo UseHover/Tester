@@ -29,7 +29,6 @@ android {
         versionCode 11
         versionName "0.8.6"
         vectorDrawables.useSupportLibrary true
-        multiDexEnabled true
     }
     buildTypes {
         debug {
@@ -82,7 +81,10 @@ dependencies {
 //        transitive = true
 //        exclude group: 'com.android.support'
 //    }
-    releaseImplementation('com.hover:android-sdk:0.17.0-SNAPSHOT07') { transitive = true }
+    releaseImplementation('com.hover:android-sdk:0.17.0-SNAPSHOT07') {
+        transitive = true
+        exclude group: 'com.android.support'
+    }
     releaseImplementation 'com.android.volley:volley:1.1.1'
 
 //    debugImplementation project(':hover.sdk')
