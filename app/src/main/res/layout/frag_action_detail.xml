@@ -51,7 +51,7 @@
     </FrameLayout>
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/variable_list"
         android:name="com.hover.tester.ActionDetailFragment"
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
         android:textStyle="bold"
         android:text="@string/results"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/result_list"
         android:name="com.hover.tester.ActionDetailFragment"
         android:layout_width="match_parent"

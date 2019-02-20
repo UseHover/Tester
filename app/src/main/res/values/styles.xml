@@ -11,4 +11,11 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+
+    <style name="SDKTheme" parent="HoverTheme">
+        <item name="colorPrimary">@color/HoverYellow</item>
+        <item name="colorPrimaryDark">@color/HoverOrange</item>
+        <item name="colorAccent">@color/HoverMedBlue</item>
+    </style>
+
 </resources>

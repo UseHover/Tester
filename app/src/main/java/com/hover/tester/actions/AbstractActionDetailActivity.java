@@ -5,18 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hover.sdk.api.Customization;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.R;
 import com.hover.tester.main.MainActivity;
@@ -33,6 +32,8 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		setUpToolbar();
 		restoreFrag(savedInstanceState);
 	}
+
+//	@Override protected void onNewIntent(Intent intent) {	}
 
 	private void setUpToolbar() {
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -90,8 +91,8 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
-		hpb.setEnvironment(HoverParameters.TEST_ENV);
-//		hpb.colors(R.color.colorPrimary, true);
+//		hpb.setEnvironment(HoverParameters.TEST_ENV);
+//		hpb.style(R.style.SDKTheme);
 
 		Intent i = hpb.buildIntent();
 
