@@ -3,7 +3,6 @@ package com.hover.tester.actions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.BuildConfig;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.Toast;
@@ -85,7 +84,6 @@ public class ActionDetailActivity extends AbstractActionDetailActivity implement
 	}
 
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
-		if (BuildConfig.BUILD_TYPE.equals("debug")) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
 		hpb.extra("pin", frag.mAction.getPin(this));
 		startActivityForResult(hpb.buildIntent(), 0);
 	}

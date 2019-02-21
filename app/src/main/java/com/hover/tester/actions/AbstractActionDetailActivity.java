@@ -1,8 +1,12 @@
 package com.hover.tester.actions;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -86,9 +90,29 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
-//		hpb.setEnvironment(HoverParameters.TEST_ENV);
+		hpb.setEnvironment(HoverParameters.TEST_ENV);
+//		hpb.colors(R.color.colorPrimary, true);
+
 		Intent i = hpb.buildIntent();
+
+		LocalBroadcastManager.getInstance(this).registerReceiver(mSMSReceiver, new IntentFilter(getPackageName() + ".SMS_MISS"));
 		startActivityForResult(i, 0);
+	}
+
+	private BroadcastReceiver mSMSReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			unregisterSMSReceiver();
+			Log.e(TAG, "Got an sms");
+		}
+	};
+	public void unregisterSMSReceiver() {
+		try {
+			if (mSMSReceiver != null) {
+				LocalBroadcastManager.getInstance(this).unregisterReceiver(mSMSReceiver);
+				mSMSReceiver = null;
+			}
+		} catch (Exception e) { }
 	}
 
 	@Override

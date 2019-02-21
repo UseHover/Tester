@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import com.hover.tester.main.MainActivity;
+import com.hover.tester.network.NetworkOps;
 
 import static android.net.ConnectivityManager.EXTRA_NO_CONNECTIVITY;
 
@@ -15,10 +17,12 @@ public class NetworkReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context c, Intent intent) {
-		Intent i = new Intent(c, MainActivity.class);
-		i.setAction(ACTION);
-		i.putExtra(EXTRA_NO_CONNECTIVITY, intent.getBooleanExtra(EXTRA_NO_CONNECTIVITY, false));
-		c.startActivity(i);
+		if (NetworkOps.isConnected(c)) {
+			Intent i = new Intent(c, MainActivity.class);
+			i.setAction(ACTION);
+			i.putExtra(EXTRA_NO_CONNECTIVITY, intent.getBooleanExtra(EXTRA_NO_CONNECTIVITY, false));
+			c.startActivity(i);
+		}
 	}
 
 	public static IntentFilter buildIntentFilter() {

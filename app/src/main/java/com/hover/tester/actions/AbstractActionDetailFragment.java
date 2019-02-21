@@ -90,10 +90,10 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 		if (loader.getId() == VARIABLE_LOADER) {
 			mVariableAdapter.swapCursor(cursor);
-			Log.d(TAG, "variable cursor count: " + mVariableAdapter.getItemCount());
+			Log.v(TAG, "variable cursor count: " + mVariableAdapter.getItemCount());
 		} else {
 			mResultAdapter.swapCursor(cursor);
-			Log.d(TAG, "result cursor count: " + mResultAdapter.getItemCount());
+			Log.v(TAG, "result cursor count: " + mResultAdapter.getItemCount());
 		}
 	}
 	@Override

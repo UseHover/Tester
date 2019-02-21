@@ -1,6 +1,7 @@
 package com.hover.tester.main;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,13 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.webkit.DownloadListener;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.hover.sdk.api.Hover;
-import com.hover.sdk.api.HoverConfigException;
-import com.hover.sdk.api.HoverHelper;
 import com.hover.sdk.permissions.PermissionActivity;
 import com.hover.tester.R;
 import com.hover.tester.actions.ActionDetailActivity;
@@ -40,16 +38,19 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	private NetworkReceiver mNetworkReceiver = null;
 	protected MainFragment mFrag;
 
+	private BroadcastReceiver mReceiver = null;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initialize();
 		setUpView();
+		initialize();
 	}
 
 	protected void initialize() {
 		Fabric.with(this, new Crashlytics());
 		Hover.initialize(this);
+		getActions();
 	}
 
 	protected void setUpView() {
@@ -74,12 +75,19 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	public void getActions() {
-		Hover.initialize(this);
-		startService(new Intent(this, HoverIntegratonListService.class));
+		if (NetworkOps.isConnected(this))
+			startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
 	public void pickIntegration(View view) {
 		if (NetworkOps.isConnected(this)) {
+//			try {
+//				List<SimInfo> sims = Hover.getPresentSims(this);
+////				Hover.requestSimChoice(sims, this, this);
+//				for (SimInfo s: sims) {
+//					Log.e(TAG, "sim detected: " + s.toString());
+//				}
+//			} catch (Exception e) { Log.e(TAG, "SIM get failure"); }
 			DialogFragment newFragment = AddIntegrationDialogFragment.newInstance(AddIntegrationDialogFragment.CHOOSE_ACTION_STEP, null);
 			newFragment.show(getSupportFragmentManager(), AddIntegrationDialogFragment.TAG);
 		}
@@ -103,12 +111,16 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	public void updateConfig(View view) {
 		Toast.makeText(AbstractMainActivity.this, getString(R.string.updating), Toast.LENGTH_SHORT).show();
 		Hover.updateActionConfigs(this, this);
+		if (NetworkOps.isConnected(this))
+			startService(new Intent(this, HoverIntegratonListService.class));
 	}
 
 	@Override public void onError(String message) {
+		Log.e(TAG, "error: " + message);
 		Snackbar.make(findViewById(R.id.nest_container), message, Snackbar.LENGTH_LONG).show();
 	}
 	@Override public void onSuccess(ArrayList<com.hover.sdk.actions.HoverAction> actions) {
+		Log.e(TAG, "success, action count: " + actions.size());
 		Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
@@ -145,6 +157,10 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 	public static boolean hasSmsPerm(Context c) {
 		return Build.VERSION.SDK_INT < 23 || ContextCompat.checkSelfPermission(c, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED;
+	}
+	public void requestPhonePerm() { // Fragment frag, int requestCode) {
+		Intent i = new Intent(this, PermissionActivity.class);
+		startActivityForResult(i, 0);
 	}
 
 	public static boolean hasAdvancedPerms(Context c) {

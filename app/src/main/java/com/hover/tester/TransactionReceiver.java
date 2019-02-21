@@ -4,13 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.ActionResult;
 import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
-import com.hover.tester.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.e(TAG, "Transaction received. Trans id: " + i.getStringExtra("uuid") + ", Action: " + i.getStringExtra(Utils.ACTION));
+		Log.e(TAG, "Transaction received. Trans id: " + i.getStringExtra("uuid") + ", Action: " + i.getStringExtra("action_id"));
 		ActionResult ar = ActionResult.getByUuid(i.getStringExtra("uuid"), context);
 		if (ar != null) {
 			Log.e(TAG, "Updating result");
@@ -55,17 +55,19 @@ public class TransactionReceiver extends BroadcastReceiver {
 		c.sendBroadcast(i);
 	}
 
-	public static String convertTinfoToJsonString(Bundle extras, JSONObject json) {
+	@SuppressWarnings("ConstantConditions")
+	public static String convertTinfoToJsonString(@Nullable Bundle extras, JSONObject json) {
 		for (String key : extras.keySet()) {
 			if (extras.get(key) != null) {
 				try {
 					if (key.equals("transaction_extras")) {
+						//noinspection unchecked
 						for (Map.Entry<String, String> entry : ((HashMap<String, String>) extras.get(key)).entrySet())
 							json.put(entry.getKey(), entry.getValue());
 					}
 					else if (extras.get(key) != null && !extras.get(key).toString().isEmpty())
 						json.put(key, extras.get(key).toString());
-				} catch (NullPointerException | JSONException e) { }
+				} catch (NullPointerException | JSONException ignore) { }
 			}
 		}
 		return json.toString();
