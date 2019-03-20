@@ -90,7 +90,7 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
-		hpb.setEnvironment(HoverParameters.TEST_ENV);
+//		hpb.setEnvironment(HoverParameters.TEST_ENV);
 //		hpb.colors(R.color.colorPrimary, true);
 
 		Intent i = hpb.buildIntent();
