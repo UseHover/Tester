@@ -63,8 +63,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 						//noinspection unchecked
 						for (Map.Entry<String, String> entry : ((HashMap<String, String>) extras.get(key)).entrySet())
 							json.put(entry.getKey(), entry.getValue());
-					}
-					else if (extras.get(key) != null && !extras.get(key).toString().isEmpty())
+					} else if (extras.get(key) != null && !extras.get(key).toString().isEmpty())
 						json.put(key, extras.get(key).toString());
 				} catch (NullPointerException | JSONException ignore) { }
 			}

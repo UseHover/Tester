@@ -33,7 +33,9 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		restoreFrag(savedInstanceState);
 	}
 
-//	@Override protected void onNewIntent(Intent intent) {	}
+	@Override protected void onNewIntent(Intent intent) {
+
+	}
 
 	private void setUpToolbar() {
 		final Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
@@ -92,7 +94,7 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
 //		hpb.setEnvironment(HoverParameters.TEST_ENV);
-//		hpb.style(R.style.SDKTheme);
+		hpb.style(R.style.SDKTheme);
 
 		Intent i = hpb.buildIntent();
 

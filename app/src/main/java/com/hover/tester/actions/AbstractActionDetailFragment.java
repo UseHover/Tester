@@ -118,9 +118,9 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 			if (va.mValue == null || va.mValue.isEmpty())
 				throw new NullPointerException("You must provide a value for " + va.mName);
 			hpb.extra(va.mName, va.mValue);
-//			if (va.mName.equals("amount"))
-//				hpb.extra("currency", mService.mCurrencyIso);
 		}
+//		hpb.hideFinalUssd(true);
+//		hpb.setEnvironment(HoverParameters.TEST_ENV);
 	}
 
 	boolean hasMissingExtras() {
