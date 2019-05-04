@@ -76,6 +76,9 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		try {
 			ActionDetailFragment frag = getFrag();
 			HoverParameters.Builder hpb = startRequest(frag);
+//		hpb.hideFinalUssd(true);
+//		hpb.setEnvironment(HoverParameters.TEST_ENV);
+			hpb.style(R.style.SDKTheme);
 			frag.addAndSaveExtras(hpb);
 			makeRequest(hpb, frag);
 		} catch (NullPointerException e) {
@@ -93,9 +96,6 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	}
 	protected void makeRequest(HoverParameters.Builder hpb, ActionDetailFragment frag) {
 		if (Utils.isInDebugMode(this)) hpb.setEnvironment(HoverParameters.DEBUG_ENV);
-//		hpb.setEnvironment(HoverParameters.TEST_ENV);
-		hpb.style(R.style.SDKTheme);
-
 		Intent i = hpb.buildIntent();
 
 		LocalBroadcastManager.getInstance(this).registerReceiver(mSMSReceiver, new IntentFilter(getPackageName() + ".SMS_MISS"));

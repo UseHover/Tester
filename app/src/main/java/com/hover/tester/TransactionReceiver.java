@@ -24,6 +24,7 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
+		Log.e(TAG, "Received broadcast");
 		ActionResult ar = ActionResult.getByUuid(i.getStringExtra("uuid"), context);
 		if (ar != null) {
 			Log.e(TAG, "Updating result");
