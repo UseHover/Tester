@@ -14,8 +14,8 @@ apply plugin: 'io.fabric'
 repositories {
     mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
-//    maven { url 'http://maven.usehover.com/snapshots' }
-    maven { url 'http://maven.usehover.com/releases' }
+    maven { url 'https://maven.usehover.com/snapshots' }
+    maven { url 'https://maven.usehover.com/releases' }
 }
 
 android {
@@ -79,11 +79,11 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-beta01'
 
 //    gatewayImplementation('com.hover:android-sdk:0.14.7-nopin')
-    releaseImplementation('com.hover:android-sdk:0.17.0') { transitive = true }
+    releaseImplementation('com.hover:android-sdk:1.2.3-androidx-SNAPSHOT') { transitive = true }
 
     debugImplementation project(":hover.sdk")
     debugImplementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    debugImplementation "android.arch.work:work-runtime:1.0.0-rc02"
+    debugImplementation "android.arch.work:work-runtime:1.0.1"
     debugImplementation 'com.google.android.gms:play-services-analytics:16.0.7'
     debugImplementation 'io.sentry:sentry-android:1.7.21'
 
@@ -99,6 +99,6 @@ configurations {
     }
 }
 
-if (getGradle().getStartParameter().getTaskRequests().toString().contains("Gateway")){
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Gateway")) {
     apply plugin: 'com.google.gms.google-services'
 }

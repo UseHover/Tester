@@ -1,8 +1,8 @@
 <resources>
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/HoverYellow</item>
-        <item name="colorPrimaryDark">@color/HoverOrange</item>
-        <item name="colorAccent">@color/HoverOrange</item>
+        <item name="colorPrimary">@color/HoverOrange</item>
+        <item name="colorPrimaryDark">@color/HoverBlue</item>
+        <item name="colorAccent">@color/HoverMedBlue</item>
     </style>
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
@@ -11,11 +11,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
-
     <style name="SDKTheme" parent="HoverTheme">
         <item name="colorPrimary">@color/HoverYellow</item>
         <item name="colorPrimaryDark">@color/HoverOrange</item>
-        <item name="colorAccent">@color/HoverMedBlue</item>
+        <item name="colorAccent">@color/HoverBlue</item>
     </style>
 
 </resources>

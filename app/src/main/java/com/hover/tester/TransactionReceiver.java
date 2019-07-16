@@ -11,6 +11,7 @@ import com.hover.tester.actions.ActionDetailActivity;
 import com.hover.tester.actions.ActionResult;
 import com.hover.tester.actions.HoverAction;
 import com.hover.tester.database.Contract;
+import com.hover.tester.utils.Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,17 +25,16 @@ public class TransactionReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent i) {
-		Log.e(TAG, "Received broadcast");
+		Log.e(TAG, "received update with action: " + i.getAction());
 		ActionResult ar = ActionResult.getByUuid(i.getStringExtra("uuid"), context);
 		if (ar != null) {
-			Log.e(TAG, "Updating result");
-			ar.mStatus = ActionResult.STATUS_SUCCEEDED;
-			ar.mTimeStamp = i.getLongExtra("response_timestamp", 0L);
+			ar.mStatus = i.getStringExtra("status").equals("succeeded") ? ActionResult.STATUS_SUCCEEDED : ActionResult.STATUS_FAILED;
+			ar.mTimeStamp = i.getLongExtra("update_timestamp", Utils.now());
 			ar.mText = i.getStringExtra("response_message");
 			ar.save(context);
 		}
 		sendGatewayBroadcast(context, i);
-		openActivity(context, i);
+//		openActivity(context, i);
 	}
 
 	private void openActivity(Context c, Intent i) {

@@ -9,3 +9,4 @@
 .gradle
 *.apk
 app/gateway/*
+*.hprof

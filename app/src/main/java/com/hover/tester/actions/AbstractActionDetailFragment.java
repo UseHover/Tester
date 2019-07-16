@@ -138,10 +138,11 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	}
 
 	void showResult(int resultCode, Intent data) {
+		Log.e(TAG, "Result: " + resultCode + " status: " + data.getStringExtra("status"));
 		if (resultCode == Activity.RESULT_OK)
 			Snackbar.make(getView(), "Request Sent. " + data.getStringExtra("response_message"), Snackbar.LENGTH_LONG).show();
 		else if (data != null && data.hasExtra("result"))
-			Snackbar.make(getView(), "Failure. " + data.getStringExtra("result"), Snackbar.LENGTH_LONG).show();
+			Snackbar.make(getView(), "Failure. " + data.getStringExtra("status-meaning"), Snackbar.LENGTH_LONG).show();
 		getLoaderManager().initLoader(RESULT_LOADER, null, this);
 	}
 }

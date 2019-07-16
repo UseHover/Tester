@@ -122,7 +122,9 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 	protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		ActionDetailFragment frag = getFrag();
+		Log.e(TAG, "got result");
 		if (frag != null && data != null) {
+			Log.e(TAG, "actionID: " + data.getStringExtra("action_id"));
 			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
 			frag.showResult(resultCode, data);
 		}

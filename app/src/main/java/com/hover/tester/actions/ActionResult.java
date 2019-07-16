@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
+
+import androidx.work.Operation;
 
 import com.hover.tester.utils.Utils;
 import com.hover.tester.database.Contract;
@@ -26,7 +29,7 @@ public class ActionResult {
 		mSdkUuid = data.hasExtra(UUID) ? data.getStringExtra(UUID) : "none";
 		mActionId = actionId;
 		if (resultCode == Activity.RESULT_OK) {
-			mStatus = STATUS_UNKNOWN;
+			mStatus = data.hasExtra("status") ? getStatus(data.getStringExtra("status")) : STATUS_UNKNOWN;
 			mText = data.getStringExtra(RESULT);
 			mDetails = getDetails(data);
 		} else {
@@ -65,6 +68,12 @@ public class ActionResult {
 		return deets;
 	}
 
+	private int getStatus(String status) {
+		if (status.equals("failed")) return STATUS_FAILED;
+		else if (status.equals("succeeded")) return STATUS_SUCCEEDED;
+		else return STATUS_UNKNOWN;
+	}
+
 	public static ActionResult getByUuid(String uuid, Context context) {
 		ActionResult ar = null;
 		Cursor cursor = new DbHelper(context).getReadableDatabase()
@@ -93,7 +102,11 @@ public class ActionResult {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				c.getContentResolver().insert(Contract.ActionResultEntry.CONTENT_URI, getContentValues());
+				try {
+					c.getContentResolver().insert(Contract.ActionResultEntry.CONTENT_URI, getContentValues());
+				} catch (Exception e) {
+					Log.e(TAG, "database failure", e);
+				}
 			}
 		}).start();
 	}
