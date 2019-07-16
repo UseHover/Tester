@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hover.sdk.api.Customization;
 import com.hover.sdk.api.HoverParameters;
 import com.hover.tester.R;
 import com.hover.tester.main.MainActivity;
