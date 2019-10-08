@@ -14,7 +14,7 @@
     <style name="SDKTheme" parent="HoverTheme">
         <item name="colorPrimary">@color/HoverYellow</item>
         <item name="colorPrimaryDark">@color/HoverOrange</item>
-        <item name="colorAccent">@color/HoverBlue</item>
+        <item name="colorAccent">@color/HoverOrange</item>
     </style>
 
 </resources>

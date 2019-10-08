@@ -76,8 +76,10 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		try {
 			ActionDetailFragment frag = getFrag();
 			HoverParameters.Builder hpb = startRequest(frag);
-//		hpb.hideFinalUssd(true);
-//		hpb.setEnvironment(HoverParameters.TEST_ENV);
+//			hpb.setEnvironment(HoverParameters.TEST_ENV);
+//			hpb.initialProcessingMessage("Test message");
+//			hpb.showUserStepDescriptions(true);
+//			hpb.hideFinalUssd(true);
 			hpb.style(R.style.SDKTheme);
 			frag.addAndSaveExtras(hpb);
 			makeRequest(hpb, frag);
