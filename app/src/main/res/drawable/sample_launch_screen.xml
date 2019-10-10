@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The android:opacity=”opaque” line — this is critical in preventing a flash of black as your theme transitions. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
+	<item android:drawable="@color/colorPrimaryDark"/>
+
+	<item
+		android:height="40dp"
+		android:bottom="233px"
+		android:drawable="@drawable/ic_africanbank_logo_white"
+		android:gravity="center">
+	</item>
+
+	<item
+		android:height="37dp"
+		android:top="233px"
+		android:drawable="@drawable/ic_hover_logo"
+		android:gravity="center">
+	</item>
+
+</layer-list>

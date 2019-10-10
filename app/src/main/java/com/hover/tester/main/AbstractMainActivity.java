@@ -12,6 +12,8 @@ import androidx.fragment.app.DialogFragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -42,15 +44,22 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+//		setTheme(R.style.AppTheme_NoActionBar);
 		super.onCreate(savedInstanceState);
-		setUpView();
+
+//		setUpView();
 		initialize();
+		updateConfig(null);
+		Runnable r = new Runnable() { @Override public void run() {
+			goToAction("b2ba9578");
+		} }; //fef640f3
+		new Handler().postDelayed(r, 1000);
 	}
 
 	protected void initialize() {
 		Fabric.with(this, new Crashlytics());
 		Hover.initialize(this);
-//		Hover.setBranding(getString(R.string.app_name), R.mipmap.ic_launcher, this);
+		Hover.setBranding("", R.drawable.ic_african_bank_logo, this);
 		getActions();
 	}
 
@@ -71,8 +80,8 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	}
 
 	private void showConfigUpdated(Intent intent) {
-		if (intent != null && intent.getAction() != null && intent.getAction().equals(UpdateReceiver.ACTION))
-			Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
+//		if (intent != null && intent.getAction() != null && intent.getAction().equals(UpdateReceiver.ACTION))
+//			Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
 	public void getActions() {
@@ -96,16 +105,20 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 
 	@Override
 	public void addAction(HoverAction action) {
-		Snackbar.make(findViewById(R.id.nest_container),
-				"Saving Action: " + action.mName + ", one moment",
-				Snackbar.LENGTH_LONG).show();
+//		Snackbar.make(findViewById(R.id.nest_container),
+//				"Saving Action: " + action.mName + ", one moment",
+//				Snackbar.LENGTH_LONG).show();
 		new SaveActionTask(null, mFrag, this).execute(action);
 	}
 
 	@Override
 	public void onListFragmentInteraction(HoverAction act) {
+		goToAction(act.mId);
+	}
+
+	private void goToAction(String id) {
 		Intent intent = new Intent(this, ActionDetailActivity.class);
-		intent.putExtra(HoverAction.ID, act.mId);
+		intent.putExtra(HoverAction.ID, id);
 		startActivity(intent);
 	}
 
@@ -118,11 +131,11 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 
 	@Override public void onError(String message) {
 		Log.e(TAG, "error: " + message);
-		Snackbar.make(findViewById(R.id.nest_container), message, Snackbar.LENGTH_LONG).show();
+//		Snackbar.make(findViewById(R.id.nest_container), message, Snackbar.LENGTH_LONG).show();
 	}
 	@Override public void onSuccess(ArrayList<com.hover.sdk.actions.HoverAction> actions) {
 		Log.e(TAG, "success, action count: " + actions.size());
-		Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
+//		Snackbar.make(findViewById(R.id.nest_container), getString(R.string.updated), Snackbar.LENGTH_LONG).show();
 	}
 
 	@Override

@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/colorPrimaryDark"
     tools:context="com.hover.tester.main.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout

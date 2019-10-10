@@ -27,6 +27,7 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.AppTheme_NoActionBar);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_action_detail);
 		setUpToolbar();
@@ -77,11 +78,11 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 			ActionDetailFragment frag = getFrag();
 			HoverParameters.Builder hpb = startRequest(frag);
 //			hpb.setEnvironment(HoverParameters.TEST_ENV);
-//			hpb.initialProcessingMessage("Test message");
+			hpb.initialProcessingMessage("Contacting network");
 //			hpb.showUserStepDescriptions(true);
 //			hpb.hideFinalUssd(true);
 			hpb.style(R.style.SDKTheme);
-			frag.addAndSaveExtras(hpb);
+//			frag.addAndSaveExtras(hpb);
 			makeRequest(hpb, frag);
 		} catch (NullPointerException e) {
 			Toast.makeText(this, getString(R.string.error_variables), Toast.LENGTH_SHORT).show();
@@ -90,9 +91,9 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 
 	private HoverParameters.Builder startRequest(ActionDetailFragment frag) {
 		if (frag != null) {
-			HoverAction action = frag.mAction;
-			Log.i(TAG, "Starting request: " + action.mName + " " + action.mId);
-			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request(action.mId);
+//			HoverAction action = frag.mAction;
+//			Log.i(TAG, "Starting request: " + action.mName + " " + action.mId);
+			return new HoverParameters.Builder(AbstractActionDetailActivity.this).request("b2ba9578"); //fef640f3
 		}
 		return null;
 	}
@@ -127,8 +128,8 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 		Log.e(TAG, "got result");
 		if (frag != null && data != null) {
 			Log.e(TAG, "actionID: " + data.getStringExtra("action_id"));
-			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
-			frag.showResult(resultCode, data);
+//			new ActionResult(frag.mAction.mId, resultCode, data).save(this);
+//			frag.showResult(resultCode, data);
 		}
 	}
 

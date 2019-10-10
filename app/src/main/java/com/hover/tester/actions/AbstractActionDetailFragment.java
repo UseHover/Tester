@@ -48,34 +48,34 @@ public class AbstractActionDetailFragment extends Fragment implements LoaderMana
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if (mAction != null) fillView(getView());
+//		if (mAction != null) fillView(getView());
 	}
 
-	private void fillView(View root) {
-		fillInfo(root);
-		addVariableView(root);
-		addResultView(root);
-	}
-
-	protected void fillInfo(View view) {
-		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mAction.mNetworkName);
-	}
-
-	private void addVariableView(View root) {
-		variableRecycler = (RecyclerView) root.findViewById(R.id.variable_list);
-		variableRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
-		mVariableAdapter = new VariableAdapter(getActivity(), null, mAction);
-		variableRecycler.setAdapter(mVariableAdapter);
-		getLoaderManager().initLoader(VARIABLE_LOADER, null, this);
-	}
-
-	private void addResultView(View root) {
-		RecyclerView resultRecycler = (RecyclerView) root.findViewById(R.id.result_list);
-		resultRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
-		mResultAdapter = new ResultAdapter(getActivity(), null, mAction);
-		resultRecycler.setAdapter(mResultAdapter);
-		getLoaderManager().initLoader(RESULT_LOADER, null, this);
-	}
+//	private void fillView(View root) {
+//		fillInfo(root);
+//		addVariableView(root);
+//		addResultView(root);
+//	}
+//
+//	protected void fillInfo(View view) {
+//		((ActionDetailActivity) getActivity()).setTitle(mAction.mId + ". " + mAction.mName, mAction.mNetworkName);
+//	}
+//
+//	private void addVariableView(View root) {
+//		variableRecycler = (RecyclerView) root.findViewById(R.id.variable_list);
+//		variableRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
+//		mVariableAdapter = new VariableAdapter(getActivity(), null, mAction);
+//		variableRecycler.setAdapter(mVariableAdapter);
+//		getLoaderManager().initLoader(VARIABLE_LOADER, null, this);
+//	}
+//
+//	private void addResultView(View root) {
+//		RecyclerView resultRecycler = (RecyclerView) root.findViewById(R.id.result_list);
+//		resultRecycler.setLayoutManager(new LinearLayoutManager(root.getContext()));
+//		mResultAdapter = new ResultAdapter(getActivity(), null, mAction);
+//		resultRecycler.setAdapter(mResultAdapter);
+//		getLoaderManager().initLoader(RESULT_LOADER, null, this);
+//	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {

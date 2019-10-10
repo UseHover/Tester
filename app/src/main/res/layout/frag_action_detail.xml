@@ -1,81 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/standard_padding">
+    tools:context="com.hover.tester.actions.ActionDetailActivity"
+    tools:ignore="MergeRootFrame">
 
-    <FrameLayout android:id="@+id/scheduler"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/standard_padding"
-        android:layout_marginBottom="@dimen/standard_padding"
-        android:visibility="gone">
-
-        <Button android:id="@+id/add_schedule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/small_padding"
-            android:text="@string/add_schedule"
-            android:onClick="addSchedule"/>
-
-        <LinearLayout android:id="@+id/schedule_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView android:id="@+id/schedule_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/schedule"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:textColor="@color/HoverYellow"
-                android:text="@string/change_schedule"
-                android:onClick="addSchedule"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="bottom"
-            android:background="@color/lightGray" />
-    </FrameLayout>
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/variable_list"
-        android:name="com.hover.tester.ActionDetailFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.hover.tester.list.ActionDetailFragment"
-        tools:listitem="@layout/action_variable"/>
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/ic_african_bank_logo"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:text="@string/results"/>
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:fontFamily="sans-serif-thin"
+        android:text="This app tests the African Bank USSD service using the Hover SDK"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="24dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/result_list"
-        android:name="com.hover.tester.ActionDetailFragment"
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="LinearLayoutManager"
-        tools:context="com.hover.tester.list.ActionDetailFragment"
-        tools:listitem="@layout/action_result"/>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="89dp"
+        android:background="@color/colorPrimaryDark"
+        android:fontFamily="sans-serif-light"
+        android:text="Test USSD Network"
+        android:textColor="@color/white"
+        android:onClick="makeRequest"/>
 
 </LinearLayout>
