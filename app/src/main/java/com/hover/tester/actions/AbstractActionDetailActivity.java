@@ -79,7 +79,7 @@ public abstract class AbstractActionDetailActivity extends AppCompatActivity {
 //			hpb.setEnvironment(HoverParameters.TEST_ENV);
 //			hpb.initialProcessingMessage("Test message");
 //			hpb.showUserStepDescriptions(true);
-//			hpb.hideFinalUssd(true);
+//			hpb.finalMsgDisplayTime(0);
 			hpb.style(R.style.SDKTheme);
 			frag.addAndSaveExtras(hpb);
 			makeRequest(hpb, frag);

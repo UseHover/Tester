@@ -50,7 +50,7 @@ public abstract class AbstractMainActivity extends AppCompatActivity
 	protected void initialize() {
 		Fabric.with(this, new Crashlytics());
 		Hover.initialize(this);
-//		Hover.setBranding(getString(R.string.app_name), R.mipmap.ic_launcher, this);
+		Hover.setBranding(getString(R.string.app_name), R.mipmap.ic_launcher, this);
 		getActions();
 	}
 

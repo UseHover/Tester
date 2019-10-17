@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.io.JsonEOFException;
+import com.hover.sdk.parsers.ParserHelper;
 import com.hover.tester.database.DbHelper;
 import com.hover.tester.gateway.KeyStoreHelper;
 import com.hover.tester.database.Contract;
@@ -30,13 +32,22 @@ public class HoverAction {
 			mName = jsonAct.getString("name");
 			mNetworkName = jsonAct.getString("network_name");
 			mSimHniList = jsonAct.getJSONArray("hni_list");
-			JSONArray variables = jsonAct.getJSONArray("custom_steps");
-			mVariables = new ArrayList<>(0);
-			for (int v = 0; v < variables.length(); v++) {
-				if (variables.getJSONObject(v).getBoolean("is_param"))
-					mVariables.add(new ActionVariable(mId, variables.getJSONObject(v).getString("value")));
-			}
-		} catch (JSONException e) { }
+			mVariables = getVariables(jsonAct);
+		} catch (JSONException ignored) { }
+	}
+
+	private ArrayList<ActionVariable> getVariables(JSONObject jsonAct) throws JSONException {
+		JSONArray variables = jsonAct.getJSONArray("custom_steps");
+		ArrayList<ActionVariable> vars = new ArrayList<>(0);
+		for (int v = 0; v < variables.length(); v++) {
+			if (variables.getJSONObject(v).getBoolean("is_param"))
+				vars.add(new ActionVariable(mId, variables.getJSONObject(v).getString("value")));
+		}
+		if (jsonAct.getString("transport_type").equals("variable_longstring")) {
+			for (String p: ParserHelper.getVariables(jsonAct.getString("root_code")))
+				vars.add(new ActionVariable(mId, p));
+		}
+		return vars;
 	}
 
 	public HoverAction(Cursor c, Context context) {
