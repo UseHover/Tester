@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.io.JsonEOFException;
-import com.hover.sdk.parsers.ParserHelper;
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import com.hover.tester.database.DbHelper;
 import com.hover.tester.gateway.KeyStoreHelper;
 import com.hover.tester.database.Contract;
@@ -17,6 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class HoverAction {
 	public static final String TAG = "HoverAction", ID = "action_id";
@@ -44,10 +46,18 @@ public class HoverAction {
 				vars.add(new ActionVariable(mId, variables.getJSONObject(v).getString("value")));
 		}
 		if (jsonAct.getString("transport_type").equals("variable_longstring")) {
-			for (String p: ParserHelper.getVariables(jsonAct.getString("root_code")))
+			for (String p: getRootCodeVariables(jsonAct.getString("root_code")))
 				vars.add(new ActionVariable(mId, p));
 		}
 		return vars;
+	}
+
+	public static Set<String> getRootCodeVariables(String message) {
+		Set<String> namedGroups = new TreeSet();
+		Matcher m = Pattern.compile("([a-zA-Z]+)").matcher(message);
+
+		while(m.find()) { namedGroups.add(m.group(1)); }
+		return namedGroups;
 	}
 
 	public HoverAction(Cursor c, Context context) {
